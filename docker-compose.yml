@@ -1,0 +1,19 @@
+version: "2"
+services:
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: dev.Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend/:/usr/src/secretary-manager/backend
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: dev.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/secretary-manager/frontend

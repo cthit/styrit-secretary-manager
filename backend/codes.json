@@ -1,0 +1,13 @@
+{
+  "12312312asdasd": {
+    "group": "armit",
+    "study_period": 1,
+    "year": 2019,
+    "meeting_no": 0,
+    "tasks": {
+      "Verksamhetsplan": "vplan",
+      "Budget": "budget",
+      "Verksamhetsrapport": "vrapport"
+    }
+  }
+}
