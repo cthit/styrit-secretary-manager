@@ -37,20 +37,7 @@ export class Body extends React.Component {
     }
     
     chooseBody() {
-        if (this.state.acceptedCode !== null) {
-            return (
-                <InputGroup className="input-group">
-                    {
-                        Object.keys(this.state.tasks).map(task => (
-                            <Upload text={task} name={this.state.tasks[task]} onUploadUpdated={this.onUploadUpdated} key={this.state.tasks[task]}/>
-                        ))
-                    }
-                    <Button variant="contained" color="primary" style={{maxHeight: "40px"}} onClick={this.onUpload} disabled={this.checkValid()}>
-                        Submit
-                    </Button>
-                </InputGroup>
-            );
-        } else {
+        if (this.state.acceptedCode === null) {           
             return (
                 <InputGroup>
                     <TextField
@@ -71,6 +58,19 @@ export class Body extends React.Component {
                         onClick={this.onSubmit}
                     >
                         Submit  
+                    </Button>
+                </InputGroup>
+            );
+        } else {
+            return (
+                <InputGroup className="input-group">
+                    {
+                        Object.keys(this.state.tasks).map(task => (
+                            <Upload text={task} name={this.state.tasks[task]} onUploadUpdated={this.onUploadUpdated} key={this.state.tasks[task]}/>
+                        ))
+                    }
+                    <Button variant="contained" color="primary" style={{maxHeight: "40px"}} onClick={this.onUpload} disabled={this.checkValid()}>
+                        Submit
                     </Button>
                 </InputGroup>
             );
@@ -112,7 +112,6 @@ export class Body extends React.Component {
     }
 
     onUploadUpdated(data) {
-
         if (data) {
             console.log("DATA", data);
             
@@ -125,10 +124,24 @@ export class Body extends React.Component {
         }
     }
 
-    onUpload() {
-        if (!this.checkValid) {
+    onUpload() {        
+        let data = new FormData()
+        Object.keys(this.state.reports).map(key => {
+            data.append(key, this.state.reports[key])
+        })
 
-        }
+        data.append("code", this.state.acceptedCode)
+        data.append("group", this.state.group)
+
+        axios
+        .put("http://localhost:5000/file", data, {})
+        .then(res => {
+            console.log(res.statusText);
+        })
+        .catch(error => {
+            console.log("Error: ", error);
+        });
+
         this.setState(defaultState)
     }    
 
@@ -137,14 +150,9 @@ export class Body extends React.Component {
         let disable = false;
         Object.keys(reports).forEach(key => {
             if (!reports[key]) {
-                console.log("Error, no all fields filled");
                 disable = true;
             }
-            console.log("Key", key)
-            console.log("Rep[key]", reports[key])
-            console.log("Reports", reports)
         })
-        console.log("SAYING OK")
         return disable;
     }
 }
