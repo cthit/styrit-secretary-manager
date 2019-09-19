@@ -1,6 +1,6 @@
 import React from "react";
 import { BodyContainer, InputGroup } from "./Body.styles";
-import { TextField, Button, Divider } from "@material-ui/core";
+import { TextField, Button, Typography } from "@material-ui/core";
 import Upload from "./Upload";
 import axios from "axios";
 
@@ -8,13 +8,9 @@ const defaultState = {
     code: "",
     acceptedCode: null,
     group: null,
-    tasks: {
-
-    },
-    reports: {
-        
-    }
-}
+    tasks: {},
+    reports: {}
+};
 
 export class Body extends React.Component {
     constructor(props) {
@@ -31,23 +27,23 @@ export class Body extends React.Component {
     render() {
         return (
             <BodyContainer className="body-container">
-                { this.chooseBody() }
+                {this.chooseBody()}
             </BodyContainer>
-        )
+        );
     }
-    
+
     chooseBody() {
-        if (this.state.acceptedCode === null) {           
+        if (this.state.acceptedCode === null) {
             return (
                 <InputGroup>
                     <TextField
                         label="Code"
                         variant="outlined"
-                        onChange={event => { 
-                            const text = event.target.value
+                        onChange={event => {
+                            const text = event.target.value;
                             this.setState((state, props) => ({
                                 code: text
-                            }))
+                            }));
                         }}
                         style={{ marginBottom: "20px" }}
                     />
@@ -57,19 +53,31 @@ export class Body extends React.Component {
                         style={{ maxHeight: "40px", marginLeft: "10px" }}
                         onClick={this.onSubmit}
                     >
-                        Submit  
+                        Submit
                     </Button>
                 </InputGroup>
             );
         } else {
             return (
                 <InputGroup className="input-group">
-                    {
-                        Object.keys(this.state.tasks).map(task => (
-                            <Upload text={task} name={this.state.tasks[task]} onUploadUpdated={this.onUploadUpdated} key={this.state.tasks[task]}/>
-                        ))
-                    }
-                    <Button variant="contained" color="primary" style={{maxHeight: "40px"}} onClick={this.onUpload} disabled={this.checkValid()}>
+                    <Typography variant="h5" style={{ marginBottom: "10px" }}>
+                        Hej {this.state.displayGroup}!
+                    </Typography>
+                    {Object.keys(this.state.tasks).map(task => (
+                        <Upload
+                            text={task}
+                            name={this.state.tasks[task]}
+                            onUploadUpdated={this.onUploadUpdated}
+                            key={this.state.tasks[task]}
+                        />
+                    ))}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ maxHeight: "40px" }}
+                        onClick={this.onUpload}
+                        disabled={this.checkValid()}
+                    >
                         Submit
                     </Button>
                 </InputGroup>
@@ -78,33 +86,33 @@ export class Body extends React.Component {
     }
 
     onSubmit() {
-        console.log("State", this)
+        console.log("State", this);
         const data = {
             code: this.state.code
-        }
-    
-        console.log("data", data)
-    
+        };
+
+        console.log("data", data);
+
         axios
             .post("http://localhost:5000/code", data, {})
             .then(res => {
                 console.log(res.statusText);
-            
-                
-                let reports = {}
+
+                let reports = {};
 
                 Object.values(res.data.tasks).forEach(task => {
-                    reports[task] = undefined
-                })
+                    reports[task] = undefined;
+                });
 
                 this.setState((state, props) => ({
                     acceptedCode: res.data.code,
-                    group: res.data.group,
+                    group: res.data.group.codeName,
+                    displayGroup: res.data.group.displayName,
                     tasks: res.data.tasks,
                     reports: reports
                 }));
 
-                console.log("STATE", this.state)
+                console.log("STATE", this.state);
             })
             .catch(error => {
                 console.log("Error: ", error);
@@ -114,36 +122,36 @@ export class Body extends React.Component {
     onUploadUpdated(data) {
         if (data) {
             console.log("DATA", data);
-            
+
             let oldState = this.state;
-            oldState.reports[data.type] = data.file; 
+            oldState.reports[data.type] = data.file;
 
-            this.setState(oldState)
+            this.setState(oldState);
 
-            console.log("STATE", this.state)
+            console.log("STATE", this.state);
         }
     }
 
-    onUpload() {        
-        let data = new FormData()
+    onUpload() {
+        let data = new FormData();
         Object.keys(this.state.reports).map(key => {
-            data.append(key, this.state.reports[key])
-        })
-
-        data.append("code", this.state.acceptedCode)
-        data.append("group", this.state.group)
-
-        axios
-        .put("http://localhost:5000/file", data, {})
-        .then(res => {
-            console.log(res.statusText);
-        })
-        .catch(error => {
-            console.log("Error: ", error);
+            data.append(key, this.state.reports[key]);
         });
 
-        this.setState(defaultState)
-    }    
+        data.append("code", this.state.acceptedCode);
+        data.append("group", this.state.group);
+
+        axios
+            .put("http://localhost:5000/file", data, {})
+            .then(res => {
+                console.log(res.statusText);
+            })
+            .catch(error => {
+                console.log("Error: ", error);
+            });
+
+        this.setState(defaultState);
+    }
 
     checkValid() {
         let reports = this.state.reports;
@@ -152,8 +160,7 @@ export class Body extends React.Component {
             if (!reports[key]) {
                 disable = true;
             }
-        })
+        });
         return disable;
     }
 }
-

@@ -1,19 +1,15 @@
 import React from "react";
 
-import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { UploadContainer } from "./Upload.styles";
 import { Card, Typography, Button } from "@material-ui/core";
-import axios from "axios";
-import Dropzone from "react-dropzone";
-import { reset } from "ansi-colors";
 
 const state = {
     file: null,
     input: null
 };
 
-const UploadSnippet = ({props}) => (
+const UploadSnippet = ({ props }) => (
     <div
         style={{
             display: "flex",
@@ -59,7 +55,7 @@ export const Upload = props => (
             {props.text}
         </Typography>
         <UploadContainer>
-            <UploadSnippet props={props}/>
+            <UploadSnippet props={props} />
         </UploadContainer>
     </Card>
 );
@@ -74,29 +70,12 @@ function onUpload(event, props) {
     if (file) {
         if (file.type === "application/pdf") {
             console.log("Accepting file:", file);
-            console.log("PROPS", props)
-            
+            console.log("PROPS", props);
+
             props.onUploadUpdated({
-                "type": props.name, 
-                "file": file
+                type: props.name,
+                file: file
             });
-
-            /*
-            state.file = file;
-            var data = new FormData();
-            data.append("file", state.file);
-            data.append("type", props.name);
-            props.onUploadUpdated(data);
-
-            axios
-                .put("http://localhost:5000/file", data, {})
-                .then(res => {
-                    console.log(res.statusText);
-                })
-                .catch(error => {
-                    console.log("Error: ", error);
-                });
-            */
         } else {
             console.log("Do not accept filetype: " + file.type);
             resetState(event);
