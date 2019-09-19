@@ -13,7 +13,7 @@ const state = {
     input: null
 };
 
-const UploadSnippet = () => (
+const UploadSnippet = ({props}) => (
     <div
         style={{
             display: "flex",
@@ -36,7 +36,7 @@ const UploadSnippet = () => (
                     width: "500px"
                 }}
                 onChange={event => {
-                    onUpload(event);
+                    onUpload(event, props);
                     console.log("State: ", state);
                 }}
             />
@@ -59,7 +59,7 @@ export const Upload = props => (
             {props.text}
         </Typography>
         <UploadContainer>
-            <UploadSnippet />
+            <UploadSnippet props={props}/>
         </UploadContainer>
     </Card>
 );
@@ -69,24 +69,34 @@ function resetState(event) {
     event.target.value = null;
 }
 
-function onUpload(event) {
+function onUpload(event, props) {
     const file = event.target.files[0];
     if (file) {
         if (file.type === "application/pdf") {
             console.log("Accepting file:", file);
+            console.log("PROPS", props)
+            
+            props.onUploadUpdated({
+                "type": props.name, 
+                "file": file
+            });
 
+            /*
             state.file = file;
             var data = new FormData();
             data.append("file", state.file);
+            data.append("type", props.name);
+            props.onUploadUpdated(data);
 
             axios
-                .put("http://localhost:5000/", data, {})
+                .put("http://localhost:5000/file", data, {})
                 .then(res => {
                     console.log(res.statusText);
                 })
                 .catch(error => {
                     console.log("Error: ", error);
                 });
+            */
         } else {
             console.log("Do not accept filetype: " + file.type);
             resetState(event);
