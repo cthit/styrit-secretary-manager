@@ -1,12 +1,10 @@
 import datetime
-import json
 import os
 
 from flask import Flask, request
 from flask_restful import Resource, Api
 
 from flask_cors import CORS
-
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,6 +17,7 @@ settings = {
 }
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 def handle_file(report_type, file, committee, year, lp, meeting_no):
     name = report_type + "_" + committee + "_" + str(year) + "_" + lp + ".pdf"
@@ -38,7 +37,7 @@ class FileResource(Resource):
         print(request.files)
         print("Should save the file?")
 
-        # Prob wanna check the codes
+        # Prob wanna check the code
         code = request.form["code"]
         committee = request.form["group"]
 
@@ -68,27 +67,8 @@ class CodeResource(Resource):
                 "error": "Incorrect code"
             }
 
-
-class CodeInfo:
-    def __init__(self):
-        super(self)
-
-    def to_json(self):
-        return {}
-
-
-def prepare_for_meeting():
-    global settings
-    with open("config.json") as json_file:
-        data = json.load(json_file)
-        settings["lp"] = data["study_period"]
-        settings["meeting_no"] = data["meeting_no"]
-        settings["year"] = data["year"]
-
-
 api.add_resource(FileResource, '/file')
 api.add_resource(CodeResource, '/code')
 
 if __name__ == '__main__':
-    prepare_for_meeting()
     app.run(host='0.0.0.0')

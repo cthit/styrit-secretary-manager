@@ -22,6 +22,7 @@ export class Body extends React.Component {
         this.onUpload = this.onUpload.bind(this);
         this.onUploadUpdated = this.onUploadUpdated.bind(this);
         this.checkValid = this.checkValid.bind(this);
+        this.onError = this.onError.bind(this);
     }
 
     render() {
@@ -115,7 +116,7 @@ export class Body extends React.Component {
                 console.log("STATE", this.state);
             })
             .catch(error => {
-                console.log("Error: ", error);
+                this.onError(error);
             });
     }
 
@@ -147,7 +148,7 @@ export class Body extends React.Component {
                 console.log(res.statusText);
             })
             .catch(error => {
-                console.log("Error: ", error);
+                this.onError(error);
             });
 
         this.setState(defaultState);
@@ -162,5 +163,10 @@ export class Body extends React.Component {
             }
         });
         return disable;
+    }
+
+    onError(error) {
+        console.error("Error: ", error);
+        alert("An error has occured, http status code " + error)
     }
 }
