@@ -1,6 +1,6 @@
 import React from "react";
 import { BodyContainer, InputGroup } from "./Body.styles";
-import { TextField, Button, Typography } from "@material-ui/core";
+import { TextField, Button, Typography, Card } from "@material-ui/core";
 import Upload from "./Upload";
 import axios from "axios";
 
@@ -9,7 +9,8 @@ const defaultState = {
     acceptedCode: null,
     group: null,
     tasks: {},
-    reports: {}
+    reports: {},
+    invalidCode: false
 };
 
 export class Body extends React.Component {
@@ -37,6 +38,11 @@ export class Body extends React.Component {
         if (this.state.acceptedCode === null) {
             return (
                 <InputGroup>
+                    {this.state.invalidCode && (
+                        <Typography variant="h6" color="error">
+                            Invalid code
+                        </Typography>
+                    )}
                     <TextField
                         label="Code"
                         variant="outlined"
@@ -99,21 +105,31 @@ export class Body extends React.Component {
             .then(res => {
                 console.log(res.statusText);
 
-                let reports = {};
+                if (res.data.error) {
+                    console.log("Server returned an error: " + res.data.error);
+                    this.setState({
+                        invalidCode: true
+                    });
+                } else {
+                    this.setState({
+                        invalidCode: false
+                    });
+                    let reports = {};
 
-                Object.values(res.data.tasks).forEach(task => {
-                    reports[task] = undefined;
-                });
+                    Object.values(res.data.data.tasks).forEach(task => {
+                        reports[task] = undefined;
+                    });
 
-                this.setState((state, props) => ({
-                    acceptedCode: res.data.code,
-                    group: res.data.group.codeName,
-                    displayGroup: res.data.group.displayName,
-                    tasks: res.data.tasks,
-                    reports: reports
-                }));
+                    this.setState((state, props) => ({
+                        acceptedCode: res.data.code,
+                        group: res.data.data.group.codeName,
+                        displayGroup: res.data.data.group.displayName,
+                        tasks: res.data.data.tasks,
+                        reports: reports
+                    }));
 
-                console.log("STATE", this.state);
+                    console.log("STATE", this.state);
+                }
             })
             .catch(error => {
                 this.onError(error);
@@ -166,7 +182,7 @@ export class Body extends React.Component {
     }
 
     onError(error) {
-        console.error("Error: ", error);
-        alert("An error has occured, http status code " + error)
+        alert("An error has occured, please try again later! \n" + error);
+        console.log(error);
     }
 }

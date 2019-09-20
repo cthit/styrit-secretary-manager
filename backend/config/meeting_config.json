@@ -1,0 +1,24 @@
+{
+  "study_period": 1,
+  "meeting_no": 0,
+  "year": 2019,
+  "tasks_to_be_done": [
+    {
+      "tasks": [
+        "vrapport"
+      ],
+      "groups": "all"
+    },
+    {
+      "tasks": [
+        "vberattelse",
+        "eberattelse"
+      ],
+      "groups": [
+        "armit",
+        "digit",
+        "styrit"
+      ]
+    }
+  ]
+}
