@@ -4,7 +4,7 @@ import json
 from pony import orm
 from pony.orm import db_session, commit, pony, desc
 
-from db import Group, Task, Meeting, GroupsTasksName, GroupsTasksTask, GroupsTasksGroup, MeetingTasks
+from db import *
 
 
 @db_session
@@ -57,26 +57,21 @@ def load_meeting_config():
 
         all_groups = list(orm.select(group.name for group in Group.select(lambda g: True)))
 
-        # Generate the meetings groups/tasks (GroupMeeting)
+        # Prepare a list of all tasks for each group
+        group_task_dict = {}
+        for group in all_groups:
+            group_task_dict[group] = []
+
+        # For each group, populate the list
         for tbd in data["tasks_to_be_done"]:
-            name = tbd["name"]
-            if GroupsTasksName.get(name=name) is not None:
-                GroupsTasksTask.select(lambda p: p.name.name == name).delete(bulk=True)
-                GroupsTasksGroup.select(lambda p: p.name.name == name).delete(bulk=True)
-                GroupsTasksName.get(name=name).delete()
-                commit()
+            for group in tbd["groups"]:
+                group_task_dict[group].append(tbd["tasks"])
 
-            gt_name = GroupsTasksName(name=name)
-            MeetingTasks(meeting=meeting, task=gt_name)
-
-            for task in tbd["tasks"]:
-                GroupsTasksTask(name=gt_name, task=task)
-
-            groups_to_use = tbd["groups"]
-            if groups_to_use == "all":
-                groups_to_use = all_groups
-            for group in groups_to_use:
-                GroupsTasksGroup(name=gt_name, group=group)
+        # Now connect the tasks with the code.
+        for group in all_groups:
+            code = CodeGroup(group=group, meeting=meeting)
+            for task in group_task_dict:
+                CodeTasks(code=code, task=task)
 
 
 @db_session

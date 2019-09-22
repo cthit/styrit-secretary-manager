@@ -4,14 +4,12 @@
   "date": "2019-10-11T18:15",
   "tasks_to_be_done": [
     {
-      "name": "vrapporter",
       "tasks": [
         "vrapport"
       ],
       "groups": "all"
     },
     {
-      "name": "berattelser",
       "tasks": [
         "vberattelse",
         "eberattelse"

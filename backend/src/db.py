@@ -11,11 +11,13 @@ db = Database()
 class Group(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
+    code_groups = Set("CodeGroup")
 
 
 class Task(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
+    code_tasks = Set("CodeTasks")
 
 
 class Meeting(db.Entity):
@@ -23,6 +25,7 @@ class Meeting(db.Entity):
     date = Required(datetime)
     lp = Required(int)
     meeting_no = Required(int)
+    code_groups = Set("CodeGroup")
 
     PrimaryKey(year, lp, meeting_no)
 
@@ -32,13 +35,14 @@ class CodeGroup(db.Entity):
     group = Required(Group)
     meeting = Required(Meeting)
 
+    code_tasks = Set("CodeTasks")
+
 
 class CodeTasks(db.Entity):
     code = Required(CodeGroup)
     task = Required(Task)
 
-    PrimaryKey(code , task)
-
+    PrimaryKey(code, task)
 
 
 db.bind(
