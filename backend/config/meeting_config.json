@@ -1,23 +1,25 @@
 {
-  "study_period": 1,
-  "meeting_no": 0,
-  "year": 2019,
+  "study_period": 2,
+  "meeting_no": 1,
+  "date": "2019-10-11T18:15",
   "tasks_to_be_done": [
     {
+      "name": "vrapporter",
       "tasks": [
         "vrapport"
       ],
       "groups": "all"
     },
     {
+      "name": "berattelser",
       "tasks": [
         "vberattelse",
         "eberattelse"
       ],
       "groups": [
-        "armit",
-        "digit",
-        "styrit"
+        "sexit",
+        "fritid",
+        "mrcit"
       ]
     }
   ]

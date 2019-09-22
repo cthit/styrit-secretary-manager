@@ -15,7 +15,8 @@ api = Api(app)
 settings = {
     "lp": 0,
     "meeting_no": 0,
-    "year": 2019
+    "year": 2019,
+    "taken_codes": []
 }
 
 code_list = {}
@@ -37,7 +38,6 @@ def handle_file(report_type, file, committee, year, lp, meeting_no):
 
 class FileResource(Resource):
     def put(self):
-        pedero = request
         print(request.files)
         print("Should save the file?")
 
@@ -52,27 +52,12 @@ class FileResource(Resource):
 
 class CodeResource(Resource):
     def post(self):
-        json = request.get_json()
-        if json["code"] in code_list:
+        data = request.get_json()
+        if data["code"] in code_list:
             print("Ok code!")
-            # return {
-            #     "code": json["code"],
-            #     "data": code_list[json["code"]].to_json()
-            # }
-
             return {
-                "code": json["code"],
-                "group": {
-                    "codeName": "armit",
-                    "displayName": "ArmIT"
-                },
-                "data": {
-                    "tasks": {
-                        "Verksamhetsplan": "vplan",
-                        "Budget": "budget",
-                        "Verksamhetsrapport": "vrapport"
-                    }
-                }
+                "code": data["code"],
+                "data": json.loads(code_list[data["code"]].to_json())
             }
         else:
             print("Invalid code")
@@ -87,38 +72,77 @@ class CodeResource(Resource):
 
 def load_configs():
     global settings
+    # Read the general config file and add it to the settings.
     with open("config/config.json") as json_file:
         data = json.load(json_file)
         settings["groups"] = data["groups"]
         # Create a list of all the groups for ease of use.
         group_list = []
         for group in settings["groups"]:
-            group_list.append(group)
+            group_list.append(group["codeName"])
 
         settings["group_list"] = group_list
         settings["tasks"] = data["tasks"]
 
+    # Read the meeting-specific config file and add it to the settings
     with open("config/meeting_config.json") as json_file:
         data = json.load(json_file)
         settings["lp"] = data["study_period"]
         settings["meeting_no"] = data["meeting_no"]
         settings["year"] = data["year"]
         settings["todo_tasks"] = data["tasks_to_be_done"]
-        for task in settings["todo_tasks"]:
+        for i in range(0, len(settings["todo_tasks"])):
+            task = settings["todo_tasks"][i]
             if task["groups"] == "all":
-                task["groups"] = settings["group_list"]
+                settings["todo_tasks"][i]["groups"] = settings["group_list"]
 
+
+def get_codes_json():
+    codes_json = "{"
+    first = True
+    for code in code_list:
+        if not first:
+            codes_json += ","
+        else:
+            first = False
+
+        codes_json += '"' + code + '":' + str(code_list[code].to_json())
+
+    codes_json += "}"
+    codes_json = json.loads(codes_json)
+    return json.dumps(codes_json, indent=4, sort_keys=True)
+
+
+def load_code_list():
+    global settings
+    with open("config/codes.json") as file:
+        json_data = json.load(file)
+        code_list = {}
+        new_codes = codes.generate_codes(settings)
+        for code in json_data:
+            code_list[code] = codes.code_info_from_json(json_data[code])
+            same = None
+            for new_code in new_codes:
+                if code_list[code].is_same(new_codes[new_code]):
+                    same = new_code
+
+            # Remove all codes that already have duplicates
+            if same is not None:
+                del new_codes[same]
+
+        return code_list
 
 
 def prepare_for_meeting():
     global settings
     global code_list
-    code_list = codes.generate_codes(settings)
-    codes_string = ""
-    for code in code_list:
-        codes_string += code + ", "
-    print("Generated " + str(len(code_list)) + " codes, they are: " + codes_string)
+    # First load the already existing codes
+    code_list = load_code_list()
+    codes_json = get_codes_json()
 
+    with open("config/codes.json", "w") as file:
+        file.write(codes_json)
+        file.close()
 
 
 api.add_resource(FileResource, '/file')

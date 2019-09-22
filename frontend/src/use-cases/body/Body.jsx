@@ -72,10 +72,10 @@ export class Body extends React.Component {
                     </Typography>
                     {Object.keys(this.state.tasks).map(task => (
                         <Upload
-                            text={task}
-                            name={this.state.tasks[task]}
+                            text={task.displayName}
+                            name={this.state.tasks[task].codeName}
                             onUploadUpdated={this.onUploadUpdated}
-                            key={this.state.tasks[task]}
+                            key={task}
                         />
                     ))}
                     <Button
@@ -116,8 +116,10 @@ export class Body extends React.Component {
                     });
                     let reports = {};
 
+                    console.log("Response: ", res.data);
+
                     Object.values(res.data.data.tasks).forEach(task => {
-                        reports[task] = undefined;
+                        reports[task.codeName] = undefined;
                     });
 
                     this.setState((state, props) => ({

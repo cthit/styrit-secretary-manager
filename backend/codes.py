@@ -1,3 +1,6 @@
+import json
+
+
 class CodeInfo:
     def __init__(self, group, lp, year, meeting_no, tasks):
         super()
@@ -8,26 +11,26 @@ class CodeInfo:
         self.tasks = tasks
 
     def to_json(self):
-        first = True
-        tasks = "[\n"
-        for task in self.tasks:
-            if first:
-                first = False
-            else:
-                tasks += ",\n"
-            tasks += "{"
-            tasks += "codeName: " + task["codeName"] + ",\n"
-            tasks += "displayName: " + task["displayName"] + "\n"
-            tasks += "}"
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
 
-        tasks += "]"
-        return {
-            "group": {
-                "codeName": self.group["codeName"],
-                "displayName": self.group["displayName"]
-            },
-            "tasks": self.tasks
-        }
+    def is_same(self, other):
+        try:
+            if self.group == other.group and \
+                    self.study_period == other.study_period and \
+                    self.year == other.year and \
+                    self.meeting_no == other.meeting_no and \
+                    self.tasks == other.tasks:
+                return True
+        except AttributeError:
+            pass
+
+        return False
+
+
+def code_info_from_json(json):
+    return CodeInfo(json["group"], json["study_period"], json["year"], json["meeting_no"], json["tasks"])
+
 
 def generate_code(codes):
     code = 0
@@ -35,6 +38,7 @@ def generate_code(codes):
         code += 1
 
     return str(code)
+
 
 def get_task_by_name(name, settings):
     for task in settings["tasks"]:
@@ -47,10 +51,10 @@ def generate_codes(settings):
     for group in settings["groups"]:
         tasks_for_group = []
         for task in settings["todo_tasks"]:
-            if group["codeName"] in task["groups"]:
-                for task_name in task["tasks"]:
-                    tasks_for_group.append(get_task_by_name(task_name, settings))
-                tasks_for_group.append(task["tasks"])
+            for task_group in task["groups"]:
+                if group["codeName"] == task_group:
+                    for task_name in task["tasks"]:
+                        tasks_for_group.append(get_task_by_name(task_name, settings))
         code = generate_code(codes)
         data = CodeInfo(group, settings["lp"], settings["year"], settings["meeting_no"], tasks_for_group)
         codes[code] = data
