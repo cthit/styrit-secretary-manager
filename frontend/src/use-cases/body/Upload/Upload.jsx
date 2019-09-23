@@ -51,6 +51,7 @@ export const Upload = props => (
             marginBottom: "20px"
         }}
     >
+        <PRINT props={props} />
         <Typography fontWeight={800} fontSize="h1.fontSize">
             {props.text}
         </Typography>
@@ -59,6 +60,11 @@ export const Upload = props => (
         </UploadContainer>
     </Card>
 );
+
+function PRINT(props) {
+    console.log(props);
+    return <div />;
+}
 
 function resetState(event) {
     state.file = null;

@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pony.orm import Database, PrimaryKey, Required, Set
+from pony.orm import Database, PrimaryKey, Required, Set, composite_key
 
 import db_config as config
 
@@ -17,7 +17,9 @@ class Group(db.Entity):
 class Task(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
+
     code_tasks = Set("CodeTasks")
+    code_files = Set("CodeFile")
 
 
 class Meeting(db.Entity):
@@ -36,11 +38,21 @@ class CodeGroup(db.Entity):
     meeting = Required(Meeting)
 
     code_tasks = Set("CodeTasks")
+    code_files = Set("CodeFile")
+    composite_key(group, meeting)
 
 
 class CodeTasks(db.Entity):
     code = Required(CodeGroup)
     task = Required(Task)
+
+    PrimaryKey(code, task)
+
+
+class CodeFile(db.Entity):
+    code = Required(CodeGroup)
+    task = Required(Task)
+    file_location = Required(str, unique=True)
 
     PrimaryKey(code, task)
 

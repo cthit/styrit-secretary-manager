@@ -72,7 +72,7 @@ export class Body extends React.Component {
                     </Typography>
                     {Object.keys(this.state.tasks).map(task => (
                         <Upload
-                            text={task.displayName}
+                            text={this.state.tasks[task].displayName}
                             name={this.state.tasks[task].codeName}
                             onUploadUpdated={this.onUploadUpdated}
                             key={task}
