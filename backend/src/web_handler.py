@@ -6,7 +6,7 @@ from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
-from db import CodeGroup, CodeTasks, Task
+from db import CodeGroup, CodeTasks, Task, CodeFile
 
 app = Flask(__name__)
 api = Api(app)
@@ -58,6 +58,8 @@ def handle_file(code, task, file):
 
     print("Saving file " + str(file) + " in " + path)
     file.save(path + "/" + name)
+
+    CodeFile(code=code, task=task, file_location=path)
 
 
 class CodeRes(Resource):
