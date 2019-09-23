@@ -33,3 +33,11 @@ services:
       - 3000:3000
     volumes:
       - ./frontend:/usr/src/secretary-manager/frontend
+
+  gotify:
+      image: cthit/gotify:latest
+      environment:
+        GOTIFY_PRE-SHARED-KEY: "123abc"
+        GOTIFY_MOCK-MODE: "true"
+      ports:
+        - 8081:8080
