@@ -20,6 +20,9 @@ def load_general_config():
             if Task.get(name=task["codeName"]) is None:
                 Task(name=task["codeName"], display_name=task["displayName"])
 
+    commit()
+    print("Finished loading database data from general config file.")
+
 
 @db_session
 def load_meeting_config():
@@ -58,3 +61,6 @@ def load_meeting_config():
                 code = CodeGroup(group=group, meeting=meeting)
                 for task in group_task_dict[code.group.name]:
                     CodeTasks(code=code, task=Task[task])
+
+    commit()
+    print("Finished loading meeting specific data from file to database")

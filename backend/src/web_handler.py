@@ -69,6 +69,10 @@ class CodeRes(Resource):
         code = data["code"]
         code_group = CodeGroup.get(code=code)
         if code_group is None:
+            codes_list = list(orm.select(code.code for code in CodeGroup))
+            for code in codes_list:
+                print("Code: " + str(code))
+
             return {"error": "Code not found"}, 404
 
         return {
