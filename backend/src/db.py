@@ -25,6 +25,7 @@ class Task(db.Entity):
 class Meeting(db.Entity):
     year = Required(int)
     date = Required(datetime)
+    last_upload = Required(datetime)
     lp = Required(int)
     meeting_no = Required(int)
     code_groups = Set("CodeGroup")
@@ -53,6 +54,7 @@ class CodeFile(db.Entity):
     code = Required(CodeGroup)
     task = Required(Task)
     file_location = Required(str, unique=True)
+    date = Required(datetime, auto=True)
 
     PrimaryKey(code, task)
 

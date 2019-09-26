@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from flask import Flask, request
@@ -6,6 +7,7 @@ from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
+import general_config
 from db import CodeGroup, CodeTasks, Task, CodeFile
 
 app = Flask(__name__)
@@ -74,6 +76,10 @@ class CodeRes(Resource):
                 print("Code: " + str(code))
 
             return {"error": "Code not found"}, 404
+
+        current_date = datetime.datetime.now()
+        if code_group.meeting.last_upload < current_date:
+            return {"error": "Code expired, please contact me at " + general_config.my_email}
 
         return {
             "code": code,

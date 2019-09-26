@@ -5,14 +5,9 @@ import requests
 from pony import orm
 from pony.orm import db_session, desc
 
+import general_config
 import gotify_auth_key
 from db import Meeting, CodeGroup, CodeTasks
-
-
-url = ""
-with open("config/config.json") as file:
-    data = json.load(file)
-    url = data["web_page"]
 
 
 @db_session
@@ -37,25 +32,24 @@ def get_mail_from_code(code, group, meeting):
     for task in task_list:
         tasks += " - " + task.display_name + "\n"
 
-    last_day_to_turn_in = meeting.date - datetime.timedelta(days=7)
+    last_turnin_time = str(meeting.last_upload.hour) + ":" + str(meeting.last_upload.minute)
+    last_turnin_date = str(meeting.day) + "/" + str(meeting.month)
 
-    mail_to = group.name + "@chalmers.it"
+    mail_to = group.name + general_config.group_email_domain
     subject = "Dokument till sektionsmöte"
     msg = '''
 Hej {0}!
     
-Den {1}/{2} är det dags för sektionsmöte och senast 23:00 den {3}/{4} behöver ni lämna in följande dokument: 
+Den {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in följande dokument: 
 {5}
 Detta görs på sidan: {6}
 Ange koden: {7}
 
-Mall för vissa dokument finns här: https://www.overleaf.com/read/ddjdhxnkxttj
+Mall för vissa dokument finns här: {8}
 Gör en kopia av projektet (Menu -> Copy Project) och fyll i.
 
-Om ni har några frågor eller stöter på några problem kan kan ni kontakta mig på sekreterare@chalmers.it eller hela styrIT på styrit@chalmers.it :).
-
-
-    '''.format(group.display_name, meeting.date.day, meeting.date.month, last_day_to_turn_in.day, last_day_to_turn_in.month, tasks, url, code)
+Om ni har några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} :).
+    '''.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date, tasks, general_config.frontend_url, code, general_config.document_template_url, general_config.my_email, general_config.board_display_name, general_config.board_email)
     return mail_to, subject, msg
 
 
@@ -66,11 +60,11 @@ def send_mails():
     group_codes = get_group_codes_for_meeting(meeting)
     print("\n\n")
     for code in group_codes:
-        url = "http://gotify:8080/mail"
+        url = general_config.gotify_url
         header = {"Authorization": gotify_auth_key.key, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(code, group_codes[code], meeting)
         data = {"to": mail_to,
-                "from": "admin@chalmers.it",
+                "from": general_config.from_email_address,
                 "subject": subject,
                 "body": msg}
         r = None
@@ -78,11 +72,5 @@ def send_mails():
             r = requests.post(url=url, json=data, headers=header)
             print(r.reason)
         except Exception as e:
-            print(e)
-        except:
-            try:
-                print("Request failed: " + r.reason)
-            except:
-                print("Unable to create request")
-                pass
+            print("Encontered an error while contacting gotify: " + str(e))
 

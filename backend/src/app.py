@@ -1,4 +1,3 @@
-import json
 import threading
 
 import mail_handler
@@ -10,4 +9,4 @@ if __name__ == '__main__':
     setup.load_meeting_config()
 
     threading.Thread(target=web_handler.host).start()
-    mail_handler.send_mails()
+    threading.Thread(target=mail_handler.send_mails).start()

@@ -4,12 +4,13 @@ import json
 from pony import orm
 from pony.orm import db_session, commit, pony, desc
 
+import general_config
 from db import *
 
 
 @db_session
 def load_general_config():
-    with open("config/config.json") as file:
+    with open(general_config.config_file_location) as file:
         data = json.load(file)
 
         for group in data["groups"]:
@@ -26,18 +27,20 @@ def load_general_config():
 
 @db_session
 def load_meeting_config():
-    with open("config/meeting_config.json") as file:
+    with open(general_config.meeting_config_file_location) as file:
         data = json.load(file)
 
         # Update the next meetings data
-        date = datetime.strptime(data["date"], "%Y-%m-%dT%H:%M")
+        date = datetime.strptime(data["date"], "%Y-%m-%d %H:%M")
+        last_upload_date = datetime.strptime(data["last_upload_date"], "%Y-%m-%d %H:%M")
+
         year = date.year
         lp = data["study_period"]
         no = data["meeting_no"]
         meeting = Meeting.get(year=year, lp=lp, meeting_no=no)
 
         if meeting is None:
-            meeting = Meeting(year=year, lp=lp, meeting_no=no, date=date)
+            meeting = Meeting(year=year, lp=lp, meeting_no=no, date=date, last_upload_date=last_upload_date)
 
         all_groups = list(orm.select(group.name for group in Group.select(lambda g: True)))
 
