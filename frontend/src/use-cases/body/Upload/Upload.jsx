@@ -33,7 +33,6 @@ const UploadSnippet = ({ props }) => (
                 }}
                 onChange={event => {
                     onUpload(event, props);
-                    console.log("State: ", state);
                 }}
             />
         </Button>
@@ -82,6 +81,9 @@ function onUpload(event, props) {
                 type: props.name,
                 file: file
             });
+            alert(
+                "Fil godkänd, om du vill byta fil är det bara att skriva in koden igen och ladda upp en ny fil."
+            );
         } else {
             console.log("Do not accept filetype: " + file.type);
             resetState(event);

@@ -52,7 +52,7 @@ export class Body extends React.Component {
                                 code: text
                             }));
                         }}
-                        style={{ marginBottom: "20px" }}
+                        style={{ marginBottom: "20px", minWidth: "325px" }}
                     />
                     <Button
                         color="primary"
@@ -169,6 +169,9 @@ export class Body extends React.Component {
                 this.onError(error);
             });
 
+        alert(
+            "Fil godkänd, om du vill byta fil är det bara att skriva in koden igen och ladda upp en ny fil."
+        );
         this.setState(defaultState);
     }
 
