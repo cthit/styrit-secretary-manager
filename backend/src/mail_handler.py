@@ -1,11 +1,8 @@
-import datetime
-import json
-
 import requests
 from pony import orm
 from pony.orm import db_session, desc
 
-import general_config
+from config import general_config
 import gotify_auth_key
 from db import Meeting, CodeGroup, CodeTasks
 
@@ -32,8 +29,8 @@ def get_mail_from_code(code, group, meeting):
     for task in task_list:
         tasks += " - " + task.display_name + "\n"
 
-    last_turnin_time = str(meeting.last_upload.hour) + ":" + str(meeting.last_upload.minute)
-    last_turnin_date = str(meeting.day) + "/" + str(meeting.month)
+    last_turnin_time = meeting.last_upload.strftime("%H:%M")
+    last_turnin_date = meeting.last_upload.strftime("%d/%m")
 
     mail_to = group.name + general_config.group_email_domain
     subject = "Dokument till sektionsmöte"

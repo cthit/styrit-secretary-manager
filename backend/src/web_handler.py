@@ -1,4 +1,5 @@
 import datetime
+import json
 import os
 
 from flask import Flask, request
@@ -7,7 +8,7 @@ from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
-import general_config
+from config import general_config
 from db import CodeGroup, CodeTasks, Task, CodeFile
 
 app = Flask(__name__)
@@ -58,10 +59,19 @@ def handle_file(code, task, file):
     if not os.path.exists(path):
         os.makedirs(path)
 
-    print("Saving file " + str(file) + " in " + path)
-    file.save(path + "/" + name)
+    save_loc = path + "/" + name
 
-    CodeFile(code=code, task=task, file_location=path)
+    print("Saving file " + str(file) + " in " + path)
+    file.save(save_loc)
+
+    code_file = CodeFile.get(code=code, task=task)
+    if code_file is None:
+        CodeFile(code=code, task=task, file_location=save_loc)
+        return {"overwrite": False}
+    else:
+        print("OVERWRITE!")
+        code_file.date = datetime.datetime.now()
+        return {"overwrite": True}
 
 
 class CodeRes(Resource):
@@ -69,7 +79,11 @@ class CodeRes(Resource):
     def post(self):
         data = request.get_json()
         code = data["code"]
-        code_group = CodeGroup.get(code=code)
+        try:
+            code_group = CodeGroup.get(code=code)
+        except ValueError as err:
+            return {"error": "Bad code format"}, 400
+
         if code_group is None:
             codes_list = list(orm.select(code.code for code in CodeGroup))
             for code in codes_list:
@@ -96,11 +110,17 @@ class FileRes(Resource):
             return {"error":  "Code not found! Please contact the developers of this system."}, 404
 
         for task in request.files:
-            handle_file(code, task, request.files[task])
+            return handle_file(code, task, request.files[task])
+
+
+class AdminResource(Resource):
+    def get(self):
+        configs = {}
 
 
 api.add_resource(FileRes, '/file')
 api.add_resource(CodeRes, '/code')
+api.add_resource(AdminResource, "/admin")
 
 def host():
     app.run(host="0.0.0.0")

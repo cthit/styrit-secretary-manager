@@ -16,18 +16,18 @@ services:
     ports:
       - 8080:8080
 
-  backend:
-    links:
-      - gotify
-    depends_on:
-      - db
-    build:
-      context: ./backend/
-      dockerfile: dev.Dockerfile
-    ports:
-      - 5000:5000
-    volumes:
-      - ./backend/:/usr/src/secretary-manager/backend
+#  backend:
+#    links:
+#      - gotify
+#    depends_on:
+#      - db
+#    build:
+#      context: ./backend/
+#      dockerfile: dev.Dockerfile
+#    ports:
+#      - 5000:5000
+#    volumes:
+#      - ./backend/:/usr/src/secretary-manager/backend
 
   frontend:
     build:
