@@ -1,6 +1,13 @@
 import React from "react";
 import { BodyContainer, InputGroup } from "./Body.styles";
-import { TextField, Button, Typography, Card } from "@material-ui/core";
+import {
+    TextField,
+    Button,
+    Typography,
+    Card,
+    Dialog,
+    DialogTitle
+} from "@material-ui/core";
 import Upload from "./Upload";
 import axios from "axios";
 
@@ -10,7 +17,8 @@ const defaultState = {
     group: null,
     tasks: {},
     reports: {},
-    invalidCode: false
+    invalidCode: false,
+    dialogOpen: false
 };
 
 export class Body extends React.Component {
@@ -60,7 +68,7 @@ export class Body extends React.Component {
                         style={{ maxHeight: "40px", marginLeft: "10px" }}
                         onClick={this.onSubmit}
                     >
-                        Submit
+                        Nästa
                     </Button>
                 </InputGroup>
             );
@@ -85,7 +93,7 @@ export class Body extends React.Component {
                         onClick={this.onUpload}
                         disabled={this.checkValid()}
                     >
-                        Submit
+                        Skicka in
                     </Button>
                 </InputGroup>
             );
@@ -164,14 +172,22 @@ export class Body extends React.Component {
             .put("http://localhost:5000/file", data, {})
             .then(res => {
                 console.log(res.statusText);
+                console.log("RES", res);
+                let overwrite = res.data.overwrite;
+                let message = "";
+                if (overwrite) {
+                    message = "\n\nSkrev över tidigare uppladdad fil.";
+                }
+
+                alert(
+                    "Fil godkänd, om du vill byta fil är det bara att skriva in koden igen och ladda upp en ny fil." +
+                        message
+                );
             })
             .catch(error => {
                 this.onError(error);
             });
 
-        alert(
-            "Fil godkänd, om du vill byta fil är det bara att skriva in koden igen och ladda upp en ny fil."
-        );
         this.setState(defaultState);
     }
 
@@ -186,8 +202,13 @@ export class Body extends React.Component {
         return disable;
     }
 
-    onError(error) {
-        alert("An error has occured, please try again later! \n" + error);
-        console.log(error);
+    onError(error, msg) {
+        alert(
+            "An error has occured, please try again later! \n" +
+                error.response.data.error +
+                "\n" +
+                error
+        );
+        console.log("Error", error);
     }
 }

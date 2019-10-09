@@ -1,5 +1,4 @@
-{
-  "groups": [
+groups = [
     {
       "codeName": "armit",
       "displayName": "ArmIT"
@@ -40,27 +39,27 @@
       "codeName": "styrit",
       "displayName": "styrIT"
     }
-  ],
-  "tasks": [
+]
+
+tasks = [
     {
-      "codeName": "vplan",
-      "displayName": "Verksamhetsplan"
+        "codeName": "vplan",
+        "displayName": "Verksamhetsplan"
     },
     {
-      "codeName": "budget",
-      "displayName": "Budget"
+        "codeName": "budget",
+        "displayName": "Budget"
     },
     {
-      "codeName": "vrapport",
-      "displayName": "Verksamhetsrapport"
+        "codeName": "vrapport",
+        "displayName": "Verksamhetsrapport"
     },
     {
-      "codeName": "vberattelse",
-      "displayName": "Verksamhetsberättelse"
+        "codeName": "vberattelse",
+        "displayName": "Verksamhetsberättelse"
     },
     {
-      "codeName": "eberattelse",
-      "displayName": "Ekonomisk Berättelse"
+        "codeName": "eberattelse",
+        "displayName": "Ekonomisk Berättelse"
     }
-  ]
-}
+]

@@ -61,7 +61,7 @@ export const Upload = props => (
 );
 
 function PRINT(props) {
-    console.log(props);
+    console.log("PROPS", props);
     return <div />;
 }
 
@@ -81,9 +81,6 @@ function onUpload(event, props) {
                 type: props.name,
                 file: file
             });
-            alert(
-                "Fil godkänd, om du vill byta fil är det bara att skriva in koden igen och ladda upp en ny fil."
-            );
         } else {
             console.log("Do not accept filetype: " + file.type);
             resetState(event);

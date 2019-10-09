@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pony.orm import Database, PrimaryKey, Required, Set, composite_key
 
-import db_config as config
+from config import db_config as config
 
 db = Database()
 
@@ -54,7 +54,7 @@ class CodeFile(db.Entity):
     code = Required(CodeGroup)
     task = Required(Task)
     file_location = Required(str, unique=True)
-    date = Required(datetime, auto=True)
+    date = Required(datetime, default=datetime.utcnow)
 
     PrimaryKey(code, task)
 
