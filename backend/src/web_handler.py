@@ -8,6 +8,7 @@ from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
+import private_keys
 from config import general_config
 from db import CodeGroup, CodeTasks, Task, CodeFile
 
@@ -115,6 +116,11 @@ class FileRes(Resource):
 
 class AdminResource(Resource):
     def get(self):
+        password = request.get_json()
+        if password != private_keys.frontend_admin_pass:
+            return {
+                "Error": "Invalid password"
+            }, 401
         configs = {}
 
 

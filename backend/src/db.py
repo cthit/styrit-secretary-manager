@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pony.orm import Database, PrimaryKey, Required, Set, composite_key
+from pony.orm import Database, PrimaryKey, Required, Set, composite_key, Optional
 
 from config import db_config as config
 
@@ -57,6 +57,18 @@ class CodeFile(db.Entity):
     date = Required(datetime, default=datetime.utcnow)
 
     PrimaryKey(code, task)
+
+
+class ConfigType(db.Entity):
+    type = PrimaryKey(str)
+
+    configs = Set("Config")
+
+
+class Config(db.Entity):
+    key = PrimaryKey(str)
+    value = Required(str)
+    config_type = Required(ConfigType)
 
 
 db.bind(
