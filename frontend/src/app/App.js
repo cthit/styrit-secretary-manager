@@ -4,7 +4,7 @@ import ToolBar from "@material-ui/core/Toolbar";
 import { Typography, Button } from "@material-ui/core";
 import Body from "../use-cases/body";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
+import Admin from "../use-cases/admin";
 
 function App() {
     return (
@@ -22,12 +22,11 @@ function App() {
                                 </Typography>
 
                                 <Link to="" style={{ color: "white" }}>
-                                    <Button color="inherit">
-                                        Default view
-                                    </Button>
+                                    <Button color="inherit">Standard vy</Button>
                                 </Link>
                             </ToolBar>
                         </AppBar>
+                        <Admin />
                     </Route>
                     <Route path="">
                         <AppBar position="static">
@@ -40,7 +39,7 @@ function App() {
                                 </Typography>
 
                                 <Link to="/admin" style={{ color: "white" }}>
-                                    <Button color="inherit">Admin</Button>
+                                    <Button color="inherit">Admin vy</Button>
                                 </Link>
                             </ToolBar>
                         </AppBar>

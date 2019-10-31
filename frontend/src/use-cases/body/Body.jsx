@@ -1,5 +1,6 @@
 import React from "react";
-import { BodyContainer, InputGroup } from "./Body.styles";
+import BodyContainer from "../../common-ui/BodyContainer";
+import InputGroup from "../../common-ui/InputGroup";
 import {
     TextField,
     Button,
@@ -17,8 +18,8 @@ const defaultState = {
     group: null,
     tasks: {},
     reports: {},
-    invalidCode: false,
-    dialogOpen: false
+    dialogOpen: false,
+    errorMsg: ""
 };
 
 export class Body extends React.Component {
@@ -46,13 +47,21 @@ export class Body extends React.Component {
         if (this.state.acceptedCode === null) {
             return (
                 <InputGroup>
-                    {this.state.invalidCode && (
-                        <Typography variant="h6" color="error">
-                            Invalid code
+                    {this.state.errorMsg !== "" && (
+                        <Typography
+                            style={{
+                                textAlign: "center",
+                                maxWidth: "400px",
+                                paddingBottom: "10px"
+                            }}
+                            variant="h6"
+                            color="error"
+                        >
+                            {this.state.errorMsg}
                         </Typography>
                     )}
                     <TextField
-                        label="Code"
+                        label="kod"
                         variant="outlined"
                         onChange={event => {
                             const text = event.target.value;
@@ -86,6 +95,19 @@ export class Body extends React.Component {
                             key={task}
                         />
                     ))}
+                    {this.state.errorMsg !== "" && (
+                        <Typography
+                            style={{
+                                textAlign: "center",
+                                maxWidth: "400px",
+                                paddingBottom: "10px"
+                            }}
+                            variant="h6"
+                            color="error"
+                        >
+                            {this.state.errorMsg}
+                        </Typography>
+                    )}
                     <Button
                         variant="contained"
                         color="primary"
@@ -116,11 +138,11 @@ export class Body extends React.Component {
                 if (res.data.error) {
                     console.log("Server returned an error: " + res.data.error);
                     this.setState({
-                        invalidCode: true
+                        errorMsg: "Invalid Code"
                     });
                 } else {
                     this.setState({
-                        invalidCode: false
+                        errorMsg: ""
                     });
                     let reports = {};
 
@@ -202,13 +224,14 @@ export class Body extends React.Component {
         return disable;
     }
 
-    onError(error, msg) {
-        alert(
-            "An error has occured, please try again later! \n" +
-                error.response.data.error +
-                "\n" +
-                error
-        );
-        console.log("Error", error);
+    onError(error) {
+        let msg = "An error has occured, please try again later! \n";
+
+        if (error.response) {
+            msg = msg + error.response.data.error + "\n";
+        }
+        this.setState({
+            errorMsg: msg
+        });
     }
 }

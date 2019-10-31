@@ -8,8 +8,9 @@ from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
-from config import general_config
-from db import CodeGroup, CodeTasks, Task, CodeFile
+import private_keys
+from config import general_config, config_handler
+from db import CodeGroup, CodeTasks, Task, CodeFile, Config, Meeting, Group
 
 app = Flask(__name__)
 api = Api(app)
@@ -23,7 +24,8 @@ def get_data_for_code(code):
     if code_group is None:
         return {"error": "Missing data for code, please send the files manually"}, 404
 
-    task_tuples = list(orm.select((code_task.task.name, code_task.task.display_name) for code_task in CodeTasks if str(code_task.code.code) == code))
+    task_tuples = list(orm.select((code_task.task.name, code_task.task.display_name) for code_task in CodeTasks if
+                                  str(code_task.code.code) == code))
     tasks = []
     for name, d_name in task_tuples:
         tasks.append({
@@ -87,7 +89,7 @@ class CodeRes(Resource):
         if code_group is None:
             codes_list = list(orm.select(code.code for code in CodeGroup))
             for code in codes_list:
-                print("Code: " + str(code))
+                ("Code: " + str(code))
 
             return {"error": "Code not found"}, 404
 
@@ -107,20 +109,64 @@ class FileRes(Resource):
         print(request.files)
         code = request.form["code"]
         if CodeGroup.get(code=code) is None:
-            return {"error":  "Code not found! Please contact the developers of this system."}, 404
+            return {"error": "C--ode not found! Please contact the developers of this system."}, 404
 
         for task in request.files:
             return handle_file(code, task, request.files[task])
 
 
+def validate_password(response_json):
+    if "pass" not in response_json:
+        return {
+                   "Error": "Bad Request"
+               }, 400
+    password = response_json["pass"]
+    if password != private_keys.frontend_admin_pass:
+        return {
+                   "Error": "Invalid password"
+               }, 401
+    return {}, 200
+
+
 class AdminResource(Resource):
-    def get(self):
-        configs = {}
+    def post(self):
+        config = request.get_json()
+        r, code = validate_password(config)
+        if code != 200:
+            return r, code
+
+        config_handler.handle_incoming_config(config)
+        return {"ok": "ok"}, 200
+
+
+class MeetingResource(Resource):
+    def post(self):
+        config = request.get_json()
+        r, code = validate_password(config)
+        if code != 200:
+            return r, code
+
+        config_handler.handle_incoming_meeting_config(config["meeting"])
+        return {"ok": "ok"}, 200
+
+
+class PasswordResource(Resource):
+    def put(self):
+        response_json = request.get_json()
+        r, code = validate_password(response_json)
+        if code != 200:
+            return r, code
+
+        configs = config_handler.get_config()
+        return configs, 200
 
 
 api.add_resource(FileRes, '/file')
 api.add_resource(CodeRes, '/code')
-api.add_resource(AdminResource, "/admin")
+api.add_resource(MeetingResource, "/admin/config/meeting")
+api.add_resource(AdminResource, "/admin/config")
+api.add_resource(PasswordResource, "/admin")
+
 
 def host():
     app.run(host="0.0.0.0")

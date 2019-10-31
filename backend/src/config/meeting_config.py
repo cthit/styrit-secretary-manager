@@ -1,4 +1,4 @@
-study_period = 2,
+study_period = 1
 meeting_no = 0
 date = "2019-10-10 18:15"
 last_upload_date = "2019-10-03 23:00"
