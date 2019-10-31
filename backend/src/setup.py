@@ -15,13 +15,13 @@ def setup_general_config():
     '''
 
     long_string = ConfigType.get(type="long_string")
-    long_string = ConfigType(type="long_string") if long_string is None else ConfigType(type="long_string")
+    long_string = ConfigType(type="long_string") if long_string is None else long_string
 
     string = ConfigType.get(type="string")
-    string = ConfigType(type="string") if string is None else ConfigType(type="string")
+    string = ConfigType(type="string") if string is None else string
 
     number = ConfigType.get(type="number")
-    number = ConfigType(type="number") if number is None else ConfigType(type="number")
+    number = ConfigType(type="number") if number is None else number
 
     config_list = [
         {"key": "frontend_url", "value": "localhost:3000", "config_type": string},
@@ -124,12 +124,12 @@ def setup_general_config():
 @db_session
 def setup_meeting_config():
     # Update the next meetings data
-    date = datetime.strptime("2019-10-10 18:15", "%Y-%m-%d %H:%M")
-    last_upload_date = datetime.strptime("2019-10-03 23:00", "%Y-%m-%d %H:%M")
+    date = datetime.strptime(meeting_config.date, "%Y-%m-%d %H:%M")
+    last_upload_date = datetime.strptime(meeting_config.last_upload_date, "%Y-%m-%d %H:%M")
 
     year = date.year
-    lp = 1
-    no = 0
+    lp = meeting_config.study_period
+    no = meeting_config.meeting_no
     meeting = Meeting.get(year=year, lp=lp, meeting_no=no)
 
     if meeting is None:
@@ -156,7 +156,7 @@ def setup_meeting_config():
         if CodeGroup.get(group=group, meeting=meeting) is None:
             code = CodeGroup(group=group, meeting=meeting)
             for task in group_task_dict[code.group.name]:
-                CodeTasks(code=code, task=Task[task])
+                CodeTasks(group=group, meeting=meeting, task=Task[task])
 
     commit()
     print("Finished loading meeting specific data from file to database")
@@ -165,4 +165,4 @@ def setup_meeting_config():
 def setup_db():
     setup_general_config()
     # Below should be done from frontend
-    # setup_meeting_config()
+    setup_meeting_config()

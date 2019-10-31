@@ -48,7 +48,7 @@ def send_mails():
     print("\n\n")
     for code in group_codes:
         url = general_config.gotify_url
-        header = {"Authorization": private_keys.key, "Accept": "*/*"}
+        header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(code, group_codes[code], meeting)
         data = {"to": mail_to,
                 "from": general_config.from_email_address,
