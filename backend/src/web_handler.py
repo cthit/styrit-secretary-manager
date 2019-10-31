@@ -1,5 +1,4 @@
 import datetime
-import json
 import os
 
 from flask import Flask, request
@@ -10,7 +9,7 @@ from pony.orm import db_session
 
 import private_keys
 from config import general_config, config_handler
-from db import CodeGroup, CodeTasks, Task, CodeFile, Config, Meeting, Group
+from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,13 +18,14 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @db_session
 def get_data_for_code(code):
-    code_group = CodeGroup.get(code=code)
+    group_meeting = GroupMeeting.select(lambda group: group.code == code)
 
-    if code_group is None:
+    if group_meeting is None:
         return {"error": "Missing data for code, please send the files manually"}, 404
 
-    task_tuples = list(orm.select((code_task.task.name, code_task.task.display_name) for code_task in CodeTasks if
-                                  str(code_task.code.code) == code))
+    task_tuples = list(orm.select(
+        (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
+                                  str(group_task.code.code) == code))
     tasks = []
     for name, d_name in task_tuples:
         tasks.append({
@@ -35,12 +35,12 @@ def get_data_for_code(code):
 
     return {
         "group": {
-            "codeName": code_group.group.name,
-            "displayName": code_group.group.display_name
+            "codeName": group_meeting.group.name,
+            "displayName": group_meeting.group.display_name
         },
-        "study_period": code_group.meeting.lp,
-        "year": code_group.meeting.year,
-        "meeting_no": code_group.meeting.meeting_no,
+        "study_period": group_meeting.meeting.lp,
+        "year": group_meeting.meeting.year,
+        "meeting_no": group_meeting.meeting.meeting_no,
         "tasks": tasks
     }
 
@@ -66,13 +66,13 @@ def handle_file(code, task, file):
     print("Saving file " + str(file) + " in " + path)
     file.save(save_loc)
 
-    code_file = CodeFile.get(code=code, task=task)
-    if code_file is None:
-        CodeFile(code=code, task=task, file_location=save_loc)
+    group_file = GroupMeetingFile.get(code=code, task=task)
+    if group_file is None:
+        GroupMeetingFile(code=code, task=task, file_location=save_loc)
         return {"overwrite": False}
     else:
         print("OVERWRITE!")
-        code_file.date = datetime.datetime.now()
+        group_file.date = datetime.datetime.now()
         return {"overwrite": True}
 
 
@@ -82,19 +82,19 @@ class CodeRes(Resource):
         data = request.get_json()
         code = data["code"]
         try:
-            code_group = CodeGroup.get(code=code)
+            group_meeting = GroupMeeting.select(lambda group: group.code == code)
         except ValueError as err:
             return {"error": "Bad code format"}, 400
 
-        if code_group is None:
-            codes_list = list(orm.select(code.code for code in CodeGroup))
+        if group_meeting is None:
+            codes_list = list(orm.select(group.code for group in GroupMeeting))
             for code in codes_list:
-                ("Code: " + str(code))
+                print("Code: " + str(code))
 
             return {"error": "Code not found"}, 404
 
         current_date = datetime.datetime.now()
-        if code_group.meeting.last_upload < current_date:
+        if group_meeting.meeting.last_upload < current_date:
             return {"error": "Code expired, please contact me at " + general_config.my_email}
 
         return {
@@ -108,8 +108,8 @@ class FileRes(Resource):
     def put(self):
         print(request.files)
         code = request.form["code"]
-        if CodeGroup.get(code=code) is None:
-            return {"error": "C--ode not found! Please contact the developers of this system."}, 404
+        if GroupMeeting.select(lambda group: group.code == code) is None:
+            return {"error": "Code not found! Please contact the developers of this system."}, 404
 
         for task in request.files:
             return handle_file(code, task, request.files[task])

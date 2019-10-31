@@ -4,7 +4,7 @@ from pony.orm import db_session, desc
 
 from config import general_config
 import private_keys
-from db import Meeting, CodeGroup, CodeTasks
+from db import Meeting, GroupMeeting, GroupMeetingTask
 
 
 @db_session
@@ -14,18 +14,27 @@ def get_next_meeting():
 
 @db_session
 def get_group_codes_for_meeting(meeting):
-    code_group_dict = {}
-    query = list(CodeGroup.select(lambda code_group: code_group.meeting == meeting))
-    for code_group in query:
-        code_group_dict[code_group.code] = code_group.group
+    """
+    Returns a dictionary from code to group for each code-group pair for the given meeting.
+    """
+    group_meeting_dict = {}
+    query = list(GroupMeeting.select(lambda group_meeting: group_meeting.meeting == meeting))
 
-    return code_group_dict
+    for group_meeting in query:
+        group_meeting_dict[group_meeting.code] = group_meeting.group
+
+    return group_meeting_dict
 
 
 @db_session
 def get_mail_from_code(code, group, meeting):
+    """
+    Returns the mail to be sent to a group given it's code, group and meeting
+    """
     tasks = ""
-    task_list = list(orm.select(code_task.task for code_task in CodeTasks if code_task.code.code == code))
+    task_list = list(orm.select(group_meeting_task.task
+                                for group_meeting_task in GroupMeetingTask
+                                if group_meeting_task.group.code == code))
     for task in task_list:
         tasks += " - " + task.display_name + "\n"
 

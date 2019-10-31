@@ -1,7 +1,7 @@
 from pony import orm
 from pony.orm import db_session
 
-from db import Meeting, CodeTasks, CodeGroup, Config, Group, Task, db, validate_meeting
+from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
 
 
 @db_session
@@ -12,28 +12,24 @@ def get_config():
     meeting_jsons = []
     for meeting in meeting_list:
         # Select all codes and tasks
-        code_tasks = orm.select((c_t.code, c_t.task) for c_t in CodeTasks)
+        code_tasks = orm.select((group_task.code, group_task.task) for group_task in GroupMeetingTask)
 
         tasks = {}
         # Filter out the codes that have the wrong meeting
         for code, task in code_tasks:
             if task.name not in tasks.keys():
                 tasks[task.name] = []
-            # Select the groups with the code and with the correct meeting
-            code_group = CodeGroup.get(code=code.code, meeting=meeting)
-            if code_group is None:
+
+            # Select the group with the code
+            group_meeting = GroupMeeting.select(lambda group: group.code == code.code)
+            if group_meeting is None:
                 continue
 
-            group = code_group.group
-            meeting_name = code_group.meeting
-            print(group)
-            print(meeting_name)
             tasks[task.name].append({
-                "name": code_group.group.name,
-                "code": str(code_group.code)
+                "name": group_meeting.group.name,
+                "code": str(group_meeting.code)
             })
 
-        print("ASD")
         m_js = {
             "lp": meeting.lp,
             "meeting_no": meeting.meeting_no,
