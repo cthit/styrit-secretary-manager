@@ -1,0 +1,16 @@
+**/node_modules
+
+**/Dockerfile
+**/dev.Dockerfile
+docker-compose.yml
+prod.docker-compose.yml
+
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/env
+
+.gitignore
+.git
