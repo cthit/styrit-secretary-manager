@@ -215,10 +215,10 @@ export class Body extends React.Component {
 
     checkValid() {
         let reports = this.state.reports;
-        let disable = false;
+        let disable = true;
         Object.keys(reports).forEach(key => {
-            if (!reports[key]) {
-                disable = true;
+            if (reports[key]) {
+                disable = false;
             }
         });
         return disable;
