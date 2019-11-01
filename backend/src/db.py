@@ -1,8 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pony import orm
-from pony.orm import Database, PrimaryKey, Required, Set, composite_key, Optional, db_session
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
 
 from config import db_config as config
 
@@ -91,17 +90,42 @@ db.generate_mapping(create_tables=True)
 
 
 # Helper methods
-def validate_task(task_json, meeting):
-    try:
-        name = task_json["name"]
-        group = Group[name]
-        if group is not None:
-            raise Exception("invalid group name " + str(name))
 
-        # task = orm.select(code_task.task for code_task in )
+@db_session
+def validate_task(task):
+    """
+    Validates a task
+    """
+    try:
+        # If the task has a code then validate that the tasks group has that code
+        # If the task doesn't have a code, validate that the group exists.
+        group_name = task["name"]
+        if "code" in task:
+            code = task["code"]
+            group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
+            return group_meeting.group.name == group_name
+
+        return Group.get(lambda group: group.name == group_name) is not None
     except Exception as e:
         print("Failed validating task " + str(e))
-        return None
+        return False
+
+
+@db_session
+def get_db_tasks(meeting):
+    """
+    Returns a dictionary from each GroupMeetingTask of the given meeting to a boolean with value False
+    """
+    try:
+        group_tasks = {}
+        db_tasks = GroupMeetingTask.select(lambda g_t: g_t.group.meeting == meeting)
+        for task in db_tasks:
+            group_tasks[task] = False
+
+        return group_tasks
+    except Exception as e:
+        print("Failed retrieving database tasks " + str(e))
+        return {}
 
 
 @db_session
@@ -118,28 +142,38 @@ def validate_meeting(meeting_json):
 
         meeting = Meeting[date.year, lp, meeting_no]
 
-        # Check all of the tasks...
+        if meeting is None:
+            # The meeting does not exist, we want to create the tasks for it
+            meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+
         tasks = meeting_json["groups_tasks"]
+        db_tasks = get_db_tasks(meeting)
 
         # We want to select all the tasks for this meeting from the database and match the json to it
-
         for type in tasks:
             for task in tasks[type]:
-                # I want to either check to see if the group has this task type on the meeting
-                # If it doesn't we want to create it.
-                # If a group
+                print(str(task) + "\n Validation: " + str(validate_task(task)))
+                if validate_task(task):
+                    group_meeting = GroupMeeting.get(lambda group: group.group.name == task["name"] and group.meeting == meeting)
+                    type_task = Task.get(lambda task: task.name == type)
+                    found = False
+                    # The task is valid, check if it has an entry in the db
+                    for db_task in db_tasks:
+                        if db_task.task.name == type and db_task.group == group_meeting:
+                            found = True
+                            db_tasks[db_task] = True
 
-                # Validate the task
-                print(type)
-                # task = validate_task(task, meeting)
-                print(task)
+                    if not found:
+                        # Add a new entry for the task
+                        GroupMeetingTask(group=group_meeting, task=type_task)
 
-        if meeting is None:
-            # The meeting does not yet exist, let's create it
-            return Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+        for task in db_tasks:
+            if not db_tasks[task]:
+                task.delete()
 
         meeting.date = date
         meeting.last_upload = last_upload
+        return meeting
     except Exception as e:
         print("Failed validating meeting " + str(e))
         return None
