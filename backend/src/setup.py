@@ -163,4 +163,4 @@ def setup_meeting_config():
 def setup_db():
     setup_general_config()
     # Below should be done from frontend
-    setup_meeting_config()
+    # setup_meeting_config()
