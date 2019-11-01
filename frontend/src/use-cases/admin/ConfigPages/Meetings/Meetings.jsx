@@ -18,7 +18,7 @@ import {
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import { MeetingsContainer, InputContainer } from "./Meetings.styles";
+import { MeetingsContainer, InputContainer, Space } from "./Meetings.styles";
 import axios from "axios";
 
 const defaultState = {
@@ -44,6 +44,8 @@ export class Meetings extends React.Component {
         this.handleCheck = this.handleCheck.bind(this);
         this.getCode = this.getCode.bind(this);
         this.onSave = this.onSave.bind(this);
+        this.onNewMeeting = this.onNewMeeting.bind(this);
+        this.getMeetingName = this.getMeetingName.bind(this);
     }
 
     render() {
@@ -76,6 +78,14 @@ export class Meetings extends React.Component {
                             ))}
                         </Select>
                     </div>
+                    <Space />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.onNewMeeting}
+                    >
+                        New Meeting
+                    </Button>
                 </InputContainer>
                 {this.state.selectedMeeting && (
                     // This is where we put that code!!!
@@ -126,7 +136,10 @@ export class Meetings extends React.Component {
                                     if (isNaN(event.target.value) === false) {
                                         let meeting = this.state
                                             .selectedMeeting;
-                                        meeting.lp = event.target.value;
+                                        meeting.lp = parseInt(
+                                            event.target.value,
+                                            10
+                                        );
                                         this.setState({
                                             selectedMeeting: meeting
                                         });
@@ -141,7 +154,10 @@ export class Meetings extends React.Component {
                                     if (isNaN(event.target.value) === false) {
                                         let meeting = this.state
                                             .selectedMeeting;
-                                        meeting.meeting_no = event.target.value;
+                                        meeting.meeting_no = parseInt(
+                                            event.target.value,
+                                            10
+                                        );
                                         this.setState({
                                             selectedMeeting: meeting
                                         });
@@ -210,9 +226,6 @@ export class Meetings extends React.Component {
     getChecked(group, task) {
         // console.log("groups_tasks", this.state.selectedMeeting.groups_tasks);
         let g_t = this.state.selectedMeeting.groups_tasks[task.name];
-        // console.log("GROUP", group);
-        // console.log("TASK", task);
-        // console.log("G_T", g_t);
         if (g_t) {
             for (let i = 0; i < g_t.length; i++) {
                 if (g_t[i].name === group.name) {
@@ -247,6 +260,8 @@ export class Meetings extends React.Component {
             meeting.groups_tasks[task.name].splice(removeIndex, 1);
         }
 
+        console.log(meeting);
+
         this.setState({
             selectedMeeting: meeting
         });
@@ -277,19 +292,36 @@ export class Meetings extends React.Component {
         return this.state.meetings[this.state.selectedMeeting];
     }
 
+    onNewMeeting() {
+        let today = new Date().toISOString();
+        let meeting = {
+            date: today,
+            last_upload_date: today,
+            lp: 0,
+            meeting_no: 0,
+            groups_tasks: {}
+        };
+
+        meeting.name = this.getMeetingName(meeting);
+
+        let state = this.state;
+        state.meetings.push(meeting);
+
+        let meetingNumber = state.meetings.findIndex(elem => elem === meeting);
+        this.setState({
+            meetings: state.meetings,
+            selectedMeetingNumber: meetingNumber,
+            selectedMeeting: meeting
+        });
+    }
+
     onSave() {
         if (this.state.selectedMeetingNumber < 0) {
             return;
         }
 
-        let newMeetings = this.state.meetings;
         let meeting = this.state.selectedMeeting;
-        meeting.name =
-            new Date(meeting.date).getFullYear() +
-            "_lp" +
-            meeting.lp +
-            "_" +
-            meeting.meeting_no;
+        meeting.name = this.getMeetingName(meeting);
         console.log("STATE", this.state);
         let data = {
             pass: this.state.pass,
@@ -298,11 +330,32 @@ export class Meetings extends React.Component {
         // Update the state meetings list with the response from the server.
         axios
             .post("http://localhost:5000/admin/config/meeting", data, {})
-            .then(response => {
-                console.log("RESPONSE" + response);
+            .then(res => {
+                console.log("RESPONSE", res);
+                alert("Meeting saved successfully");
+                // Update the new meeting with the response meeting.
+                meeting.groups_tasks = res.data.groups_tasks;
+                this.setState({
+                    selectedMeeting: meeting
+                });
             })
             .catch(error => {
-                alert("Something went wrong" + error);
+                console.log("ERROR", error);
+                let msg = error;
+                if (error && error.response && error.response.data) {
+                    msg = error.response.data.error;
+                }
+                alert("Something went wrong: " + msg);
             });
+    }
+
+    getMeetingName(meeting) {
+        return (
+            new Date(meeting.date).getFullYear() +
+            "_lp" +
+            meeting.lp +
+            "_" +
+            meeting.meeting_no
+        );
     }
 }
