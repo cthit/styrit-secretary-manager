@@ -1,4 +1,4 @@
 backend/b
-backend/Uploads
-backend/src/__pycache__/
+backend/uploads
+backend/src/config/__pycache__/
 backend/src/private_keys.py
