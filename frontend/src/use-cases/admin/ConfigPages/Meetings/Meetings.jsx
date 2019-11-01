@@ -371,7 +371,7 @@ export class Meetings extends React.Component {
             });
     }
 
-    onSaveMail() {
+    onSendMail() {
         // First save the current meeting
         this.onSave();
     }
