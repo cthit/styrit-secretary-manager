@@ -46,6 +46,9 @@ def get_data_for_code(code):
 
 
 def handle_file(code, task, file):
+    """
+    Saves the file to the disk and stores it's location in the database
+    """
     task_obj = Task.get(name=task)
     data = get_data_for_code(code)
     if task_obj is None:
@@ -54,27 +57,27 @@ def handle_file(code, task, file):
     committee = data["group"]["codeName"]
     year = str(data["year"])
     lp = str(data["study_period"])
-
+    meeting_no = str(data["meeting_no"])
     name = task + "_" + committee + "_" + year + "_" + lp + ".pdf"
-    path = "./uploads/" + year + "/lp" + lp + "/" + str(data["meeting_no"]) + "/" + str(committee)
+    path = "./uploads/" + year + "/lp" + lp + "/" + meeting_no + "/" + str(committee)
 
     if not os.path.exists(path):
         os.makedirs(path)
 
     save_loc = path + "/" + name
-
     print("Saving file " + str(file) + " in " + path)
     file.save(save_loc)
-
-    group_task = GroupMeetingTask.get(lambda group_task: str(group_task.group.code) == code)
+    group_task = GroupMeetingTask.get(
+        lambda group_task: str(group_task.group.code) == code and group_task.task == task_obj)
     group_file = GroupMeetingFile.get(group_task=group_task)
+
     if group_file is None:
         GroupMeetingFile(group_task=group_task, file_location=save_loc)
-        return {"overwrite": False}
+        return False
     else:
         print("OVERWRITE!")
         group_file.date = datetime.datetime.now()
-        return {"overwrite": True}
+        return True
 
 
 class CodeRes(Resource):
@@ -112,8 +115,12 @@ class FileRes(Resource):
         if GroupMeeting.select(lambda group: str(group.code) == code) is None:
             return {"error": "Code not found! Please contact the developers of this system."}, 404
 
+        overwrite = False
         for task in request.files:
-            return handle_file(code, task, request.files[task])
+            if handle_file(code, task, request.files[task]):
+                overwrite = True
+        return {"overwrite": overwrite}
+
 
 
 def validate_password(response_json):
