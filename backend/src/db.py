@@ -9,20 +9,23 @@ from config import db_config as config
 db = Database()
 
 
+# A group
 class Group(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
-    code_groups = Set("CodeGroup")
+
+    group_meetings = Set("GroupMeeting")
 
 
+# A general task
 class Task(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
 
-    code_tasks = Set("CodeTasks")
-    code_files = Set("CodeFile")
+    group_tasks = Set("GroupMeetingTask")
 
 
+# A specific meeting
 class Meeting(db.Entity):
     year = Required(int)
     date = Required(datetime)
@@ -30,43 +33,45 @@ class Meeting(db.Entity):
     lp = Required(int)
     meeting_no = Required(int)
 
-    code_groups = Set("CodeGroup")
+    group_meetings = Set("GroupMeeting")
     PrimaryKey(year, lp, meeting_no)
 
 
-class CodeGroup(db.Entity):
-    code = PrimaryKey(UUID, auto=True)
+# Contains the code for each group and meeting
+class GroupMeeting(db.Entity):
     group = Required(Group)
     meeting = Required(Meeting)
+    code = Required(UUID, auto=True, unique=True)
 
-    code_tasks = Set("CodeTasks")
-    code_files = Set("CodeFile")
-    composite_key(group, meeting)
+    PrimaryKey(group, meeting)
+    group_tasks = Set("GroupMeetingTask")
 
 
-class CodeTasks(db.Entity):
+# The tasks to be done by that Group/Meeting combination
+class GroupMeetingTask(db.Entity):
+    group = Required(GroupMeeting)
     task = Required(Task)
-    group = Required(Group)
-    meeting = Required(Meeting)
 
-    PrimaryKey(group, meeting, task)
+    PrimaryKey(group, task)
+    group_files = Optional("GroupMeetingFile")
 
 
-class CodeFile(db.Entity):
-    code = Required(CodeGroup)
-    task = Required(Task)
+# The file for a specific task for a specific group/meeting
+# Not a part of the groupMeetingTask as the file will be added after the group/meeting/task has been added.
+class GroupMeetingFile(db.Entity):
+    group_task = PrimaryKey(GroupMeetingTask)
     file_location = Required(str, unique=True)
     date = Required(datetime, default=datetime.utcnow)
 
-    PrimaryKey(code, task)
 
-
+# A type of config that can exist.
 class ConfigType(db.Entity):
     type = PrimaryKey(str)
 
     configs = Set("Config")
 
 
+# Represents a single config entry
 class Config(db.Entity):
     key = PrimaryKey(str)
     value = Required(str)
@@ -85,10 +90,7 @@ db.bind(
 db.generate_mapping(create_tables=True)
 
 
-
 # Helper methods
-
-
 def validate_task(task_json, meeting):
     try:
         name = task_json["name"]

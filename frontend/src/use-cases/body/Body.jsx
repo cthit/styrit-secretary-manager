@@ -138,7 +138,7 @@ export class Body extends React.Component {
                 if (res.data.error) {
                     console.log("Server returned an error: " + res.data.error);
                     this.setState({
-                        errorMsg: "Invalid Code"
+                        errorMsg: res.data.error
                     });
                 } else {
                     this.setState({

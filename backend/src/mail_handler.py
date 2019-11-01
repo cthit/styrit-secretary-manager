@@ -4,7 +4,7 @@ from pony.orm import db_session, desc
 
 from config import general_config
 import private_keys
-from db import Meeting, CodeGroup, CodeTasks
+from db import Meeting, GroupMeeting, GroupMeetingTask
 
 
 @db_session
@@ -13,19 +13,23 @@ def get_next_meeting():
 
 
 @db_session
-def get_group_codes_for_meeting(meeting):
-    code_group_dict = {}
-    query = list(CodeGroup.select(lambda code_group: code_group.meeting == meeting))
-    for code_group in query:
-        code_group_dict[code_group.code] = code_group.group
-
-    return code_group_dict
+def get_groups_for_meeting(meeting):
+    """
+    Returns all the GroupMeetings for the meeting
+    """
+    groups = list(GroupMeeting.select(lambda group_meeting: group_meeting.meeting == meeting))
+    return groups
 
 
 @db_session
 def get_mail_from_code(code, group, meeting):
+    """
+    Returns the mail to be sent to a group given it's code, group and meeting
+    """
     tasks = ""
-    task_list = list(orm.select(code_task.task for code_task in CodeTasks if code_task.code.code == code))
+    task_list = list(orm.select(group_meeting_task.task
+                                for group_meeting_task in GroupMeetingTask
+                                if group_meeting_task.group.code == code))
     for task in task_list:
         tasks += " - " + task.display_name + "\n"
 
@@ -44,12 +48,12 @@ def get_mail_from_code(code, group, meeting):
 def send_mails():
     print("\n\n")
     meeting = get_next_meeting()
-    group_codes = get_group_codes_for_meeting(meeting)
+    groups = get_groups_for_meeting(meeting)
     print("\n\n")
-    for code in group_codes:
+    for group_meeting in groups:
         url = general_config.gotify_url
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
-        mail_to, subject, msg = get_mail_from_code(code, group_codes[code], meeting)
+        mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
         data = {"to": mail_to,
                 "from": general_config.from_email_address,
                 "subject": subject,

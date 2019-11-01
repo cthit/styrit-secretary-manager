@@ -8,20 +8,32 @@ from pony.orm import db_session
 
 from config import general_config
 import mail_handler
-from db import CodeGroup, CodeFile
+from db import GroupMeetingFile
 
 
 @db_session
 def get_deadline():
+    """
+    Returns the deadline datetime.
+    """
     meeting = mail_handler.get_next_meeting()
     return meeting.last_upload
 
 
 @db_session
 def get_file_paths():
+    """
+    Returns a list of file_paths for all files uploaded for the latest meeting.
+    TODO: the meeting should be given as an input which comes from the frontend!
+    """
     meeting = mail_handler.get_next_meeting()
-    codes = list(orm.select(code_group.code for code_group in CodeGroup if code_group.meeting == meeting))
-    return list(orm.select(code_file.file_location for code_file in CodeFile if code_file.code.code in codes))
+
+    # Get a list of the filepaths for the meeting
+    file_paths = list(orm.select(
+        group_file.file_location for group_file in GroupMeetingFile
+        if group_file.group_task.group.meeting == meeting
+    ))
+    return file_paths
 
 
 def send_final_mail():
