@@ -161,6 +161,7 @@ class MeetingResource(Resource):
 
 
 class MailRes(Resource):
+    @db_session
     def put(self):
         data = request.get_json()
         r, code = validate_password(data)

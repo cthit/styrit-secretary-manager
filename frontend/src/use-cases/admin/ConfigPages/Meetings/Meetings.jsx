@@ -374,6 +374,25 @@ export class Meetings extends React.Component {
     onSendMail() {
         // First save the current meeting
         this.onSave();
+        let data = {
+            pass: this.state.pass,
+            year: new Date(this.state.selectedMeeting.date).getFullYear(),
+            lp: this.state.selectedMeeting.lp,
+            meeting_no: this.state.selectedMeeting.meeting_no
+        };
+
+        console.log("using PUT to send ", data);
+
+        axios
+            .put("http://localhost:5000/mail", data, {})
+            .then(res => {
+                console.log("RESPOSNE", res);
+                alert("Mail(s) sent successfull");
+            })
+            .catch(error => {
+                console.log("ERROR", error);
+                alert("Something went wrong with sending the email \n" + error);
+            });
     }
 
     getMeetingName(meeting) {

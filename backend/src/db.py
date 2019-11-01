@@ -159,7 +159,6 @@ def validate_meeting(meeting_json):
         # We want to select all the tasks for this meeting from the database and match the json to it
         for type in tasks:
             for task in tasks[type]:
-                print(str(task) + "\n Validation: " + str(validate_task(task)))
                 if validate_task(task):
                     group_meeting = GroupMeeting.get(lambda group: group.group.name == task["name"] and group.meeting == meeting)
                     found = False
