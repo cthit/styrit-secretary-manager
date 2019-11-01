@@ -85,7 +85,7 @@ def handle_file(code, task, file):
 
 class CodeRes(Resource):
     @db_session
-    def put(self):
+    def post(self):
         data = request.get_json()
         code = data["code"]
         try:
