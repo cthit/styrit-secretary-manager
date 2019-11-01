@@ -1,3 +1,4 @@
+from pony import orm
 from pony.orm import commit
 
 from config import meeting_config
