@@ -57,7 +57,6 @@ def send_mails(meeting):
                 "subject": subject,
                 "body": msg}
         r = None
-        print("Mailing: " + str(data))
         try:
             r = requests.post(url=url, json=data, headers=header)
             print(r.reason)
