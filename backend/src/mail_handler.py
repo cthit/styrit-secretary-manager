@@ -29,7 +29,7 @@ def get_mail_from_code(code, group, meeting):
     tasks = ""
     task_list = list(orm.select(group_meeting_task.task
                                 for group_meeting_task in GroupMeetingTask
-                                if group_meeting_task.group.code == code))
+                                if str(group_meeting_task.group.code) == code))
     for task in task_list:
         tasks += " - " + task.display_name + "\n"
 
@@ -45,11 +45,9 @@ def get_mail_from_code(code, group, meeting):
 
 
 @db_session
-def send_mails():
-    print("\n\n")
-    meeting = get_next_meeting()
+def send_mails(meeting):
     groups = get_groups_for_meeting(meeting)
-    print("\n\n")
+
     for group_meeting in groups:
         url = general_config.gotify_url
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
@@ -60,6 +58,7 @@ def send_mails():
                 "body": msg}
         r = None
         try:
+            print("Mailing: " + data)
             r = requests.post(url=url, json=data, headers=header)
             print(r.reason)
         except Exception as e:

@@ -1,5 +1,6 @@
 import datetime
 import os
+import threading
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -7,9 +8,11 @@ from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
+import end_date_handler
+import mail_handler
 import private_keys
 from config import general_config, config_handler
-from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile
+from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting
 
 app = Flask(__name__)
 api = Api(app)
@@ -82,7 +85,7 @@ def handle_file(code, task, file):
 
 class CodeRes(Resource):
     @db_session
-    def post(self):
+    def put(self):
         data = request.get_json()
         code = data["code"]
         try:
@@ -122,7 +125,6 @@ class FileRes(Resource):
         return {"overwrite": overwrite}
 
 
-
 def validate_password(response_json):
     if "pass" not in response_json:
         return {
@@ -158,6 +160,29 @@ class MeetingResource(Resource):
         return message, status
 
 
+class MailRes(Resource):
+    def put(self):
+        data = request.get_json()
+        r, code = validate_password(data)
+        if code != 200:
+            return r, code
+
+        # The password was accepted! Try to figure out which meeting it wants to send the email for.
+        try:
+            year = data["year"]
+            lp = data["lp"]
+            meeting_no = data["meeting_no"]
+            meeting = Meeting[year, lp, meeting_no]
+        except Exception as e:
+            print("Unable to validate meeting " + str(e))
+            return "Unable to validate meeting", 400
+
+        if meeting is None:
+            return "Unable to find meeting", 404
+
+        threading.Thread(target=mail_handler.send_mails, args=(meeting, )).start()
+
+
 class PasswordResource(Resource):
     def put(self):
         response_json = request.get_json()
@@ -174,6 +199,7 @@ api.add_resource(CodeRes, '/code')
 api.add_resource(MeetingResource, "/admin/config/meeting")
 api.add_resource(AdminResource, "/admin/config")
 api.add_resource(PasswordResource, "/admin")
+api.add_resource(MailRes, "/mail")
 
 
 def host():

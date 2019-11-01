@@ -24,7 +24,6 @@ def get_deadline():
 def get_file_paths():
     """
     Returns a list of file_paths for all files uploaded for the latest meeting.
-    TODO: the meeting should be given as an input which comes from the frontend!
     """
     meeting = mail_handler.get_next_meeting()
 
@@ -47,8 +46,8 @@ def send_final_mail():
         print("Path: " + path)
         shutil.copy(path, folder_loc)
 
-    print("Mail styrit through gotify with a zip file containing all the documents")
-
+    print("Should mail styrit through gotify with a zip file containing all the documents")
+    raise NotImplementedError()
 
 
 def check_for_enddate():
