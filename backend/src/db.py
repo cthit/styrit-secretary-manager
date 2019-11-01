@@ -128,6 +128,13 @@ def get_db_tasks(meeting):
         return {}
 
 
+class UserError(Exception):
+    """
+    An error caused by invalid input
+    """
+    pass
+
+
 @db_session
 def validate_meeting(meeting_json):
     try:
@@ -135,12 +142,12 @@ def validate_meeting(meeting_json):
         last_upload = datetime.strptime(meeting_json["last_upload_date"][0:15], "%Y-%m-%dT%H:%M")
         lp = meeting_json["lp"]
         if not 0 < lp <= 4:
-            raise Exception("invalid lp " + str(lp))
+            raise UserError("invalid lp " + str(lp))
         meeting_no = meeting_json["meeting_no"]
         if not 0 <= meeting_no:
-            raise Exception("invalid meeting number " + str(meeting_no))
+            raise UserError("invalid meeting number " + str(meeting_no))
 
-        meeting = Meeting[date.year, lp, meeting_no]
+        meeting = Meeting.get(year=date.year, lp=lp, meeting_no=meeting_no)
 
         if meeting is None:
             # The meeting does not exist, we want to create the tasks for it
@@ -155,16 +162,19 @@ def validate_meeting(meeting_json):
                 print(str(task) + "\n Validation: " + str(validate_task(task)))
                 if validate_task(task):
                     group_meeting = GroupMeeting.get(lambda group: group.group.name == task["name"] and group.meeting == meeting)
-                    type_task = Task.get(lambda task: task.name == type)
                     found = False
-                    # The task is valid, check if it has an entry in the db
-                    for db_task in db_tasks:
-                        if db_task.task.name == type and db_task.group == group_meeting:
-                            found = True
-                            db_tasks[db_task] = True
-
+                    if group_meeting is None:
+                        group = Group[task["name"]]
+                        group_meeting = GroupMeeting(group=group, meeting=meeting)
+                    else:
+                        # The task is valid, check if it has an entry in the db
+                        for db_task in db_tasks:
+                            if db_task.task.name == type and db_task.group == group_meeting:
+                                found = True
+                                db_tasks[db_task] = True
                     if not found:
                         # Add a new entry for the task
+                        type_task = Task.get(lambda task: task.name == type)
                         GroupMeetingTask(group=group_meeting, task=type_task)
 
         for task in db_tasks:
@@ -173,7 +183,10 @@ def validate_meeting(meeting_json):
 
         meeting.date = date
         meeting.last_upload = last_upload
-        return meeting
+        return meeting, "ok"
+    except UserError as e:
+        print("Failed validating meeting due to a user error " + str(e))
+        return None, str(e)
     except Exception as e:
         print("Failed validating meeting " + str(e))
-        return None
+        return None, ""

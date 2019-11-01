@@ -10,8 +10,12 @@ export const MeetingsContainer = styled.div`
 export const InputContainer = styled.div`
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: end;
     justify-content: space-between;
     margin: 20px;
     margin-top: 10px;
+`;
+
+export const Space = styled.div`
+    width: 20px;
 `;

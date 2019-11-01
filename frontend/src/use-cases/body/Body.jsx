@@ -202,7 +202,7 @@ export class Body extends React.Component {
                 }
 
                 alert(
-                    "Fil godkänd, om du vill byta fil är det bara att skriva in koden igen och ladda upp en ny fil." +
+                    "Fil(er) godkänd, om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil." +
                         message
                 );
             })
