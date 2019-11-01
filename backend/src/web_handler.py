@@ -147,8 +147,8 @@ class MeetingResource(Resource):
         if code != 200:
             return r, code
 
-        config_handler.handle_incoming_meeting_config(config["meeting"])
-        return {"ok": "ok"}, 200
+        status, message = config_handler.handle_incoming_meeting_config(config["meeting"])
+        return message, status
 
 
 class PasswordResource(Resource):
