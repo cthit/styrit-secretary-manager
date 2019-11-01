@@ -114,13 +114,13 @@ export class Meetings extends React.Component {
                                     label="Deadline for uploads"
                                     value={
                                         this.state.selectedMeeting
-                                            .lastUploadDate
+                                            .last_upload_date
                                     }
                                     format="dd/MM/yyyy HH:mm"
                                     onChange={event => {
                                         let meeting = this.state
                                             .selectedMeeting;
-                                        meeting.lastUploadDate = event.toISOString();
+                                        meeting.last_upload_date = event.toISOString();
                                         this.setState({
                                             selectedMeeting: meeting
                                         });
@@ -282,6 +282,7 @@ export class Meetings extends React.Component {
     onSelectMeeting(event) {
         let newMeetingNo = event.target.value;
         let newMeeting = this.state.meetings[newMeetingNo];
+        console.log("Meeting last upload", newMeeting.last_upload_date);
         this.setState({
             selectedMeetingNumber: newMeetingNo,
             selectedMeeting: newMeeting
