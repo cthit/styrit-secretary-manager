@@ -1,9 +1,7 @@
-import json
-
 from pony import orm
-from pony.orm import db_session, commit
+from pony.orm import commit
 
-from config import general_config, groups_config, meeting_config
+from config import meeting_config
 from db import *
 
 
@@ -153,10 +151,10 @@ def setup_meeting_config():
 
     # Now connect the tasks with the code.
     for group in all_groups:
-        if CodeGroup.get(group=group, meeting=meeting) is None:
-            code = CodeGroup(group=group, meeting=meeting)
-            for task in group_task_dict[code.group.name]:
-                CodeTasks(group=group, meeting=meeting, task=Task[task])
+        if GroupMeeting.get(group=group, meeting=meeting) is None:
+            group_meeting = GroupMeeting(group=group, meeting=meeting)
+            for task in group_task_dict[group_meeting.group.name]:
+                GroupMeetingTask(group=group_meeting, task=Task[task])
 
     commit()
     print("Finished loading meeting specific data from file to database")

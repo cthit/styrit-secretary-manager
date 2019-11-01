@@ -1,28 +1,30 @@
 from datetime import datetime
 from uuid import UUID
 
-from pony import orm
-from pony.orm import Database, PrimaryKey, Required, Set, composite_key, Optional, db_session
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
 
 from config import db_config as config
 
 db = Database()
 
 
+# A group
 class Group(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
-    code_groups = Set("CodeGroup")
+
+    group_meetings = Set("GroupMeeting")
 
 
+# A general task
 class Task(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
 
-    code_tasks = Set("CodeTasks")
-    code_files = Set("CodeFile")
+    group_tasks = Set("GroupMeetingTask")
 
 
+# A specific meeting
 class Meeting(db.Entity):
     year = Required(int)
     date = Required(datetime)
@@ -30,43 +32,45 @@ class Meeting(db.Entity):
     lp = Required(int)
     meeting_no = Required(int)
 
-    code_groups = Set("CodeGroup")
+    group_meetings = Set("GroupMeeting")
     PrimaryKey(year, lp, meeting_no)
 
 
-class CodeGroup(db.Entity):
-    code = PrimaryKey(UUID, auto=True)
+# Contains the code for each group and meeting
+class GroupMeeting(db.Entity):
     group = Required(Group)
     meeting = Required(Meeting)
+    code = Required(UUID, auto=True, unique=True)
 
-    code_tasks = Set("CodeTasks")
-    code_files = Set("CodeFile")
-    composite_key(group, meeting)
+    PrimaryKey(group, meeting)
+    group_tasks = Set("GroupMeetingTask")
 
 
-class CodeTasks(db.Entity):
+# The tasks to be done by that Group/Meeting combination
+class GroupMeetingTask(db.Entity):
+    group = Required(GroupMeeting)
     task = Required(Task)
-    group = Required(Group)
-    meeting = Required(Meeting)
 
-    PrimaryKey(group, meeting, task)
+    PrimaryKey(group, task)
+    group_files = Optional("GroupMeetingFile")
 
 
-class CodeFile(db.Entity):
-    code = Required(CodeGroup)
-    task = Required(Task)
+# The file for a specific task for a specific group/meeting
+# Not a part of the groupMeetingTask as the file will be added after the group/meeting/task has been added.
+class GroupMeetingFile(db.Entity):
+    group_task = PrimaryKey(GroupMeetingTask)
     file_location = Required(str, unique=True)
     date = Required(datetime, default=datetime.utcnow)
 
-    PrimaryKey(code, task)
 
-
+# A type of config that can exist.
 class ConfigType(db.Entity):
     type = PrimaryKey(str)
 
     configs = Set("Config")
 
 
+# Represents a single config entry
 class Config(db.Entity):
     key = PrimaryKey(str)
     value = Required(str)
@@ -85,21 +89,50 @@ db.bind(
 db.generate_mapping(create_tables=True)
 
 
-
 # Helper methods
 
-
-def validate_task(task_json, meeting):
+@db_session
+def validate_task(task):
+    """
+    Validates a task
+    """
     try:
-        name = task_json["name"]
-        group = Group[name]
-        if group is not None:
-            raise Exception("invalid group name " + str(name))
+        # If the task has a code then validate that the tasks group has that code
+        # If the task doesn't have a code, validate that the group exists.
+        group_name = task["name"]
+        if "code" in task:
+            code = task["code"]
+            group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
+            return group_meeting.group.name == group_name
 
-        # task = orm.select(code_task.task for code_task in )
+        return Group.get(lambda group: group.name == group_name) is not None
     except Exception as e:
         print("Failed validating task " + str(e))
-        return None
+        return False
+
+
+@db_session
+def get_db_tasks(meeting):
+    """
+    Returns a dictionary from each GroupMeetingTask of the given meeting to a boolean with value False
+    """
+    try:
+        group_tasks = {}
+        db_tasks = GroupMeetingTask.select(lambda g_t: g_t.group.meeting == meeting)
+        for task in db_tasks:
+            group_tasks[task] = False
+
+        return group_tasks
+    except Exception as e:
+        print("Failed retrieving database tasks " + str(e))
+        return {}
+
+
+class UserError(Exception):
+    """
+    An error caused by invalid input
+    """
+    pass
 
 
 @db_session
@@ -109,35 +142,51 @@ def validate_meeting(meeting_json):
         last_upload = datetime.strptime(meeting_json["last_upload_date"][0:15], "%Y-%m-%dT%H:%M")
         lp = meeting_json["lp"]
         if not 0 < lp <= 4:
-            raise Exception("invalid lp " + str(lp))
+            raise UserError("invalid lp " + str(lp))
         meeting_no = meeting_json["meeting_no"]
         if not 0 <= meeting_no:
-            raise Exception("invalid meeting number " + str(meeting_no))
+            raise UserError("invalid meeting number " + str(meeting_no))
 
-        meeting = Meeting[date.year, lp, meeting_no]
-
-        # Check all of the tasks...
-        tasks = meeting_json["groups_tasks"]
-
-        # We want to select all the tasks for this meeting from the database and match the json to it
-
-        for type in tasks:
-            for task in tasks[type]:
-                # I want to either check to see if the group has this task type on the meeting
-                # If it doesn't we want to create it.
-                # If a group
-
-                # Validate the task
-                print(type)
-                # task = validate_task(task, meeting)
-                print(task)
+        meeting = Meeting.get(year=date.year, lp=lp, meeting_no=meeting_no)
 
         if meeting is None:
-            # The meeting does not yet exist, let's create it
-            return Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+            # The meeting does not exist, we want to create the tasks for it
+            meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+
+        tasks = meeting_json["groups_tasks"]
+        db_tasks = get_db_tasks(meeting)
+
+        # We want to select all the tasks for this meeting from the database and match the json to it
+        for type in tasks:
+            for task in tasks[type]:
+                print(str(task) + "\n Validation: " + str(validate_task(task)))
+                if validate_task(task):
+                    group_meeting = GroupMeeting.get(lambda group: group.group.name == task["name"] and group.meeting == meeting)
+                    found = False
+                    if group_meeting is None:
+                        group = Group[task["name"]]
+                        group_meeting = GroupMeeting(group=group, meeting=meeting)
+                    else:
+                        # The task is valid, check if it has an entry in the db
+                        for db_task in db_tasks:
+                            if db_task.task.name == type and db_task.group == group_meeting:
+                                found = True
+                                db_tasks[db_task] = True
+                    if not found:
+                        # Add a new entry for the task
+                        type_task = Task.get(lambda task: task.name == type)
+                        GroupMeetingTask(group=group_meeting, task=type_task)
+
+        for task in db_tasks:
+            if not db_tasks[task]:
+                task.delete()
 
         meeting.date = date
         meeting.last_upload = last_upload
+        return meeting, "ok"
+    except UserError as e:
+        print("Failed validating meeting due to a user error " + str(e))
+        return None, str(e)
     except Exception as e:
         print("Failed validating meeting " + str(e))
-        return None
+        return None, ""

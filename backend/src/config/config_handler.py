@@ -1,7 +1,36 @@
 from pony import orm
 from pony.orm import db_session
 
-from db import Meeting, CodeTasks, CodeGroup, Config, Group, Task, db, validate_meeting
+from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
+
+
+@db_session
+def get_config_for_meeting(meeting):
+    # Select all codes and tasks
+    groups = GroupMeeting.select(lambda group: group.meeting == meeting)
+    tasks = {}
+
+    for group_meeting in groups:
+        group_tasks = list(GroupMeetingTask.select(lambda g_t: g_t.group == group_meeting))
+        for group_task in group_tasks:
+            task = group_task.task
+            if task.name not in tasks.keys():
+                tasks[task.name] = []
+
+            tasks[task.name].append({
+                "name": group_meeting.group.name,
+                "code": str(group_meeting.code)
+            })
+
+    m_js = {
+        "lp": meeting.lp,
+        "meeting_no": meeting.meeting_no,
+        "date": meeting.date.strftime("%Y-%m-%dT%H:%M"),
+        "last_upload_date": meeting.last_upload.strftime("%Y-%m-%dT%H:%M"),
+        "groups_tasks": tasks
+    }
+
+    return m_js
 
 
 @db_session
@@ -11,38 +40,7 @@ def get_config():
     meeting_list = Meeting.select(lambda m: True)
     meeting_jsons = []
     for meeting in meeting_list:
-        # Select all codes and tasks
-        code_tasks = orm.select((c_t.code, c_t.task) for c_t in CodeTasks)
-
-        tasks = {}
-        # Filter out the codes that have the wrong meeting
-        for code, task in code_tasks:
-            if task.name not in tasks.keys():
-                tasks[task.name] = []
-            # Select the groups with the code and with the correct meeting
-            code_group = CodeGroup.get(code=code.code, meeting=meeting)
-            if code_group is None:
-                continue
-
-            group = code_group.group
-            meeting_name = code_group.meeting
-            print(group)
-            print(meeting_name)
-            tasks[task.name].append({
-                "name": code_group.group.name,
-                "code": str(code_group.code)
-            })
-
-        print("ASD")
-        m_js = {
-            "lp": meeting.lp,
-            "meeting_no": meeting.meeting_no,
-            "date": meeting.date.strftime("%Y-%m-%dT%H:%M"),
-            "last_upload_date": meeting.last_upload.strftime("%Y-%m-%dT%H:%M"),
-            "groups_tasks": tasks
-        }
-
-        meeting_jsons.append(m_js)
+        meeting_jsons.append(get_config_for_meeting(meeting))
 
     config["meetings"] = meeting_jsons
 
@@ -83,8 +81,9 @@ def handle_incoming_config(config):
 
 
 def handle_incoming_meeting_config(config):
-    meeting = validate_meeting(config)
+    meeting, msg = validate_meeting(config)
     if meeting is None:
-        return 400, {"error": "Invalid meeting format"}
+        return 400, {"error": "Invalid meeting format\n" + msg}
 
-    # Validate that the config is a meeting
+    # Probably return the data for the new meeting?
+    return 200, get_config_for_meeting(meeting)
