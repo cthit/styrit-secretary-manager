@@ -13,17 +13,12 @@ def get_next_meeting():
 
 
 @db_session
-def get_group_codes_for_meeting(meeting):
+def get_groups_for_meeting(meeting):
     """
-    Returns a dictionary from code to group for each code-group pair for the given meeting.
+    Returns all the GroupMeetings for the meeting
     """
-    group_meeting_dict = {}
-    query = list(GroupMeeting.select(lambda group_meeting: group_meeting.meeting == meeting))
-
-    for group_meeting in query:
-        group_meeting_dict[group_meeting.code] = group_meeting.group
-
-    return group_meeting_dict
+    groups = list(GroupMeeting.select(lambda group_meeting: group_meeting.meeting == meeting))
+    return groups
 
 
 @db_session
@@ -53,12 +48,12 @@ def get_mail_from_code(code, group, meeting):
 def send_mails():
     print("\n\n")
     meeting = get_next_meeting()
-    group_codes = get_group_codes_for_meeting(meeting)
+    groups = get_groups_for_meeting(meeting)
     print("\n\n")
-    for code in group_codes:
+    for group_meeting in groups:
         url = general_config.gotify_url
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
-        mail_to, subject, msg = get_mail_from_code(code, group_codes[code], meeting)
+        mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
         data = {"to": mail_to,
                 "from": general_config.from_email_address,
                 "subject": subject,

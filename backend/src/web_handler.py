@@ -18,14 +18,14 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @db_session
 def get_data_for_code(code):
-    group_meeting = GroupMeeting.select(lambda group: group.code == code)
+    group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
 
     if group_meeting is None:
         return {"error": "Missing data for code, please send the files manually"}, 404
 
     task_tuples = list(orm.select(
         (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
-                                  str(group_task.code.code) == code))
+                                  str(group_task.group.code) == code))
     tasks = []
     for name, d_name in task_tuples:
         tasks.append({
@@ -66,9 +66,10 @@ def handle_file(code, task, file):
     print("Saving file " + str(file) + " in " + path)
     file.save(save_loc)
 
-    group_file = GroupMeetingFile.get(code=code, task=task)
+    group_task = GroupMeetingTask.get(lambda group_task: str(group_task.group.code) == code)
+    group_file = GroupMeetingFile.get(group_task=group_task)
     if group_file is None:
-        GroupMeetingFile(code=code, task=task, file_location=save_loc)
+        GroupMeetingFile(group_task=group_task, file_location=save_loc)
         return {"overwrite": False}
     else:
         print("OVERWRITE!")
@@ -82,7 +83,7 @@ class CodeRes(Resource):
         data = request.get_json()
         code = data["code"]
         try:
-            group_meeting = GroupMeeting.select(lambda group: group.code == code)
+            group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
         except ValueError as err:
             return {"error": "Bad code format"}, 400
 
@@ -108,7 +109,7 @@ class FileRes(Resource):
     def put(self):
         print(request.files)
         code = request.form["code"]
-        if GroupMeeting.select(lambda group: group.code == code) is None:
+        if GroupMeeting.select(lambda group: str(group.code) == code) is None:
             return {"error": "Code not found! Please contact the developers of this system."}, 404
 
         for task in request.files:

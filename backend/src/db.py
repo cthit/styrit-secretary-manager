@@ -53,7 +53,7 @@ class GroupMeetingTask(db.Entity):
     task = Required(Task)
 
     PrimaryKey(group, task)
-    group_files = Set("GroupMeetingFile")
+    group_files = Optional("GroupMeetingFile")
 
 
 # The file for a specific task for a specific group/meeting

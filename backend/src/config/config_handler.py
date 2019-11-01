@@ -12,23 +12,21 @@ def get_config():
     meeting_jsons = []
     for meeting in meeting_list:
         # Select all codes and tasks
-        code_tasks = orm.select((group_task.code, group_task.task) for group_task in GroupMeetingTask)
+        groups = GroupMeeting.select(lambda group: True)
 
         tasks = {}
-        # Filter out the codes that have the wrong meeting
-        for code, task in code_tasks:
-            if task.name not in tasks.keys():
-                tasks[task.name] = []
 
-            # Select the group with the code
-            group_meeting = GroupMeeting.select(lambda group: group.code == code.code)
-            if group_meeting is None:
-                continue
+        for group_meeting in groups:
+            group_tasks = list(GroupMeetingTask.select(lambda g_t: g_t.group == group_meeting))
+            for group_task in group_tasks:
+                task = group_task.task
+                if task.name not in tasks.keys():
+                    tasks[task.name] = []
 
-            tasks[task.name].append({
-                "name": group_meeting.group.name,
-                "code": str(group_meeting.code)
-            })
+                tasks[task.name].append({
+                    "name": group_meeting.group.name,
+                    "code": str(group_meeting.code)
+                })
 
         m_js = {
             "lp": meeting.lp,
