@@ -77,8 +77,8 @@ def handle_incoming_config(config):
 
 
 def handle_incoming_meeting_config(config):
-    meeting = validate_meeting(config)
+    meeting, msg = validate_meeting(config)
     if meeting is None:
-        return 400, {"error": "Invalid meeting format"}
+        return 400, {"error": "Invalid meeting format\n" + msg}
 
-    # Validate that the config is a meeting
+    return 200, {}
