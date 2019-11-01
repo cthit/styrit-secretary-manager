@@ -45,11 +45,9 @@ def get_mail_from_code(code, group, meeting):
 
 
 @db_session
-def send_mails():
-    print("\n\n")
-    meeting = get_next_meeting()
+def send_mails(meeting):
     groups = get_groups_for_meeting(meeting)
-    print("\n\n")
+
     for group_meeting in groups:
         url = general_config.gotify_url
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
