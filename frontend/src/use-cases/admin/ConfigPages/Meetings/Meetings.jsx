@@ -18,7 +18,12 @@ import {
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import { MeetingsContainer, InputContainer, Space } from "./Meetings.styles";
+import {
+    MeetingsContainer,
+    InputContainer,
+    Space,
+    CenterText
+} from "./Meetings.styles";
 import axios from "axios";
 
 const defaultState = {
@@ -46,6 +51,7 @@ export class Meetings extends React.Component {
         this.onSave = this.onSave.bind(this);
         this.onNewMeeting = this.onNewMeeting.bind(this);
         this.getMeetingName = this.getMeetingName.bind(this);
+        this.onSendMail = this.onSendMail.bind(this);
     }
 
     render() {
@@ -88,7 +94,6 @@ export class Meetings extends React.Component {
                     </Button>
                 </InputContainer>
                 {this.state.selectedMeeting && (
-                    // This is where we put that code!!!
                     <div>
                         <InputContainer>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -207,18 +212,34 @@ export class Meetings extends React.Component {
                                 ))}
                             </TableBody>
                         </Table>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{
+                                width: "100%"
+                            }}
+                            onClick={this.onSave}
+                        >
+                            Spara (mötesinställningarna)
+                        </Button>
+                        <CenterText>
+                            <Typography>
+                                Skickar mailet för detta möte (OBS! Sparar också
+                                de nuvarande mötesinställningarna!)
+                            </Typography>
+                        </CenterText>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{
+                                width: "100%"
+                            }}
+                            onClick={this.onSendMail}
+                        >
+                            Skicka mail
+                        </Button>
                     </div>
                 )}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    style={{
-                        width: "100%"
-                    }}
-                    onClick={this.onSave}
-                >
-                    Spara
-                </Button>
             </MeetingsContainer>
         );
     }
@@ -348,6 +369,11 @@ export class Meetings extends React.Component {
                 }
                 alert("Something went wrong: " + msg);
             });
+    }
+
+    onSaveMail() {
+        // First save the current meeting
+        this.onSave();
     }
 
     getMeetingName(meeting) {

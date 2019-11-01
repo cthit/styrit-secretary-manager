@@ -19,3 +19,11 @@ export const InputContainer = styled.div`
 export const Space = styled.div`
     width: 20px;
 `;
+
+export const CenterText = styled.div`
+margin-top: 20px
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+`;
