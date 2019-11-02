@@ -2,7 +2,7 @@ import datetime
 import os
 import threading
 
-from flask import Flask, request
+from flask import Flask, request, current_app, send_file, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -12,7 +12,7 @@ import end_date_handler
 import mail_handler
 import private_keys
 from config import general_config, config_handler
-from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting
+from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode
 
 app = Flask(__name__)
 api = Api(app)
@@ -196,12 +196,28 @@ class PasswordResource(Resource):
         return configs, 200
 
 
+class ArchiveDownload(Resource):
+    @db_session
+    def get(self, id):
+        archive = ArchiveCode.get(code=id)
+        if archive is None:
+            return 404
+
+        file_name = "documents_lp2_0_2019.zip"
+#        file = "." + archive.archive_location
+#        file = os.path.join(current_app.root_path, archive.archive_location)
+
+        directory = os.path.join(current_app.root_path, "../archives")
+        return send_from_directory(directory, file_name)
+
+
 api.add_resource(FileRes, '/file')
 api.add_resource(CodeRes, '/code')
 api.add_resource(MeetingResource, "/admin/config/meeting")
 api.add_resource(AdminResource, "/admin/config")
 api.add_resource(PasswordResource, "/admin")
 api.add_resource(MailRes, "/mail")
+api.add_resource(ArchiveDownload, "/archive/<string:id>")
 
 
 def host():

@@ -7,7 +7,7 @@ from pony import orm
 from pony.orm import db_session
 
 from config import general_config
-from db import GroupMeetingFile, ArchiveCode
+from db import GroupMeetingFile, ArchiveCode, Meeting
 
 
 @db_session
@@ -23,6 +23,7 @@ def get_file_paths(meeting):
     return file_paths
 
 
+@db_session
 def send_final_mail(meeting):
     folder_loc = "./b"
     if not os.path.exists(folder_loc):
@@ -31,7 +32,6 @@ def send_final_mail(meeting):
     file_paths = get_file_paths(meeting)
 
     for path in file_paths:
-        print("Path: " + path)
         shutil.copy(path, folder_loc)
 
     archives_loc = "./archives"
@@ -41,10 +41,12 @@ def send_final_mail(meeting):
     archive_name = archives_loc + "/documents_lp" + str(meeting.lp) + "_" + str(meeting.meeting_no) + "_" + str(meeting.year)
     shutil.make_archive(archive_name, 'zip', folder_loc)
 
-    ArchiveCode(meeting=meeting, archive_location=archive_name)
+    # To avoid a transaction error we need to once more get a reference to the meeting
+    meeting = Meeting[meeting.year, meeting.lp, meeting.meeting_no]
+    archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
 
     print("Should mail styrit through gotify and tell them that they can download the archive")
-    raise NotImplementedError()
+    print(archive.code)
 
 
 def check_for_enddate(meeting):
