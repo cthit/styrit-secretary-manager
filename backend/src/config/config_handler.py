@@ -25,8 +25,8 @@ def get_config_for_meeting(meeting):
     m_js = {
         "lp": meeting.lp,
         "meeting_no": meeting.meeting_no,
-        "date": meeting.date.strftime("%Y-%m-%dT%H:%M"),
-        "last_upload_date": meeting.last_upload.strftime("%Y-%m-%dT%H:%M"),
+        "date": meeting.date.strftime("%Y-%m-%dT%H:%MZ"),
+        "last_upload_date": meeting.last_upload.strftime("%Y-%m-%dT%H:%MZ"),
         "groups_tasks": tasks
     }
 

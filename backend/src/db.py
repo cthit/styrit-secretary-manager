@@ -1,6 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
+import dateutil.parser
 from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
 
 from config import db_config as config
@@ -146,8 +147,8 @@ class UserError(Exception):
 @db_session
 def validate_meeting(meeting_json):
     try:
-        date = datetime.strptime(meeting_json["date"][0:15], "%Y-%m-%dT%H:%M")
-        last_upload = datetime.strptime(meeting_json["last_upload_date"][0:15], "%Y-%m-%dT%H:%M")
+        date = dateutil.parser.parse(meeting_json["date"])
+        last_upload = dateutil.parser.parse(meeting_json["last_upload_date"])
         lp = meeting_json["lp"]
         if not 0 < lp <= 4:
             raise UserError("invalid lp " + str(lp))
