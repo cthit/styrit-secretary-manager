@@ -78,7 +78,7 @@ def handle_file(code, task, file):
         GroupMeetingFile(group_task=group_task, file_location=save_loc)
         return False
     else:
-        print("OVERWRITE!")
+        print("Overwriting file " + group_file.file_location + " from " + str(group_file.date) + " (GMT)")
         group_file.date = datetime.datetime.utcnow()
         return True
 
