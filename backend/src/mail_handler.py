@@ -6,12 +6,6 @@ from config import general_config
 import private_keys
 from db import Meeting, GroupMeeting, GroupMeetingTask
 
-
-@db_session
-def get_next_meeting():
-    return Meeting.select().order_by(desc(Meeting.date)).first()
-
-
 @db_session
 def get_groups_for_meeting(meeting):
     """

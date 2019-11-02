@@ -33,6 +33,7 @@ class Meeting(db.Entity):
     meeting_no = Required(int)
 
     group_meetings = Set("GroupMeeting")
+    archive = Optional("ArchiveCode")
     PrimaryKey(year, lp, meeting_no)
 
 
