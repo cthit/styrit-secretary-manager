@@ -56,10 +56,11 @@ def check_for_enddate(meeting):
     min_after_deadline = general_config.minutes_after_deadline_to_mail
     deadline = meeting.last_upload
     deadline = deadline + datetime.timedelta(minutes=min_after_deadline)
-    curr_date = datetime.datetime.now()
+
+    curr_date = datetime.datetime.utcnow()
 
     while curr_date < deadline:
         time.sleep(check_time)
-        curr_date = datetime.datetime.now()
+        curr_date = datetime.datetime.utcnow()
 
     send_final_mail(meeting)

@@ -79,7 +79,7 @@ def handle_file(code, task, file):
         return False
     else:
         print("OVERWRITE!")
-        group_file.date = datetime.datetime.now()
+        group_file.date = datetime.datetime.utcnow()
         return True
 
 
@@ -100,7 +100,7 @@ class CodeRes(Resource):
 
             return {"error": "Code not found"}, 404
 
-        current_date = datetime.datetime.now()
+        current_date = datetime.datetime.utcnow()
         if group_meeting.meeting.last_upload < current_date:
             return {"error": "Code expired, please contact me at " + general_config.my_email}
 
