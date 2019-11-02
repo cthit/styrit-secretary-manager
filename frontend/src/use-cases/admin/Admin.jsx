@@ -222,7 +222,7 @@ export class Admin extends React.Component {
                 let date = {};
                 let name = "";
                 let meetings_list = res.data.meetings.map(meeting => {
-                    date = new Date(meeting.date + "Z");
+                    date = new Date(meeting.date);
                     name =
                         date.getFullYear() +
                         "_lp" +
