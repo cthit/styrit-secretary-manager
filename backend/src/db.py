@@ -63,6 +63,13 @@ class GroupMeetingFile(db.Entity):
     date = Required(datetime, default=datetime.utcnow)
 
 
+# Represents the hosted archive
+class ArchiveCode(db.Entity):
+    meeting = PrimaryKey(Meeting)
+    archive_location = Required(str, unique=True)
+    code = Required(UUID, auto=True, unique=True)
+
+
 # A type of config that can exist.
 class ConfigType(db.Entity):
     type = PrimaryKey(str)
