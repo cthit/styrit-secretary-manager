@@ -145,8 +145,8 @@ class AdminResource(Resource):
         if code != 200:
             return r, code
 
-        config_handler.handle_incoming_config(config)
-        return {"ok": "ok"}, 200
+        msg, status = config_handler.handle_incoming_config(config["config"])
+        return msg, status
 
 
 class MeetingResource(Resource):

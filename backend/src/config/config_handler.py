@@ -76,8 +76,17 @@ def get_config():
     return config
 
 
+@db_session
 def handle_incoming_config(config):
-    print(config)
+    for entry in config:
+        key = entry["key"]
+        value = entry["value"]
+        db_config = Config.get(key=key)
+        if db_config is None:
+            return "Config " + str(key) + " not found", 404
+        db_config.value = value
+
+    return "ok", 200
 
 
 def handle_incoming_meeting_config(config):
