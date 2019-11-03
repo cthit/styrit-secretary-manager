@@ -218,7 +218,6 @@ export class Admin extends React.Component {
             .put("http://localhost:5000/admin", data, {})
             .then(res => {
                 console.log(res.statusText);
-
                 let date = {};
                 let name = "";
                 let meetings_list = res.data.meetings.map(meeting => {
@@ -292,6 +291,9 @@ export class Admin extends React.Component {
         axios
             .post("http://localhost:5000/admin/config", data, {})
             .then(response => {
+                this.setState({
+                    errorMsg: ""
+                });
                 alert(
                     "Saved configs to server! \nResponse: " +
                         response.statusText
