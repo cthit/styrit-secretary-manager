@@ -117,10 +117,9 @@ export class Meetings extends React.Component {
                                     autoOk
                                     ampm={false}
                                     label="Deadline for uploads"
-                                    value={
-                                        this.state.selectedMeeting
-                                            .last_upload_date
-                                    }
+                                    value={new Date(
+                                        this.state.selectedMeeting.last_upload_date
+                                    ).toISOString()}
                                     format="dd/MM/yyyy HH:mm"
                                     onChange={event => {
                                         let meeting = this.state

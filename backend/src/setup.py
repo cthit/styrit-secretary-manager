@@ -23,6 +23,7 @@ def setup_general_config():
 
     config_list = [
         {"key": "frontend_url", "value": "localhost:3000", "config_type": string},
+        {"key": "archive_base_url", "value": "localhost:5000/archive/", "config_type": string},
         {"key": "document_template_url", "value": "https://www.overleaf.com/read/ddjdhxnkxttj", "config_type": string},
         {"key": "gotify_url", "value": "http://gotify:8080/mail", "config_type": string},
         {"key": "secretary_email", "value": "sekreterare@chalmers.it", "config_type": string},
@@ -30,7 +31,15 @@ def setup_general_config():
         {"key": "group_email_domain", "value": "@chalmers.it", "config_type": string},
         {"key": "from_email_address", "value": "admin@chalmers.it", "config_type": string},
         {"key": "mail_to_groups_message",
-         "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in följande dokument: {5}\nDetta görs på sidan: {\n6\n}\nAnge koden: {\n7\n}\n\nMall för vissa dokument finns här: {8}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n\nOm ni har några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} : ).",
+         "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in "
+                  "följande dokument: {5}\nDetta görs på sidan: {\n6\n}\nAnge koden: {\n7\n}\n\nMall för vissa "
+                  "dokument finns här: {8}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n\nOm ni har "
+                  "några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} "
+                  ": ).",
+         "config_type": long_string},
+        {"key": "mail_to_board_message",
+         "value": "\nHej {0}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {1} i lp {2} är nu nådd.\nFör "
+                  "nedladdning av dessa dokument klicka på denna länk: {3}\n\nVid frågor, kontakta sekreteraren på {4}",
          "config_type": long_string},
         {"key": "board_display_name", "value": "styrIT", "config_type": string},
         {"key": "minutes_after_deadline_to_mail", "value": "5", "config_type": number}

@@ -2,7 +2,7 @@ import datetime
 import os
 import threading
 
-from flask import Flask, request
+from flask import Flask, request, current_app, send_file, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -12,7 +12,7 @@ import end_date_handler
 import mail_handler
 import private_keys
 from config import general_config, config_handler
-from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting
+from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode
 
 app = Flask(__name__)
 api = Api(app)
@@ -78,8 +78,8 @@ def handle_file(code, task, file):
         GroupMeetingFile(group_task=group_task, file_location=save_loc)
         return False
     else:
-        print("OVERWRITE!")
-        group_file.date = datetime.datetime.now()
+        print("Overwriting file " + group_file.file_location + " from " + str(group_file.date) + " (GMT)")
+        group_file.date = datetime.datetime.utcnow()
         return True
 
 
@@ -100,7 +100,7 @@ class CodeRes(Resource):
 
             return {"error": "Code not found"}, 404
 
-        current_date = datetime.datetime.now()
+        current_date = datetime.datetime.utcnow()
         if group_meeting.meeting.last_upload < current_date:
             return {"error": "Code expired, please contact me at " + general_config.my_email}
 
@@ -182,6 +182,7 @@ class MailRes(Resource):
             return "Unable to find meeting", 404
 
         threading.Thread(target=mail_handler.send_mails, args=(meeting, )).start()
+        threading.Thread(target=end_date_handler.send_final_mail, args=(meeting, )).start()
 
 
 class PasswordResource(Resource):
@@ -195,12 +196,28 @@ class PasswordResource(Resource):
         return configs, 200
 
 
+class ArchiveDownload(Resource):
+    @db_session
+    def get(self, id):
+        archive = ArchiveCode.get(code=id)
+        if archive is None:
+            return 404
+
+        file_name = "documents_lp2_0_2019.zip"
+#        file = "." + archive.archive_location
+#        file = os.path.join(current_app.root_path, archive.archive_location)
+
+        directory = os.path.join(current_app.root_path, "../archives")
+        return send_from_directory(directory, file_name)
+
+
 api.add_resource(FileRes, '/file')
 api.add_resource(CodeRes, '/code')
 api.add_resource(MeetingResource, "/admin/config/meeting")
 api.add_resource(AdminResource, "/admin/config")
 api.add_resource(PasswordResource, "/admin")
 api.add_resource(MailRes, "/mail")
+api.add_resource(ArchiveDownload, "/archive/<string:id>")
 
 
 def host():

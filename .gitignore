@@ -2,6 +2,7 @@
 backend/b
 backend/uploads
 backend/src/private_keys.py
+backend/archives
 
 
 
