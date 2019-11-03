@@ -3,11 +3,13 @@ import os
 import shutil
 import time
 
+import requests
 from pony import orm
 from pony.orm import db_session
 
+import private_keys
 from config import general_config
-from db import GroupMeetingFile, ArchiveCode, Meeting
+from db import GroupMeetingFile, ArchiveCode, Meeting, Config
 
 
 @db_session
@@ -22,6 +24,17 @@ def get_file_paths(meeting):
     ))
     return file_paths
 
+
+@db_session
+def get_mail(meeting, code):
+    msg = Config["mail_to_board_message"].value
+    board_email = Config["board_display_name"].value
+    link = Config["archive_base_url"].value + str(code)
+    secretary_email = Config["secretary_email"].value
+    msg = msg.format(board_email, meeting.meeting_no, meeting.lp, link, secretary_email)
+    to = Config["board_email"].value
+    subject = "Dokument för sektionsmöte {0} lp {1}".format(meeting.meeting_no, meeting.lp)
+    return to, subject, msg
 
 @db_session
 def send_final_mail(meeting):
@@ -43,16 +56,26 @@ def send_final_mail(meeting):
 
     # To avoid a transaction error we need to once more get a reference to the meeting
     meeting = Meeting[meeting.year, meeting.lp, meeting.meeting_no]
-    archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
+    archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
 
-    print("Should mail styrit through gotify and tell them that they can download the archive")
-    print(archive.code)
+    url = general_config.gotify_url
+    header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
+    mail_to, subject, msg = get_mail(meeting, archive.code)
+    data = {"to": mail_to,
+            "mail_from": Config["from_email_address"].value,
+            "subject": subject,
+            "body": msg}
+    r = None
+    try:
+        r = requests.post(url=url, json=data, headers=header)
+        print(r.reason)
+    except Exception as e:
+        print("Encontered an error while contacting gotify: " + str(e))
 
 
 def check_for_enddate(meeting):
     send_final_mail(meeting)
     return
-
 
     check_time = 1 # 5 * 60  # 5 minutes
     min_after_deadline = general_config.minutes_after_deadline_to_mail

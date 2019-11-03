@@ -1,10 +1,10 @@
 import requests
 from pony import orm
-from pony.orm import db_session, desc
+from pony.orm import db_session
 
 from config import general_config
 import private_keys
-from db import Meeting, GroupMeeting, GroupMeetingTask
+from db import GroupMeeting, GroupMeetingTask
 
 @db_session
 def get_groups_for_meeting(meeting):
