@@ -82,6 +82,12 @@ def handle_incoming_config(config):
         key = entry["key"]
         value = entry["value"]
         db_config = Config.get(key=key)
+        if db_config.config_type == "number":
+            # Make sure the value is a number
+            if not value.isdigit():
+                # Ignore the config as it is invalid
+                continue
+
         if db_config is None:
             return "Config " + str(key) + " not found", 404
         db_config.value = value
