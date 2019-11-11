@@ -75,9 +75,6 @@ def send_final_mail(meeting):
 
 
 def check_for_enddate(meeting):
-    send_final_mail(meeting)
-    return
-
     check_time = int(Config["check_for_deadline_frequency"].value) * 60
     min_after_deadline = int(Config["minutes_after_deadline_to_mail"].value)
     deadline = meeting.last_upload
