@@ -23,6 +23,7 @@ def get_config_for_meeting(meeting):
             })
 
     m_js = {
+        "id": str(meeting.id),
         "lp": meeting.lp,
         "meeting_no": meeting.meeting_no,
         "date": meeting.date.strftime("%Y-%m-%dT%H:%MZ"),

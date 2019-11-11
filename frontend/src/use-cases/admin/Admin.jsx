@@ -12,7 +12,7 @@ import { ConfigGrid, ConfigContainer, StyledTextField } from "./Admin.styles";
 import Meetings from "./ConfigPages/Meetings";
 
 const defaultState = {
-    password: "asd123",
+    password: "",
     acceptedPassword: null,
     errorMsg: "",
     configList: []
@@ -28,8 +28,6 @@ export class Admin extends React.Component {
         this.onError = this.onError.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onSave = this.onSave.bind(this);
-
-        this.onSubmit();
     }
 
     render() {

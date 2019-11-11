@@ -27,6 +27,7 @@ class Task(db.Entity):
 
 # A specific meeting
 class Meeting(db.Entity):
+    id = PrimaryKey(UUID, auto=True)
     year = Required(int)
     date = Required(datetime)
     last_upload = Required(datetime)
@@ -35,7 +36,6 @@ class Meeting(db.Entity):
 
     group_meetings = Set("GroupMeeting")
     archive = Optional("ArchiveCode")
-    PrimaryKey(year, lp, meeting_no)
 
 
 # Contains the code for each group and meeting
@@ -147,6 +147,7 @@ class UserError(Exception):
 @db_session
 def validate_meeting(meeting_json):
     try:
+        id = meeting_json["id"]
         date = dateutil.parser.parse(meeting_json["date"])
         last_upload = dateutil.parser.parse(meeting_json["last_upload_date"])
         lp = meeting_json["lp"]
@@ -156,11 +157,17 @@ def validate_meeting(meeting_json):
         if not 0 <= meeting_no:
             raise UserError("invalid meeting number " + str(meeting_no))
 
-        meeting = Meeting.get(year=date.year, lp=lp, meeting_no=meeting_no)
-
-        if meeting is None:
+        if id == "new":
             # The meeting does not exist, we want to create the tasks for it
             meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+        else:
+            meeting = Meeting.get(id=id)
+            if meeting is None:
+                raise UserError("Meeting id not found and not 'new'")
+
+            meeting.lp = lp
+            meeting.meeting_no = meeting_no
+            meeting.year = date.year
 
         tasks = meeting_json["groups_tasks"]
         db_tasks = get_db_tasks(meeting)

@@ -316,9 +316,10 @@ export class Meetings extends React.Component {
     onNewMeeting() {
         let today = new Date().toISOString();
         let meeting = {
+            id: "new",
             date: today,
             last_upload_date: today,
-            lp: 0,
+            lp: 1,
             meeting_no: 0,
             groups_tasks: {}
         };
@@ -356,6 +357,7 @@ export class Meetings extends React.Component {
                 alert("Meeting saved successfully");
                 // Update the new meeting with the response meeting.
                 meeting.groups_tasks = res.data.groups_tasks;
+                meeting.id = res.data.id;
                 this.setState({
                     selectedMeeting: meeting
                 });
