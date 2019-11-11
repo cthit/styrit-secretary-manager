@@ -2,9 +2,9 @@ import requests
 from pony import orm
 from pony.orm import db_session
 
-from config import general_config
 import private_keys
-from db import GroupMeeting, GroupMeetingTask
+from db import GroupMeeting, GroupMeetingTask, Config
+
 
 @db_session
 def get_groups_for_meeting(meeting):
@@ -30,11 +30,14 @@ def get_mail_from_code(code, group, meeting):
     last_turnin_time = meeting.last_upload.strftime("%H:%M")
     last_turnin_date = meeting.last_upload.strftime("%d/%m")
 
-    mail_to = group.name + general_config.group_email_domain
+    mail_to = group.name + Config["group_email_domain"].value
     subject = "Dokument till sektionsmöte"
 
     # Setup the message that will be sent to the different groups
-    msg = general_config.mail_to_groups_message.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date, tasks, general_config.frontend_url, code, general_config.document_template_url, general_config.my_email, general_config.board_display_name, general_config.board_email)
+    msg = Config["mail_to_groups_message"].value
+    msg = msg.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date,
+                     tasks, Config["frontend_url"].value, code, Config["document_template_url"].value,
+                     Config["secretary_email"].value, Config["board_display_name"].value, Config["board_email"].value)
     return mail_to, subject, msg
 
 
@@ -43,11 +46,11 @@ def send_mails(meeting):
     groups = get_groups_for_meeting(meeting)
 
     for group_meeting in groups:
-        url = general_config.gotify_url
+        url = Config["gotify_url"].value
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
         data = {"to": mail_to,
-                "from": general_config.from_email_address,
+                "from": Config["from_email_address"],
                 "subject": subject,
                 "body": msg}
         r = None
@@ -56,4 +59,3 @@ def send_mails(meeting):
             print(r.reason)
         except Exception as e:
             print("Encontered an error while contacting gotify: " + str(e))
-

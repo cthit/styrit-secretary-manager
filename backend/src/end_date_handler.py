@@ -8,7 +8,6 @@ from pony import orm
 from pony.orm import db_session
 
 import private_keys
-from config import general_config
 from db import GroupMeetingFile, ArchiveCode, Meeting, Config
 
 
@@ -36,6 +35,7 @@ def get_mail(meeting, code):
     subject = "Dokument för sektionsmöte {0} lp {1}".format(meeting.meeting_no, meeting.lp)
     return to, subject, msg
 
+
 @db_session
 def send_final_mail(meeting):
     folder_loc = "./b"
@@ -51,14 +51,15 @@ def send_final_mail(meeting):
     if not os.path.exists(archives_loc):
         os.makedirs(archives_loc)
 
-    archive_name = archives_loc + "/documents_lp" + str(meeting.lp) + "_" + str(meeting.meeting_no) + "_" + str(meeting.year)
+    archive_name = archives_loc + "/documents_lp" + str(meeting.lp) + "_" + str(meeting.meeting_no) + "_" + str(
+        meeting.year)
     shutil.make_archive(archive_name, 'zip', folder_loc)
 
     # To avoid a transaction error we need to once more get a reference to the meeting
     meeting = Meeting[meeting.year, meeting.lp, meeting.meeting_no]
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
 
-    url = general_config.gotify_url
+    url = Config["gotify_url"].value
     header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
     mail_to, subject, msg = get_mail(meeting, archive.code)
     data = {"to": mail_to,
@@ -74,11 +75,8 @@ def send_final_mail(meeting):
 
 
 def check_for_enddate(meeting):
-    send_final_mail(meeting)
-    return
-
-    check_time = 1 # 5 * 60  # 5 minutes
-    min_after_deadline = general_config.minutes_after_deadline_to_mail
+    check_time = int(Config["check_for_deadline_frequency"].value) * 60
+    min_after_deadline = int(Config["minutes_after_deadline_to_mail"].value)
     deadline = meeting.last_upload
     deadline = deadline + datetime.timedelta(minutes=min_after_deadline)
 

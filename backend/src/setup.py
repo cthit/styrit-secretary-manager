@@ -1,7 +1,5 @@
-from pony import orm
 from pony.orm import commit
 
-from config import meeting_config
 from db import *
 
 
@@ -42,7 +40,8 @@ def setup_general_config():
                   "nedladdning av dessa dokument klicka på denna länk: {3}\n\nVid frågor, kontakta sekreteraren på {4}",
          "config_type": long_string},
         {"key": "board_display_name", "value": "styrIT", "config_type": string},
-        {"key": "minutes_after_deadline_to_mail", "value": "5", "config_type": number}
+        {"key": "minutes_after_deadline_to_mail", "value": "5", "config_type": number},
+        {"key": "check_for_deadline_frequency", "value": "5", "config_type": number}
     ]
 
     for config in config_list:
@@ -128,48 +127,5 @@ def setup_general_config():
     print("Finished loading database data from general config file.")
 
 
-@db_session
-def setup_meeting_config():
-    # Update the next meetings data
-    date = datetime.strptime(meeting_config.date, "%Y-%m-%d %H:%M")
-    last_upload_date = datetime.strptime(meeting_config.last_upload_date, "%Y-%m-%d %H:%M")
-
-    year = date.year
-    lp = meeting_config.study_period
-    no = meeting_config.meeting_no
-    meeting = Meeting.get(year=year, lp=lp, meeting_no=no)
-
-    if meeting is None:
-        meeting = Meeting(year=year, lp=lp, meeting_no=no, date=date, last_upload=last_upload_date)
-
-    all_groups = list(orm.select(group.name for group in Group.select(lambda g: True)))
-
-    # Prepare a list of all tasks for each group
-    group_task_dict = {}
-    for group in all_groups:
-        group_task_dict[group] = []
-
-    # For each group, populate the list
-    for tbd in meeting_config.tasks_to_be_done:
-        groups = tbd["groups"]
-        if groups == "all":
-            groups = all_groups
-
-        for group in groups:
-            group_task_dict[group] = group_task_dict[group] + tbd["tasks"]
-
-    # Now connect the tasks with the code.
-    for group in all_groups:
-        if GroupMeeting.get(group=group, meeting=meeting) is None:
-            group_meeting = GroupMeeting(group=group, meeting=meeting)
-            for task in group_task_dict[group_meeting.group.name]:
-                GroupMeetingTask(group=group_meeting, task=Task[task])
-
-    commit()
-    print("Finished loading meeting specific data from file to database")
-
-
 def setup_db():
     setup_general_config()
-    # Below should be done from frontend
-    # setup_meeting_config()

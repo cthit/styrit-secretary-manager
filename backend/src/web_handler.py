@@ -2,7 +2,7 @@ import datetime
 import os
 import threading
 
-from flask import Flask, request, current_app, send_file, send_from_directory
+from flask import Flask, request, current_app, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -11,8 +11,8 @@ from pony.orm import db_session
 import end_date_handler
 import mail_handler
 import private_keys
-from config import general_config, config_handler
-from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode
+from config import config_handler
+from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 
 app = Flask(__name__)
 api = Api(app)
@@ -28,7 +28,7 @@ def get_data_for_code(code):
 
     task_tuples = list(orm.select(
         (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
-                                  str(group_task.group.code) == code))
+        str(group_task.group.code) == code))
     tasks = []
     for name, d_name in task_tuples:
         tasks.append({
@@ -102,7 +102,7 @@ class CodeRes(Resource):
 
         current_date = datetime.datetime.utcnow()
         if group_meeting.meeting.last_upload < current_date:
-            return {"error": "Code expired, please contact me at " + general_config.my_email}
+            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}
 
         return {
             "code": code,
@@ -181,8 +181,8 @@ class MailRes(Resource):
         if meeting is None:
             return "Unable to find meeting", 404
 
-        threading.Thread(target=mail_handler.send_mails, args=(meeting, )).start()
-        threading.Thread(target=end_date_handler.send_final_mail, args=(meeting, )).start()
+        threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
+        threading.Thread(target=end_date_handler.send_final_mail, args=(meeting,)).start()
 
 
 class PasswordResource(Resource):
@@ -204,8 +204,8 @@ class ArchiveDownload(Resource):
             return 404
 
         file_name = "documents_lp2_0_2019.zip"
-#        file = "." + archive.archive_location
-#        file = os.path.join(current_app.root_path, archive.archive_location)
+        #        file = "." + archive.archive_location
+        #        file = os.path.join(current_app.root_path, archive.archive_location)
 
         directory = os.path.join(current_app.root_path, "../archives")
         return send_from_directory(directory, file_name)
