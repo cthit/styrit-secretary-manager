@@ -56,7 +56,7 @@ def send_final_mail(meeting):
     shutil.make_archive(archive_name, 'zip', folder_loc)
 
     # To avoid a transaction error we need to once more get a reference to the meeting
-    meeting = Meeting[meeting.year, meeting.lp, meeting.meeting_no]
+    meeting = Meeting[meeting.id]
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
 
     url = Config["gotify_url"].value

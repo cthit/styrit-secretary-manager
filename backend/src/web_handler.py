@@ -170,10 +170,8 @@ class MailRes(Resource):
 
         # The password was accepted! Try to figure out which meeting it wants to send the email for.
         try:
-            year = data["year"]
-            lp = data["lp"]
-            meeting_no = data["meeting_no"]
-            meeting = Meeting[year, lp, meeting_no]
+            id = data["id"]
+            meeting = Meeting[id]
         except Exception as e:
             print("Unable to validate meeting " + str(e))
             return "Unable to validate meeting", 400
