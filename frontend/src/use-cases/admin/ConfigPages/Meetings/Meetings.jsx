@@ -47,6 +47,8 @@ export class Meetings extends React.Component {
         this.getSelectedMeeting = this.getSelectedMeeting.bind(this);
         this.getChecked = this.getChecked.bind(this);
         this.handleCheck = this.handleCheck.bind(this);
+        this.handleCheckAll = this.handleCheckAll.bind(this);
+        this.getAllChecked = this.getAllChecked.bind(this);
         this.getCode = this.getCode.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onNewMeeting = this.onNewMeeting.bind(this);
@@ -176,7 +178,12 @@ export class Meetings extends React.Component {
                                     {this.state.tasks.map(col => (
                                         <TableCell align="right">
                                             {col.display_name}
-                                            <Checkbox checked={false} />
+                                            <Checkbox
+                                                checked={this.get}
+                                                onChange={() =>
+                                                    this.handleCheckAll(col)
+                                                }
+                                            />
                                         </TableCell>
                                     ))}
                                     <TableCell align="center">Code</TableCell>
@@ -285,6 +292,25 @@ export class Meetings extends React.Component {
         this.setState({
             selectedMeeting: meeting
         });
+    }
+
+    handleCheckAll(task) {
+        this.state.groups.forEach(group => {
+            this.handleCheck(group, task);
+        });
+    }
+
+    // Returns whether or not all of the groups has this task checked.
+    getAllChecked(task) {
+        let meeting = this.state.selectedMeeting;
+        this.state.groups.forEach(group => {
+            if (
+                meeting.groups_tasks[task.name].includes(group.name) === false
+            ) {
+                return false;
+            }
+        });
+        return true;
     }
 
     getCode(group) {
