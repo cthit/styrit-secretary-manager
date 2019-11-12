@@ -56,8 +56,9 @@ def send_mails(meeting):
         url = Config["gotify_url"].value
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
+        mail_from = Config["from_email_address"].value
         data = {"to": mail_to,
-                "from": Config["from_email_address"],
+                "from": mail_from,
                 "subject": subject,
                 "body": msg}
         r = None
