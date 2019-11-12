@@ -67,6 +67,7 @@ export class Admin extends React.Component {
                         </Typography>
                     </Card>
                     <TextField
+                        type="password"
                         label="Lösenord"
                         variant="outlined"
                         onChange={event => {

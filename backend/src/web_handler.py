@@ -1,6 +1,7 @@
 import datetime
 import os
 import threading
+import uuid
 
 from flask import Flask, request, current_app, send_from_directory
 from flask_cors import CORS
@@ -171,16 +172,15 @@ class MailRes(Resource):
         # The password was accepted! Try to figure out which meeting it wants to send the email for.
         try:
             id = data["id"]
-            meeting = Meeting[id]
+            meeting = Meeting.get(id=id)
+            if meeting is None:
+                raise Exception("unable to find meeting with id " + id)
         except Exception as e:
             print("Unable to validate meeting " + str(e))
             return "Unable to validate meeting", 400
 
-        if meeting is None:
-            return "Unable to find meeting", 404
-
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
-        threading.Thread(target=end_date_handler.send_final_mail, args=(meeting,)).start()
+        threading.Thread(target=end_date_handler.check_for_enddate, args=(meeting,)).start()
 
 
 class PasswordResource(Resource):

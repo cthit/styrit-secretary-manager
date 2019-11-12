@@ -35,9 +35,16 @@ def get_mail_from_code(code, group, meeting):
 
     # Setup the message that will be sent to the different groups
     msg = Config["mail_to_groups_message"].value
+    frontend_url = Config["frontend_url"].value
+    document_template_url = Config["document_template_url"].value
+    secretary_email = Config["secretary_email"].value
+    board_display_name = Config["board_display_name"].value
+    board_email = Config["board_email"].value
+
     msg = msg.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date,
-                     tasks, Config["frontend_url"].value, code, Config["document_template_url"].value,
-                     Config["secretary_email"].value, Config["board_display_name"].value, Config["board_email"].value)
+                     tasks, frontend_url, code, document_template_url,
+                     secretary_email, board_display_name, board_email)
+
     return mail_to, subject, msg
 
 
@@ -49,8 +56,9 @@ def send_mails(meeting):
         url = Config["gotify_url"].value
         header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
+        mail_from = Config["from_email_address"].value
         data = {"to": mail_to,
-                "from": Config["from_email_address"],
+                "from": mail_from,
                 "subject": subject,
                 "body": msg}
         r = None

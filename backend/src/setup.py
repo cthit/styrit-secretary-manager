@@ -30,7 +30,7 @@ def setup_general_config():
         {"key": "from_email_address", "value": "admin@chalmers.it", "config_type": string},
         {"key": "mail_to_groups_message",
          "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in "
-                  "följande dokument: {5}\nDetta görs på sidan: {\n6\n}\nAnge koden: {\n7\n}\n\nMall för vissa "
+                  "följande dokument: {5}\nDetta görs på sidan: {6}\nAnge koden: {7}\n\nMall för vissa "
                   "dokument finns här: {8}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n\nOm ni har "
                   "några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} "
                   ": ).",

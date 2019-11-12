@@ -302,7 +302,6 @@ export class Meetings extends React.Component {
     onSelectMeeting(event) {
         let newMeetingNo = event.target.value;
         let newMeeting = this.state.meetings[newMeetingNo];
-        console.log("Meeting last upload", newMeeting.last_upload_date);
         this.setState({
             selectedMeetingNumber: newMeetingNo,
             selectedMeeting: newMeeting
@@ -338,61 +337,71 @@ export class Meetings extends React.Component {
     }
 
     onSave() {
-        if (this.state.selectedMeetingNumber < 0) {
-            return;
-        }
+        return new Promise((resolve, reject) => {
+            if (this.state.selectedMeetingNumber < 0) {
+                reject(Error("No valid meeting selected"));
+            }
 
-        let meeting = this.state.selectedMeeting;
-        meeting.name = this.getMeetingName(meeting);
-        console.log("STATE", this.state);
-        let data = {
-            pass: this.state.pass,
-            meeting: meeting
-        };
-        // Update the state meetings list with the response from the server.
-        axios
-            .post("http://localhost:5000/admin/config/meeting", data, {})
-            .then(res => {
-                console.log("RESPONSE", res);
-                alert("Meeting saved successfully");
-                // Update the new meeting with the response meeting.
-                meeting.groups_tasks = res.data.groups_tasks;
-                meeting.id = res.data.id;
-                this.setState({
-                    selectedMeeting: meeting
+            let meeting = this.state.selectedMeeting;
+            meeting.name = this.getMeetingName(meeting);
+            console.log("STATE", this.state);
+            let data = {
+                pass: this.state.pass,
+                meeting: meeting
+            };
+            // Update the state meetings list with the response from the server.
+            axios
+                .post("http://localhost:5000/admin/config/meeting", data, {})
+                .then(res => {
+                    console.log("RESPONSE", res);
+                    alert("Meeting saved successfully");
+                    // Update the new meeting with the response meeting.
+                    meeting.groups_tasks = res.data.groups_tasks;
+                    meeting.id = res.data.id;
+                    this.setState({
+                        selectedMeeting: meeting
+                    });
+                    resolve("Meeting saved successfully!");
+                })
+                .catch(error => {
+                    console.log("ERROR", error);
+                    let msg = error;
+                    if (error && error.response && error.response.data) {
+                        msg = error.response.data.error;
+                    }
+                    alert("Something went wrong: " + msg);
+                    reject(Error("Unable to save meeting"));
                 });
-            })
-            .catch(error => {
-                console.log("ERROR", error);
-                let msg = error;
-                if (error && error.response && error.response.data) {
-                    msg = error.response.data.error;
-                }
-                alert("Something went wrong: " + msg);
-            });
+        });
     }
 
     onSendMail() {
         // First save the current meeting
-        this.onSave();
-        let data = {
-            pass: this.state.pass,
-            year: new Date(this.state.selectedMeeting.date).getFullYear(),
-            lp: this.state.selectedMeeting.lp,
-            meeting_no: this.state.selectedMeeting.meeting_no
-        };
+        this.onSave()
+            .then(() => {
+                let data = {
+                    pass: this.state.pass,
+                    id: this.state.selectedMeeting.id
+                };
 
-        console.log("using PUT to send ", data);
-
-        axios
-            .put("http://localhost:5000/mail", data, {})
-            .then(res => {
-                console.log("RESPOSNE", res);
-                alert("Mail(s) sent successfull");
+                axios
+                    .put("http://localhost:5000/mail", data, {})
+                    .then(res => {
+                        console.log("RESPONSE", res);
+                        alert("Mail(s) sent successfull");
+                    })
+                    .catch(error => {
+                        console.log("ERROR", error);
+                        alert(
+                            "Something went wrong with sending the email \n" +
+                                error
+                        );
+                    });
             })
-            .catch(error => {
-                console.log("ERROR", error);
-                alert("Something went wrong with sending the email \n" + error);
+            .catch(() => {
+                console.log(
+                    "Unable to send mail as something went wrong with saving the meeting."
+                );
             });
     }
 
