@@ -44,6 +44,7 @@ def get_mail_from_code(code, group, meeting):
     msg = msg.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date,
                      tasks, frontend_url, code, document_template_url,
                      secretary_email, board_display_name, board_email)
+
     return mail_to, subject, msg
 
 
