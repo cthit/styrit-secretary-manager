@@ -132,7 +132,8 @@ def validate_password(response_json):
                    "Error": "Bad Request"
                }, 400
     password = response_json["pass"]
-    if password != private_keys.frontend_admin_pass:
+    frontend_admin_pass = os.environ.get("frontend_admin_pass")
+    if password != frontend_admin_pass:
         return {
                    "Error": "Invalid password"
                }, 401

@@ -66,9 +66,9 @@ def send_final_mail(meeting):
         # Create a new archive
         archive = ArchiveCode(meeting=meeting, archive_location=archives_loc)
 
-
     url = Config["gotify_url"].value
-    header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
+    gotify_auth_key = os.environ.get("gotify_auth_key")
+    header = {"Authorization": gotify_auth_key, "Accept": "*/*"}
     mail_to, subject, msg = get_mail(meeting, archive.code)
     data = {"to": mail_to,
             "mail_from": Config["from_email_address"].value,

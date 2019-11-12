@@ -1,3 +1,5 @@
+from os import environ
+
 import requests
 from pony import orm
 from pony.orm import db_session
@@ -51,10 +53,11 @@ def get_mail_from_code(code, group, meeting):
 @db_session
 def send_mails(meeting):
     groups = get_groups_for_meeting(meeting)
+    gotify_auth_key = environ.get("gotify_auth_key")
 
     for group_meeting in groups:
         url = Config["gotify_url"].value
-        header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
+        header = {"Authorization": gotify_auth_key, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
         mail_from = Config["from_email_address"].value
         data = {"to": mail_to,
