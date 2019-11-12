@@ -64,7 +64,7 @@ def send_final_mail(meeting):
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
     if archive is None:
         # Create a new archive
-        archive = ArchiveCode(meeting=meeting, archives_location=archives_loc)
+        archive = ArchiveCode(meeting=meeting, archive_location=archives_loc)
 
 
     url = Config["gotify_url"].value
