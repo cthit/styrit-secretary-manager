@@ -17,6 +17,7 @@ services:
             - 8080:8080
 
     backend:
+        image: styrit_secretary_manager_backend
         links:
             - gotify
         depends_on:
@@ -24,12 +25,16 @@ services:
         build:
             context: ./backend/
             dockerfile: dev.Dockerfile
+        environment:
+            gotify_auth_key: "123abc"
+            frontend_admin_pass: "asd123"
         ports:
             - 5000:5000
         volumes:
             - ./backend/:/usr/src/secretary-manager/backend
 
     frontend:
+        image: styrit_secretary_manager_frontend
         build:
             context: ./frontend/
             dockerfile: dev.Dockerfile
