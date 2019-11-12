@@ -63,7 +63,8 @@ def send_final_mail(meeting):
 
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
     if archive is None:
-        raise Exception("No archive for meeting " + str(id))
+        print("No archives uploaded for meeting")
+        return
 
     url = Config["gotify_url"].value
     header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}

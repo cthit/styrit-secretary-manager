@@ -179,9 +179,6 @@ class MailRes(Resource):
             print("Unable to validate meeting " + str(e))
             return "Unable to validate meeting", 400
 
-        if meeting is None:
-            return "Unable to find meeting", 404
-
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
         threading.Thread(target=end_date_handler.send_final_mail, args=(meeting,)).start()
 
