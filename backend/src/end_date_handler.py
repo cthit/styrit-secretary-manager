@@ -63,8 +63,9 @@ def send_final_mail(meeting):
 
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
     if archive is None:
-        print("No archives uploaded for meeting")
-        return
+        # Create a new archive
+        archive = ArchiveCode(meeting=meeting, archives_location=archives_loc)
+
 
     url = Config["gotify_url"].value
     header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
@@ -81,6 +82,7 @@ def send_final_mail(meeting):
         print("Encontered an error while contacting gotify: " + str(e))
 
 
+@db_session
 def check_for_enddate(meeting):
     check_time = int(Config["check_for_deadline_frequency"].value) * 60
     min_after_deadline = int(Config["minutes_after_deadline_to_mail"].value)
@@ -90,6 +92,7 @@ def check_for_enddate(meeting):
     curr_date = datetime.datetime.utcnow()
 
     while curr_date < deadline:
+        print("Checking for end, keep waiting curr: " + str(curr_date) + " waiting for: " + str(deadline))
         time.sleep(check_time)
         curr_date = datetime.datetime.utcnow()
 
