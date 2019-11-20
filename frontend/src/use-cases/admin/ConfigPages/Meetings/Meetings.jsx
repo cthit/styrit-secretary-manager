@@ -377,7 +377,7 @@ export class Meetings extends React.Component {
             };
             // Update the state meetings list with the response from the server.
             axios
-                .post("http://localhost:5000/admin/config/meeting", data, {})
+                .post("/admin/config/meeting", data, {})
                 .then(res => {
                     console.log("RESPONSE", res);
                     alert("Meeting saved successfully");
@@ -411,7 +411,7 @@ export class Meetings extends React.Component {
                 };
 
                 axios
-                    .put("http://localhost:5000/mail", data, {})
+                    .put("/mail", data, {})
                     .then(res => {
                         console.log("RESPONSE", res);
                         alert("Mail(s) sent successfull");

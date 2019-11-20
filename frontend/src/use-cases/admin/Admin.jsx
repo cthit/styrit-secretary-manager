@@ -214,7 +214,7 @@ export class Admin extends React.Component {
         console.log("sending data to server", data);
 
         axios
-            .put("http://localhost:5000/admin", data, {})
+            .put("/admin", data, {})
             .then(res => {
                 console.log(res.statusText);
                 let date = {};
@@ -288,7 +288,7 @@ export class Admin extends React.Component {
         };
 
         axios
-            .post("http://localhost:5000/admin/config", data, {})
+            .post("/admin/config", data, {})
             .then(response => {
                 this.setState({
                     errorMsg: ""

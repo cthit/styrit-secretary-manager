@@ -24,10 +24,15 @@ services:
             - db
         build:
             context: ./backend/
-            dockerfile: dev.Dockerfile
+            dockerfile: prod.Dockerfile
         environment:
             gotify_auth_key: "123abc"
             frontend_admin_pass: "asd123"
+            SECRETARY_POSTGRES_USER: secretary
+            SECRETARY_POSTGRES_PASSWORD: password
+            SECRETARY_POSTGRES_HOST: db
+            SECRETARY_POSTGRES_PORT: 5432
+            PYTHONUNBUFFERED: 0
         ports:
             - 5000:5000
         volumes:
@@ -37,9 +42,9 @@ services:
         image: styrit_secretary_manager_frontend
         build:
             context: ./frontend/
-            dockerfile: dev.Dockerfile
+            dockerfile: prod.Dockerfile
         ports:
-            - 3000:3000
+            - 3000:80
         volumes:
             - ./frontend:/usr/src/secretary-manager/frontend
 

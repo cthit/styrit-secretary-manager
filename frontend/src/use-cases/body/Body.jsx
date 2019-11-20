@@ -131,7 +131,7 @@ export class Body extends React.Component {
         console.log("data", data);
 
         axios
-            .post("http://localhost:5000/code", data, {})
+            .post("/code", data, {})
             .then(res => {
                 console.log(res.statusText);
 
@@ -191,7 +191,7 @@ export class Body extends React.Component {
         data.append("group", this.state.group);
 
         axios
-            .put("http://localhost:5000/file", data, {})
+            .put("/file", data, {})
             .then(res => {
                 console.log(res.statusText);
                 console.log("RES", res);
