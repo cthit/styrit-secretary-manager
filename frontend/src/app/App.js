@@ -7,8 +7,34 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Admin from "../use-cases/admin";
 
 function App() {
+    let debug = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+    console.log("Debug mode: " + debug);
+    let backend = "";
+    if (debug) {
+        backend = "http://localhost:5000";
+    }
+
     return (
         <div>
+            {debug && (
+                <div
+                    style={{
+                        backgroundColor: "yellow",
+                        display: "flex ",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}
+                >
+                    <h1
+                        style={{
+                            fontFamily: "Arial, Sans-serif",
+                            textDecoration: "underline"
+                        }}
+                    >
+                        DEBUG MODE
+                    </h1>
+                </div>
+            )}
             <Router>
                 <Switch>
                     <Route path="/admin">
@@ -20,13 +46,12 @@ function App() {
                                 >
                                     Dokumentinsamling
                                 </Typography>
-
                                 <Link to="" style={{ color: "white" }}>
                                     <Button color="inherit">Standard vy</Button>
                                 </Link>
                             </ToolBar>
                         </AppBar>
-                        <Admin />
+                        <Admin debugMode={debug} backendAddress={backend} />
                     </Route>
                     <Route path="">
                         <AppBar position="static">
@@ -43,7 +68,12 @@ function App() {
                                 </Link>
                             </ToolBar>
                         </AppBar>
-                        <Body />
+                        <Body
+                            props={{
+                                debugMode: debug,
+                                backendAddress: backend
+                            }}
+                        />
                     </Route>
                 </Switch>
             </Router>

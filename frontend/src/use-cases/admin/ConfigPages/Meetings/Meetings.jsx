@@ -27,6 +27,8 @@ import {
 import axios from "axios";
 
 const defaultState = {
+    debugMode: false,
+    backendAddress: "",
     meetings: {},
     selectedMeetingNumber: -1,
     selectedMeeting: null,
@@ -36,6 +38,10 @@ const defaultState = {
 export class Meetings extends React.Component {
     constructor(props) {
         super(props);
+
+        defaultState.debugMode = props.debugMode;
+        defaultState.backendAddress = props.backendAddress;
+
         defaultState.meetings = props.meetings;
         defaultState.tasks = props.tasks;
         defaultState.groups = props.groups;
@@ -105,7 +111,9 @@ export class Meetings extends React.Component {
                                     label="Date"
                                     value={this.state.selectedMeeting.date}
                                     onChange={event => {
-                                        console.log("STATE", this.state);
+                                        if (this.state.debugMode) {
+                                            console.log("STATE", this.state);
+                                        }
                                         let meeting = this.state
                                             .selectedMeeting;
                                         meeting.date = event.toISOString();
@@ -286,9 +294,9 @@ export class Meetings extends React.Component {
             // Remove the group
             meeting.groups_tasks[task.name].splice(removeIndex, 1);
         }
-
-        console.log(meeting);
-
+        if (this.state.debugMode) {
+            console.log(meeting);
+        }
         this.setState({
             selectedMeeting: meeting
         });
@@ -370,16 +378,24 @@ export class Meetings extends React.Component {
 
             let meeting = this.state.selectedMeeting;
             meeting.name = this.getMeetingName(meeting);
-            console.log("STATE", this.state);
+            if (this.state.debugMode) {
+                console.log("STATE", this.state);
+            }
             let data = {
                 pass: this.state.pass,
                 meeting: meeting
             };
             // Update the state meetings list with the response from the server.
             axios
-                .post("/admin/config/meeting", data, {})
+                .post(
+                    this.state.backendAddress + "/admin/config/meeting",
+                    data,
+                    {}
+                )
                 .then(res => {
-                    console.log("RESPONSE", res);
+                    if (this.state.debugMode) {
+                        console.log("RESPONSE", res);
+                    }
                     alert("Meeting saved successfully");
                     // Update the new meeting with the response meeting.
                     meeting.groups_tasks = res.data.groups_tasks;
@@ -390,7 +406,9 @@ export class Meetings extends React.Component {
                     resolve("Meeting saved successfully!");
                 })
                 .catch(error => {
-                    console.log("ERROR", error);
+                    if (this.state.debugMode) {
+                        console.log("ERROR", error);
+                    }
                     let msg = error;
                     if (error && error.response && error.response.data) {
                         msg = error.response.data.error;
@@ -411,13 +429,17 @@ export class Meetings extends React.Component {
                 };
 
                 axios
-                    .put("/mail", data, {})
+                    .put(this.state.backendAddress + "/mail", data, {})
                     .then(res => {
-                        console.log("RESPONSE", res);
+                        if (this.state.debugMode) {
+                            console.log("RESPONSE", res);
+                        }
                         alert("Mail(s) sent successfull");
                     })
                     .catch(error => {
-                        console.log("ERROR", error);
+                        if (this.state.debugMode) {
+                            console.log("ERROR", error);
+                        }
                         alert(
                             "Something went wrong with sending the email \n" +
                                 error
@@ -425,9 +447,11 @@ export class Meetings extends React.Component {
                     });
             })
             .catch(() => {
-                console.log(
-                    "Unable to send mail as something went wrong with saving the meeting."
-                );
+                if (this.state.debugMode) {
+                    console.log(
+                        "Unable to send mail as something went wrong with saving the meeting."
+                    );
+                }
             });
     }
 

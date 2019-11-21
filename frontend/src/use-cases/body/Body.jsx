@@ -13,6 +13,8 @@ import Upload from "./Upload";
 import axios from "axios";
 
 const defaultState = {
+    debugMode: false,
+    backendAddress: "",
     code: "",
     acceptedCode: null,
     group: null,
@@ -25,6 +27,9 @@ const defaultState = {
 export class Body extends React.Component {
     constructor(props) {
         super(props);
+
+        defaultState.debugMode = props.props.debugMode;
+        defaultState.backendAddress = props.props.backendAddress;
         this.state = defaultState;
 
         this.chooseBody = this.chooseBody.bind(this);
@@ -123,20 +128,28 @@ export class Body extends React.Component {
     }
 
     onSubmit() {
-        console.log("State", this);
+        if (this.state.debugMode) {
+            console.log("State", this);
+        }
         const data = {
             code: this.state.code
         };
 
-        console.log("data", data);
+        if (this.state.debugMode) {
+            console.log("data", data);
+        }
 
         axios
-            .post("/code", data, {})
+            .post(this.state.backendAddress + "/code", data, {})
             .then(res => {
                 console.log(res.statusText);
 
                 if (res.data.error) {
-                    console.log("Server returned an error: " + res.data.error);
+                    if (this.state.debugMode) {
+                        console.log(
+                            "Server returned an error: " + res.data.error
+                        );
+                    }
                     this.setState({
                         errorMsg: res.data.error
                     });
@@ -146,8 +159,9 @@ export class Body extends React.Component {
                     });
                     let reports = {};
 
-                    console.log("Response: ", res.data);
-
+                    if (this.state.debugMode) {
+                        console.log("Response: ", res.data);
+                    }
                     Object.values(res.data.data.tasks).forEach(task => {
                         reports[task.codeName] = undefined;
                     });
@@ -160,7 +174,9 @@ export class Body extends React.Component {
                         reports: reports
                     }));
 
-                    console.log("STATE", this.state);
+                    if (this.state.debugMode) {
+                        console.log("STATE", this.state);
+                    }
                 }
             })
             .catch(error => {
@@ -170,14 +186,18 @@ export class Body extends React.Component {
 
     onUploadUpdated(data) {
         if (data) {
-            console.log("DATA", data);
+            if (this.state.debugMode) {
+                console.log("DATA", data);
+            }
 
             let oldState = this.state;
             oldState.reports[data.type] = data.file;
 
             this.setState(oldState);
 
-            console.log("STATE", this.state);
+            if (this.state.debugMode) {
+                console.log("STATE", this.state);
+            }
         }
     }
 
@@ -191,10 +211,12 @@ export class Body extends React.Component {
         data.append("group", this.state.group);
 
         axios
-            .put("/file", data, {})
+            .put(this.state.backendAddress + "/file", data, {})
             .then(res => {
-                console.log(res.statusText);
-                console.log("RES", res);
+                if (this.state.debugMode) {
+                    console.log(res.statusText);
+                    console.log("RES", res);
+                }
                 let overwrite = res.data.overwrite;
                 let message = "";
                 if (overwrite) {
