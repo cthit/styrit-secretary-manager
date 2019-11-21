@@ -53,11 +53,12 @@ def get_mail_from_code(code, group, meeting):
 @db_session
 def send_mails(meeting):
     groups = get_groups_for_meeting(meeting)
-    gotify_auth_key = environ.get("gotify_auth_key")
+    gotify_auth_key = environ.get("gotify_auth_key", "123abc")
+    auth = "pre-shared: " + str(gotify_auth_key)
 
     for group_meeting in groups:
         url = Config["gotify_url"].value
-        header = {"Authorization": gotify_auth_key, "Accept": "*/*"}
+        header = {"Authorization": auth, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
         mail_from = Config["from_email_address"].value
         data = {"to": mail_to,
@@ -67,6 +68,6 @@ def send_mails(meeting):
         r = None
         try:
             r = requests.post(url=url, json=data, headers=header)
-            print(r.reason)
+            print("status_code" + str(r.status_code) + "\n" + "reason " + str(r.reason))
         except Exception as e:
             print("Encontered an error while contacting gotify: " + str(e))

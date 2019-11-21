@@ -132,7 +132,7 @@ def validate_password(response_json):
                    "Error": "Bad Request"
                }, 400
     password = response_json["pass"]
-    frontend_admin_pass = os.environ.get("frontend_admin_pass")
+    frontend_admin_pass = os.environ.get("frontend_admin_pass", "asd123")
     if password != frontend_admin_pass:
         return {
                    "Error": "Invalid password"
@@ -180,8 +180,8 @@ class MailRes(Resource):
             print("Unable to validate meeting " + str(e))
             return "Unable to validate meeting", 400
 
-        threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
         threading.Thread(target=end_date_handler.check_for_enddate, args=(meeting,)).start()
+        threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
 
 
 class PasswordResource(Resource):
@@ -206,7 +206,7 @@ class ArchiveDownload(Resource):
         #        file = "." + archive.archive_location
         #        file = os.path.join(current_app.root_path, archive.archive_location)
 
-        directory = os.path.join(current_app.root_path, "../archives")
+        directory = os.path.join(current_app.root_path, "./archives")
         return send_from_directory(directory, file_name)
 
 

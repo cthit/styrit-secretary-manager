@@ -64,11 +64,13 @@ def send_final_mail(meeting):
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
     if archive is None:
         # Create a new archive
-        archive = ArchiveCode(meeting=meeting, archive_location=archives_loc)
+        archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
+
+    print("Archive should now be available at '" + str(Config["archive_base_url"].value) + str(archive.code) + "'")
 
     url = Config["gotify_url"].value
-    gotify_auth_key = os.environ.get("gotify_auth_key")
-    header = {"Authorization": gotify_auth_key, "Accept": "*/*"}
+    gotify_auth_key = os.environ.get("gotify_auth_key", "123abc")
+    header = {"Authorization": "pre-shared: " + str(gotify_auth_key), "Accept": "*/*"}
     mail_to, subject, msg = get_mail(meeting, archive.code)
     data = {"to": mail_to,
             "mail_from": Config["from_email_address"].value,

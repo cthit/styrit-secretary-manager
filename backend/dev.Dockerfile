@@ -21,4 +21,4 @@ ENV PYTHONUNBUFFERED 0
 
 EXPOSE 5000
 
-CMD ["sh", "start.sh"]
+CMD ["sh", "dev_start.sh"]
