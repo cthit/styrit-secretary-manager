@@ -1,4 +1,6 @@
-FROM python:3
+FROM python:3-alpine
+
+RUN apk update && apk add postgresql-bdr-client postgresql-dev build-base shadow
 
 WORKDIR /usr/src/secretary-manager/backend
 
@@ -6,19 +8,18 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+RUN apk del build-base postgresql-dev
 
 RUN useradd secretary_manager
+
+COPY . .
+
 RUN chown -R secretary_manager /usr/src/secretary-manager/backend
 
 USER secretary_manager
 
-ENV SECRETARY_POSTGRES_USER secretary
-ENV SECRETARY_POSTGRES_PASSWORD password
-ENV SECRETARY_POSTGRES_HOST db
-ENV SECRETARY_POSTGRES_PORT 5432
-ENV PYTHONUNBUFFERED 0
+ENV FLASK_ENV production
 
 EXPOSE 5000
 
-CMD ["sh", "dev_start.sh"]
+CMD ["sh", "start.sh"]

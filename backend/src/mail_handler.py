@@ -1,15 +1,11 @@
+from os import environ
+
 import requests
 from pony import orm
-from pony.orm import db_session, desc
+from pony.orm import db_session
 
-from config import general_config
 import private_keys
-from db import Meeting, GroupMeeting, GroupMeetingTask
-
-
-@db_session
-def get_next_meeting():
-    return Meeting.select().order_by(desc(Meeting.date)).first()
+from db import GroupMeeting, GroupMeetingTask, Config
 
 
 @db_session
@@ -36,32 +32,42 @@ def get_mail_from_code(code, group, meeting):
     last_turnin_time = meeting.last_upload.strftime("%H:%M")
     last_turnin_date = meeting.last_upload.strftime("%d/%m")
 
-    mail_to = group.name + general_config.group_email_domain
+    mail_to = group.name + Config["group_email_domain"].value
     subject = "Dokument till sektionsmöte"
 
     # Setup the message that will be sent to the different groups
-    msg = general_config.mail_to_groups_message.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date, tasks, general_config.frontend_url, code, general_config.document_template_url, general_config.my_email, general_config.board_display_name, general_config.board_email)
+    msg = Config["mail_to_groups_message"].value
+    frontend_url = Config["frontend_url"].value
+    document_template_url = Config["document_template_url"].value
+    secretary_email = Config["secretary_email"].value
+    board_display_name = Config["board_display_name"].value
+    board_email = Config["board_email"].value
+
+    msg = msg.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date,
+                     tasks, frontend_url, code, document_template_url,
+                     secretary_email, board_display_name, board_email)
+
     return mail_to, subject, msg
 
 
 @db_session
-def send_mails():
-    print("\n\n")
-    meeting = get_next_meeting()
+def send_mails(meeting):
     groups = get_groups_for_meeting(meeting)
-    print("\n\n")
+    gotify_auth_key = environ.get("gotify_auth_key", "123abc")
+    auth = "pre-shared: " + str(gotify_auth_key)
+
     for group_meeting in groups:
-        url = general_config.gotify_url
-        header = {"Authorization": private_keys.gotify_auth_key, "Accept": "*/*"}
+        url = Config["gotify_url"].value
+        header = {"Authorization": auth, "Accept": "*/*"}
         mail_to, subject, msg = get_mail_from_code(group_meeting.code, group_meeting.group, meeting)
+        mail_from = Config["from_email_address"].value
         data = {"to": mail_to,
-                "from": general_config.from_email_address,
+                "from": mail_from,
                 "subject": subject,
                 "body": msg}
         r = None
         try:
             r = requests.post(url=url, json=data, headers=header)
-            print(r.reason)
+            print("status_code" + str(r.status_code) + "\n" + "reason " + str(r.reason))
         except Exception as e:
             print("Encontered an error while contacting gotify: " + str(e))
-

@@ -12,7 +12,9 @@ import { ConfigGrid, ConfigContainer, StyledTextField } from "./Admin.styles";
 import Meetings from "./ConfigPages/Meetings";
 
 const defaultState = {
-    password: "asd123",
+    debugMode: false,
+    backendAddress: "",
+    password: "",
     acceptedPassword: null,
     errorMsg: "",
     configList: []
@@ -21,6 +23,10 @@ const defaultState = {
 export class Admin extends React.Component {
     constructor(props) {
         super(props);
+
+        defaultState.debugMode = props.debugMode;
+        defaultState.backendAddress = props.backendAddress;
+
         this.state = defaultState;
 
         this.chooseBody = this.chooseBody.bind(this);
@@ -28,8 +34,6 @@ export class Admin extends React.Component {
         this.onError = this.onError.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onSave = this.onSave.bind(this);
-
-        this.onSubmit();
     }
 
     render() {
@@ -69,6 +73,7 @@ export class Admin extends React.Component {
                         </Typography>
                     </Card>
                     <TextField
+                        type="password"
                         label="Lösenord"
                         variant="outlined"
                         onChange={event => {
@@ -97,6 +102,8 @@ export class Admin extends React.Component {
                         tasks={this.state.tasks}
                         groups={this.state.groups}
                         pass={this.state.acceptedPassword}
+                        debugMode={this.state.debugMode}
+                        backendAddress={this.state.backendAddress}
                     />
 
                     <ConfigContainer>
@@ -173,9 +180,12 @@ export class Admin extends React.Component {
                                         </ConfigContainer>
                                     );
                                 default:
-                                    console.log(
-                                        "ERROR, unknown conf type: " + conf.type
-                                    );
+                                    if (this.state.debugMode) {
+                                        console.log(
+                                            "ERROR, unknown conf type: " +
+                                                conf.type
+                                        );
+                                    }
                             }
                         }
                     })}
@@ -212,18 +222,19 @@ export class Admin extends React.Component {
         let data = {
             pass: this.state.password
         };
-        console.log("sending data to server", data);
+
+        if (this.state.debugMode) {
+            console.log("sending data to server", data);
+        }
 
         axios
-            .put("http://localhost:5000/admin", data, {})
+            .put(this.state.backendAddress + "/admin", data, {})
             .then(res => {
                 console.log(res.statusText);
-
                 let date = {};
                 let name = "";
                 let meetings_list = res.data.meetings.map(meeting => {
                     date = new Date(meeting.date);
-                    console.log("DATE", date);
                     name =
                         date.getFullYear() +
                         "_lp" +
@@ -242,8 +253,10 @@ export class Admin extends React.Component {
                     tasks: res.data.tasks
                 });
 
-                console.log(res);
-                console.log("STATE", this.state);
+                if (this.state.debugMode) {
+                    console.log(res);
+                    console.log("STATE", this.state);
+                }
             })
             .catch(error => {
                 if (error.response && error.response.status === 401) {
@@ -257,7 +270,9 @@ export class Admin extends React.Component {
     }
 
     onError(error) {
-        console.log("ERROR", error);
+        if (this.state.debugMode) {
+            console.log("ERROR", error);
+        }
         let msg = "An error has occured, please try again later! \n";
 
         if (error.response) {
@@ -291,8 +306,11 @@ export class Admin extends React.Component {
         };
 
         axios
-            .post("http://localhost:5000/admin/config", data, {})
+            .post(this.state.backendAddress + "/admin/config", data, {})
             .then(response => {
+                this.setState({
+                    errorMsg: ""
+                });
                 alert(
                     "Saved configs to server! \nResponse: " +
                         response.statusText

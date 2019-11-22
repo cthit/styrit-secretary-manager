@@ -1,15 +1,19 @@
 import datetime
 import os
+import threading
+import uuid
 
-from flask import Flask, request
+from flask import Flask, request, current_app, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
 from pony.orm import db_session
 
+import end_date_handler
+import mail_handler
 import private_keys
-from config import general_config, config_handler
-from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile
+from config import config_handler
+from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,7 +29,7 @@ def get_data_for_code(code):
 
     task_tuples = list(orm.select(
         (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
-                                  str(group_task.group.code) == code))
+        str(group_task.group.code) == code))
     tasks = []
     for name, d_name in task_tuples:
         tasks.append({
@@ -59,7 +63,7 @@ def handle_file(code, task, file):
     lp = str(data["study_period"])
     meeting_no = str(data["meeting_no"])
     name = task + "_" + committee + "_" + year + "_" + lp + ".pdf"
-    path = "./uploads/" + year + "/lp" + lp + "/" + meeting_no + "/" + str(committee)
+    path = "src/uploads/" + year + "/lp" + lp + "/" + meeting_no + "/" + str(committee)
 
     if not os.path.exists(path):
         os.makedirs(path)
@@ -75,8 +79,8 @@ def handle_file(code, task, file):
         GroupMeetingFile(group_task=group_task, file_location=save_loc)
         return False
     else:
-        print("OVERWRITE!")
-        group_file.date = datetime.datetime.now()
+        print("Overwriting file " + group_file.file_location + " from " + str(group_file.date) + " (GMT)")
+        group_file.date = datetime.datetime.utcnow()
         return True
 
 
@@ -97,9 +101,9 @@ class CodeRes(Resource):
 
             return {"error": "Code not found"}, 404
 
-        current_date = datetime.datetime.now()
+        current_date = datetime.datetime.utcnow()
         if group_meeting.meeting.last_upload < current_date:
-            return {"error": "Code expired, please contact me at " + general_config.my_email}
+            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}
 
         return {
             "code": code,
@@ -122,14 +126,14 @@ class FileRes(Resource):
         return {"overwrite": overwrite}
 
 
-
 def validate_password(response_json):
     if "pass" not in response_json:
         return {
                    "Error": "Bad Request"
                }, 400
     password = response_json["pass"]
-    if password != private_keys.frontend_admin_pass:
+    frontend_admin_pass = os.environ.get("frontend_admin_pass", "asd123")
+    if password != frontend_admin_pass:
         return {
                    "Error": "Invalid password"
                }, 401
@@ -143,8 +147,8 @@ class AdminResource(Resource):
         if code != 200:
             return r, code
 
-        config_handler.handle_incoming_config(config)
-        return {"ok": "ok"}, 200
+        msg, status = config_handler.handle_incoming_config(config["config"])
+        return msg, status
 
 
 class MeetingResource(Resource):
@@ -158,6 +162,28 @@ class MeetingResource(Resource):
         return message, status
 
 
+class MailRes(Resource):
+    @db_session
+    def put(self):
+        data = request.get_json()
+        r, code = validate_password(data)
+        if code != 200:
+            return r, code
+
+        # The password was accepted! Try to figure out which meeting it wants to send the email for.
+        try:
+            id = data["id"]
+            meeting = Meeting.get(id=id)
+            if meeting is None:
+                raise Exception("unable to find meeting with id " + id)
+        except Exception as e:
+            print("Unable to validate meeting " + str(e))
+            return "Unable to validate meeting", 400
+
+        threading.Thread(target=end_date_handler.check_for_enddate, args=(meeting,)).start()
+        threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
+
+
 class PasswordResource(Resource):
     def put(self):
         response_json = request.get_json()
@@ -169,11 +195,28 @@ class PasswordResource(Resource):
         return configs, 200
 
 
+class ArchiveDownload(Resource):
+    @db_session
+    def get(self, id):
+        archive = ArchiveCode.get(code=id)
+        if archive is None:
+            return 404
+
+        file_name = "documents_lp2_0_2019.zip"
+        #        file = "." + archive.archive_location
+        #        file = os.path.join(current_app.root_path, archive.archive_location)
+
+        directory = os.path.join(current_app.root_path, "src/archives")
+        return send_from_directory(directory, file_name)
+
+
 api.add_resource(FileRes, '/file')
 api.add_resource(CodeRes, '/code')
 api.add_resource(MeetingResource, "/admin/config/meeting")
 api.add_resource(AdminResource, "/admin/config")
 api.add_resource(PasswordResource, "/admin")
+api.add_resource(MailRes, "/mail")
+api.add_resource(ArchiveDownload, "/archive/<string:id>")
 
 
 def host():

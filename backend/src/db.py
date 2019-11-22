@@ -1,6 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
+import dateutil.parser
 from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
 
 from config import db_config as config
@@ -26,6 +27,7 @@ class Task(db.Entity):
 
 # A specific meeting
 class Meeting(db.Entity):
+    id = PrimaryKey(UUID, auto=True)
     year = Required(int)
     date = Required(datetime)
     last_upload = Required(datetime)
@@ -33,7 +35,7 @@ class Meeting(db.Entity):
     meeting_no = Required(int)
 
     group_meetings = Set("GroupMeeting")
-    PrimaryKey(year, lp, meeting_no)
+    archive = Optional("ArchiveCode")
 
 
 # Contains the code for each group and meeting
@@ -61,6 +63,13 @@ class GroupMeetingFile(db.Entity):
     group_task = PrimaryKey(GroupMeetingTask)
     file_location = Required(str, unique=True)
     date = Required(datetime, default=datetime.utcnow)
+
+
+# Represents the hosted archive
+class ArchiveCode(db.Entity):
+    meeting = PrimaryKey(Meeting)
+    archive_location = Required(str, unique=True)
+    code = Required(UUID, auto=True, unique=True)
 
 
 # A type of config that can exist.
@@ -138,8 +147,9 @@ class UserError(Exception):
 @db_session
 def validate_meeting(meeting_json):
     try:
-        date = datetime.strptime(meeting_json["date"][0:15], "%Y-%m-%dT%H:%M")
-        last_upload = datetime.strptime(meeting_json["last_upload_date"][0:15], "%Y-%m-%dT%H:%M")
+        id = meeting_json["id"]
+        date = dateutil.parser.parse(meeting_json["date"])
+        last_upload = dateutil.parser.parse(meeting_json["last_upload_date"])
         lp = meeting_json["lp"]
         if not 0 < lp <= 4:
             raise UserError("invalid lp " + str(lp))
@@ -147,11 +157,17 @@ def validate_meeting(meeting_json):
         if not 0 <= meeting_no:
             raise UserError("invalid meeting number " + str(meeting_no))
 
-        meeting = Meeting.get(year=date.year, lp=lp, meeting_no=meeting_no)
-
-        if meeting is None:
+        if id == "new":
             # The meeting does not exist, we want to create the tasks for it
             meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+        else:
+            meeting = Meeting.get(id=id)
+            if meeting is None:
+                raise UserError("Meeting id not found and not 'new'")
+
+            meeting.lp = lp
+            meeting.meeting_no = meeting_no
+            meeting.year = date.year
 
         tasks = meeting_json["groups_tasks"]
         db_tasks = get_db_tasks(meeting)
@@ -159,9 +175,9 @@ def validate_meeting(meeting_json):
         # We want to select all the tasks for this meeting from the database and match the json to it
         for type in tasks:
             for task in tasks[type]:
-                print(str(task) + "\n Validation: " + str(validate_task(task)))
                 if validate_task(task):
-                    group_meeting = GroupMeeting.get(lambda group: group.group.name == task["name"] and group.meeting == meeting)
+                    group_meeting = GroupMeeting.get(
+                        lambda group: group.group.name == task["name"] and group.meeting == meeting)
                     found = False
                     if group_meeting is None:
                         group = Group[task["name"]]
