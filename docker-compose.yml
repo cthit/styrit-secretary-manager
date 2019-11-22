@@ -31,6 +31,7 @@ services:
     #         SECRETARY_POSTGRES_USER: secretary
     #         SECRETARY_POSTGRES_PASSWORD: password
     #         SECRETARY_POSTGRES_HOST: db
+    #         SECRETARY_POSTGRES_DB: postgres
     #         SECRETARY_POSTGRES_PORT: 5432
     #         PYTHONUNBUFFERED: 0
     #     ports:
