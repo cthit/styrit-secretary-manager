@@ -63,7 +63,7 @@ def handle_file(code, task, file):
     lp = str(data["study_period"])
     meeting_no = str(data["meeting_no"])
     name = task + "_" + committee + "_" + year + "_" + lp + ".pdf"
-    path = "./uploads/" + year + "/lp" + lp + "/" + meeting_no + "/" + str(committee)
+    path = "src/uploads/" + year + "/lp" + lp + "/" + meeting_no + "/" + str(committee)
 
     if not os.path.exists(path):
         os.makedirs(path)
@@ -206,7 +206,7 @@ class ArchiveDownload(Resource):
         #        file = "." + archive.archive_location
         #        file = os.path.join(current_app.root_path, archive.archive_location)
 
-        directory = os.path.join(current_app.root_path, "./archives")
+        directory = os.path.join(current_app.root_path, "src/archives")
         return send_from_directory(directory, file_name)
 
 
