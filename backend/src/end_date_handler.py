@@ -38,7 +38,7 @@ def get_mail(meeting, code):
 
 @db_session
 def send_final_mail(meeting):
-    folder_loc = "./b"
+    folder_loc = "src/b"
     if not os.path.exists(folder_loc):
         os.makedirs(folder_loc)
 
@@ -47,12 +47,13 @@ def send_final_mail(meeting):
     for path in file_paths:
         shutil.copy(path, folder_loc)
 
-    archives_loc = "./archives"
+    archives_loc = "src/archives"
     if not os.path.exists(archives_loc):
         os.makedirs(archives_loc)
 
     archive_name = archives_loc + "/documents_lp" + str(meeting.lp) + "_" + str(meeting.meeting_no) + "_" + str(
         meeting.year)
+    print("Archiving folder: " + str(folder_loc) + "\nTo file: " + str(archive_name))
     shutil.make_archive(archive_name, 'zip', folder_loc)
 
     # To avoid a transaction error we need to once more get a reference to the meeting
