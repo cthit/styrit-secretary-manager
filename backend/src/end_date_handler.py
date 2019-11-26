@@ -7,7 +7,6 @@ import requests
 from pony import orm
 from pony.orm import db_session
 
-import private_keys
 from db import GroupMeetingFile, ArchiveCode, Meeting, Config
 
 
