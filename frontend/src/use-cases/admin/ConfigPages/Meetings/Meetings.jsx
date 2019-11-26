@@ -259,7 +259,6 @@ export class Meetings extends React.Component {
     }
 
     getChecked(group, task) {
-        // console.log("groups_tasks", this.state.selectedMeeting.groups_tasks);
         let g_t = this.state.selectedMeeting.groups_tasks[task.name];
         if (g_t) {
             for (let i = 0; i < g_t.length; i++) {
@@ -311,14 +310,15 @@ export class Meetings extends React.Component {
     // Returns whether or not all of the groups has this task checked.
     getAllChecked(task) {
         let meeting = this.state.selectedMeeting;
+        let allChecked = true;
         this.state.groups.forEach(group => {
             if (
                 meeting.groups_tasks[task.name].includes(group.name) === false
             ) {
-                return false;
+                allChecked = false;
             }
         });
-        return true;
+        return allChecked;
     }
 
     getCode(group) {
