@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 import dateutil.parser
-from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, commit
 
 from config import db_config as config
 
@@ -33,6 +33,7 @@ class Meeting(db.Entity):
     last_upload = Required(datetime)
     lp = Required(int)
     meeting_no = Required(int)
+    check_for_deadline = Required(bool)
 
     group_meetings = Set("GroupMeeting")
     archive = Optional("ArchiveCode")
@@ -85,7 +86,6 @@ class Config(db.Entity):
     value = Required(str)
     config_type = Required(ConfigType)
 
-
 db.bind(
     provider="postgres",
     user=config.POSTGRES_USER,
@@ -94,6 +94,32 @@ db.bind(
     port=config.POSTGRES_PORT,
     database=config.POSTGRES_DB
 )
+
+@db_session
+def add_column():
+    column_exists = db.execute("""
+    SELECT TRUE AS value
+    FROM   pg_attribute
+    WHERE  attrelid = 'meeting'::regclass  -- cast to a registered class (table)
+    AND    attname = 'check_for_deadline'
+    AND    NOT attisdropped  -- exclude dropped (dead) columns
+    -- AND attnum > 0        -- exclude system columns (you may or may not want this)
+    """)
+    try:
+        val = not [v for v in column_exists][0][0]
+    except Exception as e:
+        print("ERROR: " + str(e))
+        val = True
+
+    if val:
+        print("ADDING COLUMN")
+        db.execute("ALTER TABLE meeting ADD COLUMN check_for_deadline boolean;")
+        commit()
+        db.execute("UPDATE meeting SET check_for_deadline = 't' WHERE check_for_deadline IS NULL;")
+        commit()
+        db.execute("ALTER TABLE meeting ALTER COLUMN check_for_deadline SET NOT NULL;")
+
+add_column()
 
 db.generate_mapping(create_tables=True)
 
@@ -159,7 +185,8 @@ def validate_meeting(meeting_json):
 
         if id == "new":
             # The meeting does not exist, we want to create the tasks for it
-            meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no)
+            meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp,
+                              meeting_no=meeting_no, check_for_deadline=False)
         else:
             meeting = Meeting.get(id=id)
             if meeting is None:
