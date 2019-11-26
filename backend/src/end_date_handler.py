@@ -61,6 +61,9 @@ def send_final_mail(meeting):
     if meeting is None:
         raise Exception("Unable to find meeting with id " + str(id))
 
+    # Set the flag for checking the deadline to false to avoid multiple emails.
+    meeting.check_for_deadline = False
+
     archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
     if archive is None:
         # Create a new archive
@@ -84,18 +87,30 @@ def send_final_mail(meeting):
         print("Encontered an error while contacting gotify: " + str(e))
 
 
-@db_session
-def check_for_enddate(meeting):
-    check_time = int(Config["check_for_deadline_frequency"].value) * 60
-    min_after_deadline = int(Config["minutes_after_deadline_to_mail"].value)
-    deadline = meeting.last_upload
-    deadline = deadline + datetime.timedelta(minutes=min_after_deadline)
+def check_for_enddate():
+    check_time, min_after_deadline = get_enddate_configs()
 
-    curr_date = datetime.datetime.utcnow()
-
-    while curr_date < deadline:
-        print("Checking for end, keep waiting curr: " + str(curr_date) + " waiting for: " + str(deadline))
-        time.sleep(check_time)
+    while True:
         curr_date = datetime.datetime.utcnow()
+        meetings = get_meetings_to_check()
+        print("Checking for deadlines for " + str(len(meetings)) + " meetings")
+        print("Curr time: " + str(curr_date))
+        for meeting in meetings:
+            deadline = meeting.last_upload
+            deadline = deadline + datetime.timedelta(minutes=min_after_deadline)
+            print("Meeting: " + str(meeting.id) + " waiting for: " + str(deadline))
+            if deadline <= curr_date:
+                send_final_mail(meeting)
 
-    send_final_mail(meeting)
+        time.sleep(check_time)
+
+
+@db_session
+def get_enddate_configs():
+    return int(Config["check_for_deadline_frequency"].value) * 60, \
+           int(Config["minutes_after_deadline_to_mail"].value)
+
+
+@db_session
+def get_meetings_to_check():
+    return list(Meeting.select(lambda meeting: meeting.check_for_deadline == True))
