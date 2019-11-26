@@ -11,7 +11,7 @@ from pony.orm import db_session
 
 import end_date_handler
 import mail_handler
-import private_keys
+
 from config import config_handler
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 
@@ -96,8 +96,6 @@ class CodeRes(Resource):
 
         if group_meeting is None:
             codes_list = list(orm.select(group.code for group in GroupMeeting))
-            for code in codes_list:
-                print("Code: " + str(code))
 
             return {"error": "Code not found"}, 404
 
