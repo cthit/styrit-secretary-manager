@@ -115,7 +115,7 @@ def add_column():
         print("ADDING COLUMN")
         db.execute("ALTER TABLE meeting ADD COLUMN check_for_deadline boolean;")
         commit()
-        db.execute("UPDATE meeting SET check_for_deadline = 't' WHERE check_for_deadline IS NULL;")
+        db.execute("UPDATE meeting SET check_for_deadline = 'f' WHERE check_for_deadline IS NULL;")
         commit()
         db.execute("ALTER TABLE meeting ALTER COLUMN check_for_deadline SET NOT NULL;")
 

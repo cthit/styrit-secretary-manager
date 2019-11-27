@@ -252,6 +252,22 @@ export class Meetings extends React.Component {
                         >
                             Skicka mail
                         </Button>
+                        <CenterText>
+                            <Typography>
+                                Flaggar att mötets deadline ska kollas efter,
+                                när denna tar slut kommer en länk skickas till
+                                styrelsen där alla filer kan laddas ned.
+                            </Typography>
+                        </CenterText>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{
+                                width: "100%"
+                            }}
+                        >
+                            Starta deadline koll
+                        </Button>
                     </div>
                 )}
             </MeetingsContainer>
