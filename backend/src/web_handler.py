@@ -125,7 +125,7 @@ class FileRes(Resource):
 
 
 def validate_password(response_json):
-    if "pass" not in response_json:
+    if response_json is None or "pass" not in response_json:
         return {
                    "Error": "Bad Request"
                }, 400
@@ -178,6 +178,8 @@ class MailRes(Resource):
             print("Unable to validate meeting " + str(e))
             return "Unable to validate meeting", 400
 
+        threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
+
 
 class TimerResource(Resource):
     @db_session
@@ -188,11 +190,12 @@ class TimerResource(Resource):
             return r, code
 
         # The password was accepted, check the meeting id
-        meeting = Meeting.get(id)
+        meeting = Meeting.get(id=id)
         if meeting is None:
             return 404, "Meeting with id " + str(id) + " not found"
 
         # Meeting is valid, set the flag in the database for checking the deadline for the meeting
+        print("Starting to check for deadline for meeting with id: " + str(id))
         meeting.check_for_deadline = True
 
 
