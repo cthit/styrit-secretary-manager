@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 import dateutil.parser
-from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, commit
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, commit, InternalError
 
 from config import db_config as config
 
@@ -97,27 +97,31 @@ db.bind(
 
 @db_session
 def add_column():
-    column_exists = db.execute("""
-    SELECT TRUE AS value
-    FROM   pg_attribute
-    WHERE  attrelid = 'meeting'::regclass  -- cast to a registered class (table)
-    AND    attname = 'check_for_deadline'
-    AND    NOT attisdropped  -- exclude dropped (dead) columns
-    -- AND attnum > 0        -- exclude system columns (you may or may not want this)
-    """)
     try:
+        column_exists = db.execute("""
+        SELECT TRUE AS value
+        FROM   pg_attribute
+        WHERE  attrelid = 'meeting'::regclass  -- cast to a registered class (table)
+        AND    attname = 'check_for_deadline'
+        AND    NOT attisdropped  -- exclude dropped (dead) columns
+        -- AND attnum > 0        -- exclude system columns (you may or may not want this)
+        """)
+
         val = not [v for v in column_exists][0][0]
     except Exception as e:
         print("ERROR: " + str(e))
         val = True
 
-    if val:
-        print("ADDING COLUMN")
-        db.execute("ALTER TABLE meeting ADD COLUMN check_for_deadline boolean;")
-        commit()
-        db.execute("UPDATE meeting SET check_for_deadline = 't' WHERE check_for_deadline IS NULL;")
-        commit()
-        db.execute("ALTER TABLE meeting ALTER COLUMN check_for_deadline SET NOT NULL;")
+    try:
+        if val:
+            print("ADDING COLUMN")
+            db.execute("ALTER TABLE meeting ADD COLUMN check_for_deadline boolean;")
+            commit()
+            db.execute("UPDATE meeting SET check_for_deadline = 't' WHERE check_for_deadline IS NULL;")
+            commit()
+            db.execute("ALTER TABLE meeting ALTER COLUMN check_for_deadline SET NOT NULL;")
+    except InternalError as e:
+        print("Got internal error, probably due to the database being empty " + str(e))
 
 add_column()
 
