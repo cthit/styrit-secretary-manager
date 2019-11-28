@@ -1,5 +1,6 @@
 from os import environ
 
+import pytz
 import requests
 from pony import orm
 from pony.orm import db_session
@@ -28,9 +29,13 @@ def get_mail_from_code(code, group, meeting):
     for task in task_list:
         tasks += " - " + task.display_name + "\n"
 
-    last_turnin_time = meeting.last_upload.strftime("%H:%M")
-    last_turnin_date = meeting.last_upload.strftime("%d/%m")
+    se_timezone = pytz.timezone(pytz.country_timezones["SE"][0])
+    # Convert the datetime to the swedish timezone
+    last_upload = meeting.last_upload.replace(tzinfo=pytz.utc).astimezone(se_timezone)
+    last_turnin_time = last_upload.strftime("%H:%M")
+    last_turnin_date = last_upload.strftime("%d/%m")
 
+    date = meeting.date.replace(tzinfo=pytz.utc).astimezone(se_timezone)
     mail_to = group.name + Config["group_email_domain"].value
     subject = "Dokument till sektionsmöte"
 
@@ -42,7 +47,7 @@ def get_mail_from_code(code, group, meeting):
     board_display_name = Config["board_display_name"].value
     board_email = Config["board_email"].value
 
-    msg = msg.format(group.display_name, meeting.date.day, meeting.date.month, last_turnin_time, last_turnin_date,
+    msg = msg.format(group.display_name, date.day, date.month, last_turnin_time, last_turnin_date,
                      tasks, frontend_url, code, document_template_url,
                      secretary_email, board_display_name, board_email)
 
