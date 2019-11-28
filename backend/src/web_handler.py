@@ -254,8 +254,9 @@ class ArchiveDownload(Resource):
 
         # Return a redirect to the archive download location
         base_url = Config["archive_base_url"].value
-        full_url = str(base_url) + str(archive.code)
-        return redirect(full_url, 302)
+        redirect_url = base_url + str(archive.code)
+        print("Should redirect to " + redirect_url)
+        return redirect_url
 
 
 api.add_resource(FileRes, '/file')
