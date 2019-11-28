@@ -7,7 +7,6 @@ import requests
 from pony import orm
 from pony.orm import db_session
 
-import private_keys
 from db import GroupMeetingFile, ArchiveCode, Meeting, Config
 
 
@@ -37,7 +36,7 @@ def get_mail(meeting, code):
 
 
 @db_session
-def send_final_mail(meeting):
+def create_archive(meeting):
     folder_loc = "src/b"
     if not os.path.exists(folder_loc):
         os.makedirs(folder_loc)
@@ -62,10 +61,22 @@ def send_final_mail(meeting):
     if meeting is None:
         raise Exception("Unable to find meeting with id " + str(id))
 
-    archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
+    # Set the flag for checking the deadline to false to avoid multiple emails.
+    meeting.check_for_deadline = False
+
+    archive_name = archive_name[4:]
+    archive = ArchiveCode.get(meeting=meeting)
     if archive is None:
         # Create a new archive
         archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
+    else:
+        archive.archive_location = archive_name
+
+    return archive
+
+@db_session
+def send_final_mail(meeting):
+    archive = create_archive(meeting)
 
     print("Archive should now be available at '" + str(Config["archive_base_url"].value) + str(archive.code) + "'")
 
@@ -85,18 +96,30 @@ def send_final_mail(meeting):
         print("Encontered an error while contacting gotify: " + str(e))
 
 
-@db_session
-def check_for_enddate(meeting):
-    check_time = int(Config["check_for_deadline_frequency"].value) * 60
-    min_after_deadline = int(Config["minutes_after_deadline_to_mail"].value)
-    deadline = meeting.last_upload
-    deadline = deadline + datetime.timedelta(minutes=min_after_deadline)
-
-    curr_date = datetime.datetime.utcnow()
-
-    while curr_date < deadline:
-        print("Checking for end, keep waiting curr: " + str(curr_date) + " waiting for: " + str(deadline))
-        time.sleep(check_time)
+def check_for_enddate():
+    while True:
+        # These are in the while-loop as they could've been updated in the database
+        check_time, min_after_deadline = get_enddate_configs()
         curr_date = datetime.datetime.utcnow()
+        meetings = get_meetings_to_check()
+        print("Checking for deadlines for " + str(len(meetings)) + " meetings")
+        print("Curr time: " + str(curr_date))
+        for meeting in meetings:
+            deadline = meeting.last_upload
+            deadline = deadline + datetime.timedelta(minutes=min_after_deadline)
+            print("Meeting: " + str(meeting.id) + " waiting for: " + str(deadline))
+            if deadline <= curr_date:
+                send_final_mail(meeting)
 
-    send_final_mail(meeting)
+        time.sleep(check_time)
+
+
+@db_session
+def get_enddate_configs():
+    return int(Config["check_for_deadline_frequency"].value) * 60, \
+           int(Config["minutes_after_deadline_to_mail"].value)
+
+
+@db_session
+def get_meetings_to_check():
+    return list(Meeting.select(lambda meeting: meeting.check_for_deadline == True))

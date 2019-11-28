@@ -3,7 +3,7 @@ import os
 import threading
 import uuid
 
-from flask import Flask, request, current_app, send_from_directory
+from flask import Flask, request, current_app, send_from_directory, send_file, redirect
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -11,7 +11,7 @@ from pony.orm import db_session
 
 import end_date_handler
 import mail_handler
-import private_keys
+
 from config import config_handler
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 
@@ -96,8 +96,6 @@ class CodeRes(Resource):
 
         if group_meeting is None:
             codes_list = list(orm.select(group.code for group in GroupMeeting))
-            for code in codes_list:
-                print("Code: " + str(code))
 
             return {"error": "Code not found"}, 404
 
@@ -127,7 +125,7 @@ class FileRes(Resource):
 
 
 def validate_password(response_json):
-    if "pass" not in response_json:
+    if response_json is None or "pass" not in response_json:
         return {
                    "Error": "Bad Request"
                }, 400
@@ -180,8 +178,25 @@ class MailRes(Resource):
             print("Unable to validate meeting " + str(e))
             return "Unable to validate meeting", 400
 
-        threading.Thread(target=end_date_handler.check_for_enddate, args=(meeting,)).start()
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
+
+
+class TimerResource(Resource):
+    @db_session
+    def post(self, id):
+        data = request.get_json()
+        r, code = validate_password(data)
+        if code != 200:
+            return r, code
+
+        # The password was accepted, check the meeting id
+        meeting = Meeting.get(id=id)
+        if meeting is None:
+            return 404, "Meeting with id " + str(id) + " not found"
+
+        # Meeting is valid, set the flag in the database for checking the deadline for the meeting
+        print("Starting to check for deadline for meeting with id: " + str(id))
+        meeting.check_for_deadline = True
 
 
 class PasswordResource(Resource):
@@ -196,18 +211,47 @@ class PasswordResource(Resource):
 
 
 class ArchiveDownload(Resource):
+    """
+    Download a zip file with all the documents for the meeting with the given id.
+    """
     @db_session
     def get(self, id):
-        archive = ArchiveCode.get(code=id)
+        """
+        Download the archive for the meeting with the given id (if it exists)
+        """
+        try:
+            archive = ArchiveCode.get(code=id)
+        except ValueError:
+            archive = None
+
         if archive is None:
-            return 404
+            return "Archive not found", 404
 
-        file_name = "documents_lp2_0_2019.zip"
-        #        file = "." + archive.archive_location
-        #        file = os.path.join(current_app.root_path, archive.archive_location)
+        file_name = archive.archive_location + ".zip"
+        file_path_name = os.path.normpath(file_name)
+        num = archive.meeting.meeting_no
+        lp = archive.meeting.lp
+        year = archive.meeting.year
+        print("DOWNLOADING FILE: " + str(file_path_name))
+        name = "documents_" + str(num) + "_lp" + str(lp) + "_" + str(year) + ".zip"
+        return send_file(file_path_name, as_attachment=True, attachment_filename=name)
 
-        directory = os.path.join(current_app.root_path, "src/archives")
-        return send_from_directory(directory, file_name)
+    @db_session
+    def post(self, id):
+        """
+        Request that the archive is created without the meeting deadline being reached.
+        Returns the archive code
+        """
+        try:
+            meeting = Meeting.get(id=id)
+        except ValueError:
+            meeting = None
+
+        if meeting is None:
+            return "Meeting not found", 404
+
+        archive = end_date_handler.create_archive(meeting)
+        return str(archive.code)
 
 
 api.add_resource(FileRes, '/file')
@@ -216,8 +260,8 @@ api.add_resource(MeetingResource, "/admin/config/meeting")
 api.add_resource(AdminResource, "/admin/config")
 api.add_resource(PasswordResource, "/admin")
 api.add_resource(MailRes, "/mail")
+api.add_resource(TimerResource, "/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/archive/<string:id>")
-
 
 def host():
     app.run(host="0.0.0.0")
