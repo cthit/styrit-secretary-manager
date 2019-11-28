@@ -54,12 +54,6 @@ def create_archive(meeting):
         meeting.year)
     print("Archiving folder: " + str(folder_loc) + "\nTo file: " + str(archive_name))
     shutil.make_archive(archive_name, 'zip', folder_loc)
-    return archive_name
-
-
-@db_session
-def send_final_mail(meeting):
-    archive_name = create_archive(meeting)
 
     # To avoid a transaction error we need to once more get a reference to the meeting
     id = meeting.id
@@ -74,6 +68,12 @@ def send_final_mail(meeting):
     if archive is None:
         # Create a new archive
         archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
+
+    return archive
+
+@db_session
+def send_final_mail(meeting):
+    archive = create_archive(meeting)
 
     print("Archive should now be available at '" + str(Config["archive_base_url"].value) + str(archive.code) + "'")
 
