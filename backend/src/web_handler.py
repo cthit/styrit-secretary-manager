@@ -211,8 +211,14 @@ class PasswordResource(Resource):
 
 
 class ArchiveDownload(Resource):
+    """
+    Download a zip file with all the documents for the meeting with the given id.
+    """
     @db_session
     def get(self, id):
+        """
+        Download the archive for the meeting with the given id (if it exists)
+        """
         try:
             archive = ArchiveCode.get(code=id)
         except ValueError:
@@ -229,6 +235,23 @@ class ArchiveDownload(Resource):
         print("DOWNLOADING FILE: " + str(file_path_name))
         name = "documents_" + str(num) + "_lp" + str(lp) + "_" + str(year) + ".zip"
         return send_file(file_path_name, as_attachment=True, attachment_filename=name)
+
+    @db_session
+    def post(self, id):
+        """
+        Request that the archive is created without the meeting deadline being reached.
+        Returns the archive
+        """
+        try:
+            meeting = Meeting.get(id=id)
+        except ValueError:
+            meeting = None
+
+        if meeting is None:
+            return "Meeting not found", 404
+
+        archive = end_date_handler.create_archive(meeting)
+        return self.get(archive.code)
 
 
 api.add_resource(FileRes, '/file')
