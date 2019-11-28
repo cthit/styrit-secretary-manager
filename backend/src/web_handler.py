@@ -3,7 +3,7 @@ import os
 import threading
 import uuid
 
-from flask import Flask, request, current_app, send_from_directory
+from flask import Flask, request, current_app, send_from_directory, send_file
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -213,16 +213,22 @@ class PasswordResource(Resource):
 class ArchiveDownload(Resource):
     @db_session
     def get(self, id):
-        archive = ArchiveCode.get(code=id)
+        try:
+            archive = ArchiveCode.get(code=id)
+        except ValueError:
+            archive = None
+
         if archive is None:
-            return 404
+            return "Archive not found", 404
 
-        file_name = "documents_lp2_0_2019.zip"
-        #        file = "." + archive.archive_location
-        #        file = os.path.join(current_app.root_path, archive.archive_location)
-
-        directory = os.path.join(current_app.root_path, "src/archives")
-        return send_from_directory(directory, file_name)
+        file_name = archive.archive_location + ".zip"
+        file_path_name = os.path.normpath(file_name)
+        num = archive.meeting.meeting_no
+        lp = archive.meeting.lp
+        year = archive.meeting.year
+        print("DOWNLOADING FILE: " + str(file_path_name))
+        name = "documents_" + str(num) + "_lp" + str(lp) + "_" + str(year) + ".zip"
+        return send_file(file_path_name, as_attachment=True, attachment_filename=name)
 
 
 api.add_resource(FileRes, '/file')
