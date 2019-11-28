@@ -88,9 +88,9 @@ def send_final_mail(meeting):
 
 
 def check_for_enddate():
-    check_time, min_after_deadline = get_enddate_configs()
-
     while True:
+        # These are in the while-loop as they could've been updated in the database
+        check_time, min_after_deadline = get_enddate_configs()
         curr_date = datetime.datetime.utcnow()
         meetings = get_meetings_to_check()
         print("Checking for deadlines for " + str(len(meetings)) + " meetings")
