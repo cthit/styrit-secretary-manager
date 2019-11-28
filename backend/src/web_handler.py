@@ -251,7 +251,11 @@ class ArchiveDownload(Resource):
             return "Meeting not found", 404
 
         archive = end_date_handler.create_archive(meeting)
-        return str(archive.code)
+
+        # Return a redirect to the archive download location
+        base_url = Config["archive_base_url"].value
+        full_url = str(base_url) + str(archive.code)
+        return redirect(full_url, 302)
 
 
 api.add_resource(FileRes, '/file')
