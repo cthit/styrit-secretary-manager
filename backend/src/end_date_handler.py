@@ -36,7 +36,7 @@ def get_mail(meeting, code):
 
 
 @db_session
-def send_final_mail(meeting):
+def create_archive(meeting):
     folder_loc = "src/b"
     if not os.path.exists(folder_loc):
         os.makedirs(folder_loc)
@@ -68,6 +68,12 @@ def send_final_mail(meeting):
     if archive is None:
         # Create a new archive
         archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
+
+    return archive
+
+@db_session
+def send_final_mail(meeting):
+    archive = create_archive(meeting)
 
     print("Archive should now be available at '" + str(Config["archive_base_url"].value) + str(archive.code) + "'")
 

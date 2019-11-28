@@ -61,6 +61,7 @@ export class Meetings extends React.Component {
     this.getMeetingName = this.getMeetingName.bind(this);
     this.onSendMail = this.onSendMail.bind(this);
     this.onStartTimer = this.onStartTimer.bind(this);
+    this.onArchiveDownload = this.onArchiveDownload.bind(this);
   }
 
   render() {
@@ -242,6 +243,22 @@ export class Meetings extends React.Component {
               onClick={this.onStartTimer}
             >
               Starta deadline koll
+            </Button>
+            <CenterText>
+              <Typography>
+                Laddar ned arkivet (med alla dokument) för detta möte (OBS!
+                Sparar också de nuvarande mötesinställningarna!)
+              </Typography>
+            </CenterText>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{
+                width: "100%"
+              }}
+              onClick={this.onArchiveDownload}
+            >
+              Ladda ned arkiv
             </Button>
           </div>
         )}
@@ -459,9 +476,34 @@ export class Meetings extends React.Component {
       })
       .catch(err => {
         if (this.state.debugMode) {
-          console.log("ERROR: " + err);
+          console.log("ERROR: ", err);
         }
         alert("Something went wrong :(");
       });
+  }
+
+  onArchiveDownload() {
+    this.onSave().then(() => {
+      let meeting_id = this.state.selectedMeeting.id;
+
+      axios
+        .post(this.state.backendAddress + "/archive/" + meeting_id)
+        .then(res => {
+          if (this.state.debugMode) {
+            let code = res.data;
+            // Redirect to the download link
+            window.location.replace(
+              this.state.backendAddress + "/archive/" + code
+            );
+            console.log("Should download file?", res);
+          }
+        })
+        .catch(err => {
+          if (this.state.debugMode) {
+            console.log("ERROR: ", err);
+          }
+          alert("Something went wrong :(");
+        });
+    });
   }
 }
