@@ -3,7 +3,7 @@ import os
 import threading
 import uuid
 
-from flask import Flask, request, current_app, send_from_directory, send_file
+from flask import Flask, request, current_app, send_from_directory, send_file, redirect
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -240,7 +240,7 @@ class ArchiveDownload(Resource):
     def post(self, id):
         """
         Request that the archive is created without the meeting deadline being reached.
-        Returns the archive
+        Returns the archive code
         """
         try:
             meeting = Meeting.get(id=id)
@@ -251,7 +251,7 @@ class ArchiveDownload(Resource):
             return "Meeting not found", 404
 
         archive = end_date_handler.create_archive(meeting)
-        return self.get(archive.code)
+        return str(archive.code)
 
 
 api.add_resource(FileRes, '/file')
