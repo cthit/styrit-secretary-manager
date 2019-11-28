@@ -64,10 +64,13 @@ def create_archive(meeting):
     # Set the flag for checking the deadline to false to avoid multiple emails.
     meeting.check_for_deadline = False
 
-    archive = ArchiveCode.get(meeting=meeting, archive_location=archive_name)
+    archive_name = archive_name[4:]
+    archive = ArchiveCode.get(meeting=meeting)
     if archive is None:
         # Create a new archive
         archive = ArchiveCode(meeting=meeting, archive_location=archive_name)
+    else:
+        archive.archive_location = archive_name
 
     return archive
 
