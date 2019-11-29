@@ -1,11 +1,11 @@
 FROM node:latest
 
-RUN mkdir -p /usr/src/secretary-manager/frontend
-RUN chown -R node /usr/src/secretary-manager/frontend
+RUN mkdir -p /usr/src/secretary-manager/frontend_new
+RUN chown -R node /usr/src/secretary-manager/frontend_new
 
 USER node
 
-WORKDIR /usr/src/secretary-manager/frontend
+WORKDIR /usr/src/secretary-manager/frontend_new
 
 COPY ./src/ .
 COPY package.json .
