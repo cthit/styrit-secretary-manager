@@ -42,12 +42,12 @@ services:
     frontend:
         image: styrit_secretary_manager_frontend_dev
         build:
-            context: ./frontend/
+            context: ./frontend_new/
             dockerfile: dev.Dockerfile
         ports:
             - 3000:3000
         volumes:
-            - ./frontend:/usr/src/secretary-manager/frontend
+            - ./frontend_new:/usr/src/secretary-manager/frontend_new
         environment:
             - DEBUG_MODE=true
 
