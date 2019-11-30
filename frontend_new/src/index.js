@@ -1,10 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./app/App";
+import * as serviceWorker from "./serviceWorker";
+import { DigitProviders } from "@cthit/react-digit-components";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+let theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#3f51b5",
+            dark: "#002984",
+            light: "#757de8"
+        },
+        secondary: {
+            main: "#ffa500",
+            dark: "#c67600",
+            light: "#ffd64a"
+        }
+    }
+});
+
+ReactDOM.render(
+    <DigitProviders theme={theme}>
+        <App />
+    </DigitProviders>,
+    document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
