@@ -83,7 +83,7 @@ def handle_file(code, task, file):
         group_file.date = datetime.datetime.utcnow()
         return True
 
-
+# Validate code, return data associated with a validated code.
 class CodeRes(Resource):
     @db_session
     def post(self):
@@ -101,14 +101,14 @@ class CodeRes(Resource):
 
         current_date = datetime.datetime.utcnow()
         if group_meeting.meeting.last_upload < current_date:
-            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}
+            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}, 401
 
         return {
             "code": code,
             "data": get_data_for_code(code)
         }
 
-
+# Uploads a or a number of files, requires a valid code.
 class FileRes(Resource):
     @db_session
     def put(self):
@@ -124,6 +124,7 @@ class FileRes(Resource):
         return {"overwrite": overwrite}
 
 
+# Validates an admin password.
 def validate_password(response_json):
     if response_json is None or "pass" not in response_json:
         return {
@@ -138,6 +139,7 @@ def validate_password(response_json):
     return {}, 200
 
 
+# If the given password is valid, updates the servers configs.
 class AdminResource(Resource):
     def post(self):
         config = request.get_json()
@@ -148,7 +150,7 @@ class AdminResource(Resource):
         msg, status = config_handler.handle_incoming_config(config["config"])
         return msg, status
 
-
+# If the given password is valid, updates / adds the given meeting configs.
 class MeetingResource(Resource):
     def post(self):
         config = request.get_json()
@@ -159,7 +161,7 @@ class MeetingResource(Resource):
         status, message = config_handler.handle_incoming_meeting_config(config["meeting"])
         return message, status
 
-
+# If the given password is valid, sends out the emails for the given meeting.
 class MailRes(Resource):
     @db_session
     def put(self):
@@ -180,7 +182,7 @@ class MailRes(Resource):
 
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
 
-
+# If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
     @db_session
     def post(self, id):
@@ -199,6 +201,7 @@ class TimerResource(Resource):
         meeting.check_for_deadline = True
 
 
+# If the password is valid, returns the complete current configs.
 class PasswordResource(Resource):
     def put(self):
         response_json = request.get_json()
@@ -210,6 +213,7 @@ class PasswordResource(Resource):
         return configs, 200
 
 
+# Handles downloading of archives for meetings.
 class ArchiveDownload(Resource):
     """
     Download a zip file with all the documents for the meeting with the given id.
