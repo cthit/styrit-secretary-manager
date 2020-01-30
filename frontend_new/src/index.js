@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./app/App";
+import App from "./app";
 import * as serviceWorker from "./serviceWorker";
 import { DigitProviders } from "@cthit/react-digit-components";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { rootReducer } from "./app/App.reducer";
 
 let theme = createMuiTheme({
     palette: {
@@ -22,7 +23,7 @@ let theme = createMuiTheme({
 });
 
 ReactDOM.render(
-    <DigitProviders theme={theme}>
+    <DigitProviders theme={theme} rootReducer={{ root: rootReducer }}>
         <App />
     </DigitProviders>,
     document.getElementById("root")
