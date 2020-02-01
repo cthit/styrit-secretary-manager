@@ -88,10 +88,10 @@ class CodeRes(Resource):
     @db_session
     def post(self):
         data = request.get_json()
-        code = data["code"]
-        if code is None:
-            return {"error": "Missing code"}, 400
+        if data is None:
+            return {"error": "Missing arguments"}, 400
 
+        code = data["code"]
         try:
             group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
         except ValueError as err:
