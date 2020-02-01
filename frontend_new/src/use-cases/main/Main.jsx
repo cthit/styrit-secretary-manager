@@ -1,10 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import Code from "./screens/code";
+import Upload from "./screens/upload/";
 
-class Main extends Component {
-    render() {
+export const Main = props => {
+    if (props.acceptedCode) {
+        return <Upload />;
+    } else {
         return <Code />;
     }
-}
+};
 
 export default Main;

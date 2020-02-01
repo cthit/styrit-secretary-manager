@@ -21,7 +21,8 @@ function onAccept(response) {
     return {
         type: SUBMIT_CODE_SUCCESSFUL,
         payload: {
-            ...response.data
+            code: response.data.code,
+            data: response.data.data
         },
         error: false
     };
@@ -29,10 +30,12 @@ function onAccept(response) {
 
 function onError(error) {
     console.error("ERROR::", error);
-    let data = error.response.data;
     let msg = "Woops, something went wrong.";
-    if (data && data.error) {
-        msg = data.error;
+    if (error.response) {
+        let data = error.response.data;
+        if (data && data.error) {
+            msg = data.error;
+        }
     }
 
     return {

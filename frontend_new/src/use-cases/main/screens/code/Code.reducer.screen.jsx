@@ -13,7 +13,8 @@ export const CodeReducer = (state = initialState, action) => {
         case SUBMIT_CODE_SUCCESSFUL:
             return Object.assign({}, state, {
                 error: null,
-                acceptedCode: action.payload.code
+                acceptedCode: action.payload.code,
+                data: action.payload.data
             });
         case SUBMIT_CODE_FAILED:
             return Object.assign({}, state, {

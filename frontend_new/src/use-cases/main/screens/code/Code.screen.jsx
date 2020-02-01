@@ -20,7 +20,9 @@ export const Code = props => (
         })}
         render={({ errors }) => (
             <FormContainer>
-                {props.error && <DigitText.Text text={props.error} />}
+                {props.error && (
+                    <DigitText.Text text={props.error} color="error" bold />
+                )}
                 <DigitFormField
                     name="code"
                     component={DigitTextField}
