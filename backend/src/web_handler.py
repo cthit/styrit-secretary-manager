@@ -89,6 +89,9 @@ class CodeRes(Resource):
     def post(self):
         data = request.get_json()
         code = data["code"]
+        if code is None:
+            return {"error": "Missing code"}, 400
+
         try:
             group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
         except ValueError as err:
