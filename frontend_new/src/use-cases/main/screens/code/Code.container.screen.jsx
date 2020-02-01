@@ -3,7 +3,9 @@ import { submitCode } from "./Code.action-creator.screen";
 
 import Code from "./Code.screen";
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+    error: state.root.CodeReducer.error
+});
 
 const mapDispatchToProps = dispatch => ({
     submitCode: code => dispatch(submitCode(code))

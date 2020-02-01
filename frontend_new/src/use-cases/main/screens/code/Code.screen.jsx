@@ -3,7 +3,8 @@ import {
     DigitForm,
     DigitTextField,
     DigitFormField,
-    DigitButton
+    DigitButton,
+    DigitText
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
 import { FormContainer } from "./Code.styles.screen";
@@ -19,6 +20,7 @@ export const Code = props => (
         })}
         render={({ errors }) => (
             <FormContainer>
+                {props.error && <DigitText.Text text={props.error} />}
                 <DigitFormField
                     name="code"
                     component={DigitTextField}

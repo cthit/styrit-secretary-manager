@@ -6,6 +6,4 @@ const mapStateToProps = state => ({
     debug: state.root.init.debug
 });
 
-const mapDispatchToProps = dispatch => ({});
-
 export default connect(mapStateToProps)(withRouter(DebugHeader));

@@ -10,8 +10,8 @@ export function initApi(debugMode) {
     }
 }
 
-export async function getRequest(endpoint, includePassword = true) {
-    if (initialized != true) {
+export function getRequest(endpoint, includePassword = true) {
+    if (initialized !== true) {
         console.error("API not initialized!");
         return;
     }
@@ -22,10 +22,35 @@ export async function getRequest(endpoint, includePassword = true) {
         // Do something here!
     }
 
-    return axios
-        .get(path + endpoint, { headers })
-        .then(response => {
-            return response;
-        })
-        .catch(error => console.error("Received error on endpoint ", endpoint));
+    return axios.get(path + endpoint, { headers });
+}
+
+export function postRequest(endpoint, data, includePassword = true) {
+    if (initialized !== true) {
+        console.error("API not initialized!");
+        return;
+    }
+
+    let headers = {};
+
+    if (includePassword) {
+        // Do something here!
+    }
+
+    return axios.post(path + endpoint, data, { headers });
+}
+
+export function putRequest(endpoint, data, includePassword = true) {
+    if (initialized !== true) {
+        console.error("API not initialized!");
+        return;
+    }
+
+    let headers = {};
+
+    if (includePassword) {
+        // Do something here!
+    }
+
+    return axios.put(path + endpoint, data, { headers });
 }
