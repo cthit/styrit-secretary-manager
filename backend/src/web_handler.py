@@ -25,7 +25,7 @@ def get_data_for_code(code):
     group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
 
     if group_meeting is None:
-        return {"error": "Missing data for code, please send the files manually"}, 404
+        return None
 
     task_tuples = list(orm.select(
         (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
@@ -54,9 +54,12 @@ def handle_file(code, task, file):
     Saves the file to the disk and stores it's location in the database
     """
     task_obj = Task.get(name=task)
-    data = get_data_for_code(code)
     if task_obj is None:
         return {"error": "Report type not found: " + str(task)}, 404
+
+    data = get_data_for_code(code)
+    if data is None:
+        return {"error": "Unable to find meeting for code"}, 404
 
     committee = data["group"]["codeName"]
     year = str(data["year"])
@@ -77,11 +80,11 @@ def handle_file(code, task, file):
 
     if group_file is None:
         GroupMeetingFile(group_task=group_task, file_location=save_loc)
-        return False
+        return False, 200
     else:
         print("Overwriting file " + group_file.file_location + " from " + str(group_file.date) + " (GMT)")
         group_file.date = datetime.datetime.utcnow()
-        return True
+        return True, 200
 
 # Validate code, return data associated with a validated code.
 class CodeRes(Resource):
@@ -122,8 +125,12 @@ class FileRes(Resource):
 
         overwrite = False
         for task in request.files:
-            if handle_file(code, task, request.files[task]):
-                overwrite = True
+            r, code = handle_file(code, task, request.files[task])
+            if code != 200:
+                return r, code
+
+            overwrite = r
+
         return {"overwrite": overwrite}
 
 
