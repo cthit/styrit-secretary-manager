@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { onUpload } from "./Uploads.action-creator.screen";
+import { onUpload, onSubmitFiles } from "./Upload.action-creator.screen";
 
 import Upload from "./Upload.screen";
 import { DigitDialogActions } from "@cthit/react-digit-components";
@@ -17,15 +17,20 @@ const dispatchDialog = (dialogData, dispatch) =>
     dispatch(DigitDialogActions.digitDialogOpen(dialogData));
 
 const mapStateToProps = state => ({
-    groupName: state.root.CodeReducer.data.group.displayName,
+    group: state.root.CodeReducer.data.group,
     tasks: state.root.CodeReducer.data.tasks,
-    error: state.root.UploadReducer.error
+    error: state.root.UploadReducer.error,
+    noSubmit: state.root.UploadReducer.noSubmit,
+    reports: state.root.UploadReducer.reports,
+    code: state.root.CodeReducer.acceptedCode
 });
 
 const mapDispatchToProps = dispatch => ({
     onUpload: (file, task) => dispatch(onUpload(file, task)),
     onInvalidFiletype: type =>
-        dispatchDialog(invalidFiletypeDialogData(type), dispatch)
+        dispatchDialog(invalidFiletypeDialogData(type), dispatch),
+    submitFiles: (reports, code, group) =>
+        dispatch(onSubmitFiles(reports, code, group))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Upload);

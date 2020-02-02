@@ -3,6 +3,7 @@ import {
     SUBMIT_CODE_FAILED
 } from "./Code.actions.screen";
 import { postCode } from "../../../../api/post.Code.api";
+import { handleError } from "../../../../common/functions/handleError";
 
 export function submitCode(code) {
     return dispatch => {
@@ -29,20 +30,5 @@ function onAccept(response) {
 }
 
 function onError(error) {
-    console.error("ERROR::", error);
-    let msg = "Woops, something went wrong.";
-    if (error.response) {
-        let data = error.response.data;
-        if (data && data.error) {
-            msg = data.error;
-        }
-    }
-
-    return {
-        type: SUBMIT_CODE_FAILED,
-        payload: {
-            message: msg
-        },
-        error: true
-    };
+    return handleError(error, SUBMIT_CODE_FAILED);
 }

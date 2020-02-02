@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./app";
 import * as serviceWorker from "./serviceWorker";
-import { DigitProviders, DigitDialog } from "@cthit/react-digit-components";
+import { DigitProviders } from "@cthit/react-digit-components";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { rootReducer } from "./app/App.reducer";
 
@@ -24,7 +24,6 @@ let theme = createMuiTheme({
 
 ReactDOM.render(
     <DigitProviders theme={theme} rootReducer={{ root: rootReducer }}>
-        <DigitDialog />
         <App />
     </DigitProviders>,
     document.getElementById("root")

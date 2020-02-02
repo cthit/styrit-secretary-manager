@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { DigitHeader, DigitButton } from "@cthit/react-digit-components";
+import {
+    DigitHeader,
+    DigitButton,
+    DigitDialog
+} from "@cthit/react-digit-components";
 import { Switch, Route } from "react-router-dom";
 import Main from "../use-cases/main";
 import DebugHeader from "../use-cases/debug";
@@ -19,6 +23,7 @@ class App extends Component {
     render() {
         return (
             <div>
+                <DigitDialog />
                 <DebugHeader />
                 <DigitHeader
                     dense

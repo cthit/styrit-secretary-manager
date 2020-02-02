@@ -23,6 +23,7 @@ export const UploadCard = ({ props }) => (
                             if (file.type === "application/pdf") {
                                 props.onUpload(file);
                             } else {
+                                event.target.value = null;
                                 props.onInvalidFiletype(file.type);
                             }
                         }

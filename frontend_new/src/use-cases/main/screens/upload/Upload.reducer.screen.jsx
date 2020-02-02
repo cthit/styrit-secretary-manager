@@ -1,8 +1,9 @@
-import { ON_UPLOAD } from "./Upload.actions.screen";
+import { ON_UPLOAD, ON_SUBMIT_FILES_FAILED } from "./Upload.actions.screen";
 
 const initialState = {
     reports: {},
-    error: null
+    error: null,
+    noSubmit: true
 };
 
 export const UploadReducer = (state = initialState, action) => {
@@ -14,7 +15,11 @@ export const UploadReducer = (state = initialState, action) => {
             newReports[task] = file;
             return Object.assign({}, state, {
                 reports: newReports,
-                error: null
+                noSubmit: false
+            });
+        case ON_SUBMIT_FILES_FAILED:
+            return Object.assign({}, state, {
+                error: action.payload.message
             });
         default:
             return state;
