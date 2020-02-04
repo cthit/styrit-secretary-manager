@@ -1,4 +1,8 @@
-import { ON_UPLOAD, ON_SUBMIT_FILES_FAILED } from "./Upload.actions.screen";
+import {
+    ON_UPLOAD,
+    ON_SUBMIT_FILES_FAILED,
+    ON_FILEUPLOAD_FINISHED
+} from "./Upload.actions.screen";
 import { putFiles } from "../../../../api/put.Files.api";
 import { handleError } from "../../../../common/functions/handleError";
 import { DigitDialogActions } from "@cthit/react-digit-components";
@@ -45,7 +49,8 @@ function onAccept(response) {
             "Om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil." +
             msg,
         confirmButtonText: "Ok",
-        cancelButtonText: ""
+        cancelButtonText: "Fortsätt ladda upp filer med samma kod ",
+        onConfirm: () => onConfirmFilesUploaded
     };
 
     return DigitDialogActions.digitDialogOpen(dialogData);
@@ -53,4 +58,13 @@ function onAccept(response) {
 
 function onError(error) {
     return handleError(error, ON_SUBMIT_FILES_FAILED);
+}
+
+function onConfirmFilesUploaded() {
+    // Reset the state to code input.
+    return {
+        type: ON_FILEUPLOAD_FINISHED,
+        payload: {},
+        error: false
+    };
 }

@@ -1,4 +1,8 @@
-import { ON_UPLOAD, ON_SUBMIT_FILES_FAILED } from "./Upload.actions.screen";
+import {
+    ON_UPLOAD,
+    ON_SUBMIT_FILES_FAILED,
+    ON_FILEUPLOAD_FINISHED
+} from "./Upload.actions.screen";
 
 const initialState = {
     reports: {},
@@ -21,6 +25,8 @@ export const UploadReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 error: action.payload.message
             });
+        case ON_FILEUPLOAD_FINISHED:
+            return initialState;
         default:
             return state;
     }

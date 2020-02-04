@@ -1,20 +1,22 @@
+import React from "react";
 import { connect } from "react-redux";
 import { onUpload, onSubmitFiles } from "./Upload.action-creator.screen";
 
 import Upload from "./Upload.screen";
-import { DigitDialogActions } from "@cthit/react-digit-components";
+import { DigitDialogActions, DigitButton } from "@cthit/react-digit-components";
 
 function invalidFiletypeDialogData(type) {
     return {
         title: "Invalid filetype " + type,
         description: "Only pdf files are allowed",
-        confirmButtonText: "Ok",
-        cancelButtonText: ""
+        renderButtons: confirm => (
+            <DigitButton text="Ok" onClick={confirm} primary raised />
+        )
     };
 }
 
 const dispatchDialog = (dialogData, dispatch) =>
-    dispatch(DigitDialogActions.digitDialogOpen(dialogData));
+    dispatch(DigitDialogActions.digitDialogCustomOpen(dialogData));
 
 const mapStateToProps = state => ({
     group: state.root.CodeReducer.data.group,

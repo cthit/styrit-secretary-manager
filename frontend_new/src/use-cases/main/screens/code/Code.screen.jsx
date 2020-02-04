@@ -1,13 +1,12 @@
 import React from "react";
 import {
     DigitForm,
-    DigitTextField,
-    DigitFormField,
     DigitButton,
-    DigitText
+    DigitText,
+    DigitFormField
 } from "@cthit/react-digit-components";
 import * as yup from "yup";
-import { FormContainer } from "./Code.styles.screen";
+import { FormContainer, CodeTextField } from "./Code.styles.screen";
 
 export const Code = props => (
     <DigitForm
@@ -25,10 +24,12 @@ export const Code = props => (
                 )}
                 <DigitFormField
                     name="code"
-                    component={DigitTextField}
+                    component={CodeTextField}
                     componentProps={{
-                        outlined: true,
-                        upperLabel: "Kod"
+                        variant: "outlined",
+                        size: "medium",
+                        label: "Kod",
+                        style: { marginBottom: "20px", minWidth: "325px" }
                     }}
                 />
                 <DigitButton primary raised submit text="Nästa" />
@@ -38,3 +39,16 @@ export const Code = props => (
 );
 
 export default Code;
+
+/*
+                        label="kod"
+                        variant="outlined"
+                        onChange={event => {
+                            const text = event.target.value;
+                            this.setState((state, props) => ({
+                                code: text
+                            }));
+                        }}
+                        style={{ marginBottom: "20px", minWidth: "325px" }}
+                    />
+                    */
