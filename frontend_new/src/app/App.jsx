@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-  DigitHeader,
-  DigitButton,
-  DigitDialog,
-  DigitDesign
-} from "@cthit/react-digit-components";
+import { DigitHeader, DigitDialog } from "@cthit/react-digit-components";
 import { Switch, Route } from "react-router-dom";
 import Main from "../use-cases/main";
 import DebugHeader from "../use-cases/debug";
