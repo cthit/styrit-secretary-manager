@@ -137,15 +137,11 @@ class FileRes(Resource):
 # Validates an admin password.
 def validate_password(response_json):
     if response_json is None or "pass" not in response_json:
-        return {
-                   "Error": "Bad Request"
-               }, 400
+        return {"error": "Bad Request"}, 400
     password = response_json["pass"]
     frontend_admin_pass = os.environ.get("frontend_admin_pass", "asd123")
     if password != frontend_admin_pass:
-        return {
-                   "Error": "Invalid password"
-               }, 401
+        return {"error": "Invalid password"}, 401
     return {}, 200
 
 
@@ -188,7 +184,7 @@ class MailRes(Resource):
                 raise Exception("unable to find meeting with id " + id)
         except Exception as e:
             print("Unable to validate meeting " + str(e))
-            return "Unable to validate meeting", 400
+            return {"error": "Unable to validate meeting"}, 400
 
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
 
@@ -204,7 +200,7 @@ class TimerResource(Resource):
         # The password was accepted, check the meeting id
         meeting = Meeting.get(id=id)
         if meeting is None:
-            return 404, "Meeting with id " + str(id) + " not found"
+            return {"error": "Meeting with id " + str(id) + " not found"}, 404
 
         # Meeting is valid, set the flag in the database for checking the deadline for the meeting
         print("Starting to check for deadline for meeting with id: " + str(id))
@@ -239,7 +235,7 @@ class ArchiveDownload(Resource):
             archive = None
 
         if archive is None:
-            return "Archive not found", 404
+            return {"error": "Archive not found"}, 404
 
         file_name = archive.archive_location + ".zip"
         file_path_name = os.path.normpath(file_name)
@@ -262,7 +258,7 @@ class ArchiveDownload(Resource):
             meeting = None
 
         if meeting is None:
-            return "Meeting not found", 404
+            return {"error": "Meeting not found"}, 404
 
         archive = end_date_handler.create_archive(meeting)
 
