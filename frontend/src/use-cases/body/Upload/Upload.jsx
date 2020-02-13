@@ -52,7 +52,7 @@ export const Upload = props => (
     >
         <PRINT props={props} />
         <Typography fontWeight={800} fontSize="h1.fontSize">
-            {props.text}
+            {props.text} 
         </Typography>
         <UploadContainer>
             <UploadSnippet props={props} />

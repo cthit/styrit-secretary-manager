@@ -7,37 +7,38 @@ import Admin from "../use-cases/admin";
 import HeaderButtons from "../common/views/headerbuttons";
 
 class App extends Component {
-  state = {
-    debug: false
-  };
+    state = {
+        debug: false
+    };
 
-  constructor(props) {
-    super();
-    props.init();
-    console.log("FUCKIGN HELL!? ", props);
-    this.state.debug = props.debug.debug;
-  }
+    constructor(props) {
+        super();
+        props.init();
+        console.log("FUCKIGN HELL!? ", props);
+        this.state.debug = props.debug.debug;
+        props.helper("asd123");
+    }
 
-  render() {
-    return (
-      <div>
-        <DigitDialog />
-        <DebugHeader />
-        <DigitHeader
-          dense
-          headerHeight="56px"
-          title="Dokumentinsamling"
-          renderHeader={() => <HeaderButtons />}
-          renderMain={() => (
-            <Switch>
-              <Route path="/admin" component={Admin} />
-              <Route path="/" component={Main} />
-            </Switch>
-          )}
-        ></DigitHeader>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <DigitDialog />
+                <DebugHeader />
+                <DigitHeader
+                    dense
+                    headerHeight="56px"
+                    title="Dokumentinsamling"
+                    renderHeader={() => <HeaderButtons />}
+                    renderMain={() => (
+                        <Switch>
+                            <Route path="/admin" component={Admin} />
+                            <Route path="/" component={Main} />
+                        </Switch>
+                    )}
+                ></DigitHeader>
+            </div>
+        );
+    }
 }
 
 export default App;
