@@ -25,5 +25,9 @@ export const NewButtonContainer = styled.div`
 `;
 
 export const MeetingTableContainer = styled.div`
-    width: 60%;
+    width: 100%;
+`;
+
+export const MeetingConfContainer = styled.div`
+    min-width: 80%;
 `;

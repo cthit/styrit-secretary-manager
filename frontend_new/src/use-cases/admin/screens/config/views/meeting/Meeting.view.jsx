@@ -1,15 +1,17 @@
 import React from "react";
 import {
-    DigitTable,
     DigitSelect,
-    DigitButton
+    DigitButton,
+    DigitCheckbox
 } from "@cthit/react-digit-components";
 import {
     MeetingContainer,
     MeetingSelectContainer,
-    NewButtonContainer
+    NewButtonContainer,
+    MeetingConfContainer
 } from "./Meeting.styles.view";
 import GeneralMeeting from "./views/general-meeting/";
+import MeetingTable from "./views/meeting-table";
 
 export const Meeting = props => {
     return (
@@ -29,12 +31,10 @@ export const Meeting = props => {
                 </NewButtonContainer>
             </MeetingSelectContainer>
             {props.selectedMeeting && (
-                <div>
+                <MeetingConfContainer>
                     <GeneralMeeting />
-                    {/* <MeetingTableContainer>
-                        <DigitTable />
-                    </MeetingTableContainer> */}
-                </div>
+                    <MeetingTable />
+                </MeetingConfContainer>
             )}
         </MeetingContainer>
     );
