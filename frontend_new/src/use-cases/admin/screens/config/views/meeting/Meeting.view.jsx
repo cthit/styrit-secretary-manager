@@ -12,6 +12,7 @@ import {
 } from "./Meeting.styles.view";
 import GeneralMeeting from "./views/general-meeting/";
 import MeetingTable from "./views/meeting-table";
+import { Button } from "@material-ui/core";
 
 export const Meeting = props => {
     return (
@@ -27,7 +28,10 @@ export const Meeting = props => {
                     value={props.selectedMeetingID}
                 />
                 <NewButtonContainer>
-                    <DigitButton text="New Meeting" raised primary />
+                    {/* text="New Meeting" raised primary /> */}
+                    <Button variant="contained" color="primary">
+                        New Meeting
+                    </Button>
                 </NewButtonContainer>
             </MeetingSelectContainer>
             {props.selectedMeeting && (

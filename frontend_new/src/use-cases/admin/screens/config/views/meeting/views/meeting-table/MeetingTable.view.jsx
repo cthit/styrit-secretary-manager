@@ -7,6 +7,8 @@ import {
     StyledCheckbox
 } from "./MeetingTable.styles.view";
 import { MeetingTableContainer } from "../../Meeting.styles.view";
+import { DigitCheckbox } from "@cthit/react-digit-components";
+import { Checkbox } from "@material-ui/core";
 
 export const MeetingTable = p => {
     const { tasks, groups, groups_tasks } = p;
@@ -20,12 +22,12 @@ export const MeetingTable = p => {
                         {tasks.map(task => (
                             <StyledTableCell align="right" key={task.name}>
                                 {task.display_name}
-                                <StyledCheckbox
-                                    primary
+                                <Checkbox
                                     value={true} // Add checkall later!
                                     onChange={val => {
                                         console.log("TASK, VAL", task, val);
                                     }}
+                                    style={{ marginLeft: "5px!" }}
                                 />
                             </StyledTableCell>
                         ))}
