@@ -4,6 +4,7 @@ import { onMeetingSelected } from "./Meeting.action-creators.view";
 
 const mapStateToProps = state => ({
     meetings: state.root.PasswordReducer.data.meetings,
+    selectedMeetingID: state.root.MeetingReducer.selectedMeetingID,
     selectedMeeting: state.root.MeetingReducer.selectedMeeting
 });
 

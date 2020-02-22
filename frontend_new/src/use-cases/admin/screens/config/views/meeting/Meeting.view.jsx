@@ -2,26 +2,16 @@ import React from "react";
 import {
     DigitTable,
     DigitSelect,
-    DigitDateAndTimePicker,
-    DigitButton,
-    DigitTextField
+    DigitButton
 } from "@cthit/react-digit-components";
 import {
     MeetingContainer,
-    MeetingTableContainer,
     MeetingSelectContainer,
-    GeneralMeetingInfoGroup,
-    NewButtonContainer,
-    GeneralInfoContainer,
-    GeneralTextFieldContainer
+    NewButtonContainer
 } from "./Meeting.styles.view";
-import NumbersTextField from "../../../../../../common/elements/NumberTextField";
+import GeneralMeeting from "./views/general-meeting/";
+
 export const Meeting = props => {
-    const meeting = props.meetings[props.selectedMeeting];
-    console.log("ASD", meeting);
-    if (meeting) {
-        console.log("NUMBER", meeting.meeting_no);
-    }
     return (
         <MeetingContainer>
             <MeetingSelectContainer>
@@ -32,7 +22,7 @@ export const Meeting = props => {
                     onChange={e => {
                         props.onMeetingSelected(e.target.value);
                     }}
-                    value={props.selectedMeeting}
+                    value={props.selectedMeetingID}
                 />
                 <NewButtonContainer>
                     <DigitButton text="New Meeting" raised primary />
@@ -40,36 +30,7 @@ export const Meeting = props => {
             </MeetingSelectContainer>
             {props.selectedMeeting && (
                 <div>
-                    <GeneralMeetingInfoGroup>
-                        <DigitDateAndTimePicker
-                            outlined
-                            upperLabel="Date"
-                            value={meeting.date}
-                        />
-                        <DigitDateAndTimePicker
-                            outlined
-                            upperLabel="Deadline"
-                            value={meeting.last_upload_date}
-                        />
-                        <GeneralTextFieldContainer>
-                            <NumbersTextField
-                                label="Study period"
-                                value={meeting.study_period}
-                                onChange={val =>
-                                    console.log("New study period:", val)
-                                }
-                            />
-                        </GeneralTextFieldContainer>
-                        <GeneralTextFieldContainer>
-                            <NumbersTextField
-                                label="Meeting number"
-                                value={meeting.meeting_no}
-                                onChange={val =>
-                                    console.log("New meeting number", val)
-                                }
-                            />
-                        </GeneralTextFieldContainer>
-                    </GeneralMeetingInfoGroup>
+                    <GeneralMeeting />
                     {/* <MeetingTableContainer>
                         <DigitTable />
                     </MeetingTableContainer> */}

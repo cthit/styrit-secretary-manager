@@ -12,7 +12,6 @@ const initialState = {
 export const PasswordReducer = (state = initialState, action) => {
     switch (action.type) {
         case SUBMIT_PASSWORD_SUCCESSFUL:
-            console.log("Got the following data", action.payload);
             return Object.assign({}, state, {
                 error: null,
                 password: action.payload.password,
