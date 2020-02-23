@@ -3,9 +3,10 @@ import MeetingTable from "./MeetingTable.view";
 import { onGroupTaskClicked } from "./MeetingTable.action-creators.view";
 
 const mapStateToProps = state => ({
-    tasks: state.root.MeetingReducer.tasksMode,
-    groups: state.root.MeetingReducer.groupCodes,
-    groups_tasks: state.root.MeetingReducer.selectedMeeting.groups_tasks
+    groups: state.root.MeetingReducer.groups,
+    tasks: state.root.MeetingReducer.tasks,
+    tasksMode: state.root.MeetingReducer.taskMode,
+    groupTasks: state.root.MeetingReducer.groupTasks
 });
 
 const mapDispatchToProps = dispatch => ({

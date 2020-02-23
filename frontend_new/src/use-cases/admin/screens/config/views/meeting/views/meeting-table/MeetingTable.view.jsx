@@ -10,8 +10,8 @@ import { MeetingTableContainer } from "../../Meeting.styles.view";
 import { Checkbox } from "@material-ui/core";
 import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
 
-export const MeetingTable = p => {
-    const { tasks, groups, groups_tasks } = p;
+export const MeetingTable = props => {
+    const { groups, tasks, tasksMode, groupTasks } = props;
 
     return (
         <MeetingTableContainer>
@@ -19,12 +19,14 @@ export const MeetingTable = p => {
                 <StyledTableHead>
                     <StyledTableRow>
                         <StyledTableCell>Task</StyledTableCell>
-                        {tasks.map(task => (
-                            <StyledTableCell align="right" key={task.name}>
-                                {task.display_name}
+                        {Object.keys(tasks).map(task => (
+                            <StyledTableCell align="right" key={task}>
+                                {tasks[task]}
                                 <Checkbox
-                                    checked={task.mode == TASK_MODE_ALL} // Add checkall later!
-                                    indeterminate={task.mode == TASK_MODE_SOME}
+                                    checked={tasksMode[task] === TASK_MODE_ALL}
+                                    indeterminate={
+                                        tasksMode[task] === TASK_MODE_SOME
+                                    }
                                     onChange={() => {
                                         console.log("TASK", task);
                                     }}
@@ -35,27 +37,30 @@ export const MeetingTable = p => {
                     </StyledTableRow>
                 </StyledTableHead>
                 <StyledTableBody>
-                    {groups.map(group => (
-                        <StyledTableRow key={group.name}>
+                    {Object.keys(groups).map(group => (
+                        <StyledTableRow key={group}>
                             <StyledTableCell component="th" scope="row">
-                                {group.displayName}
+                                {groups[group]}
                             </StyledTableCell>
-                            {tasks.map(task => (
-                                <StyledTableCell align="right" key={task.name}>
+                            {Object.keys(tasks).map(task => (
+                                <StyledTableCell align="right" key={task}>
                                     <Checkbox
                                         checked={getChecked(
                                             group,
                                             task,
-                                            groups_tasks
+                                            groupTasks
                                         )}
                                         onChange={() => {
-                                            p.onGroupTaskClicked(task, group);
+                                            props.onGroupTaskClicked(
+                                                task,
+                                                group
+                                            );
                                         }}
                                     />
                                 </StyledTableCell>
                             ))}
                             <StyledTableCell align="right">
-                                {group.code}
+                                {groupTasks[group].code}
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}
@@ -65,17 +70,8 @@ export const MeetingTable = p => {
     );
 };
 
-function getChecked(group, task, groups_tasks) {
-    let checked = false;
-    const groups = groups_tasks[task.name];
-    if (groups) {
-        groups.forEach(g => {
-            if (g.name === group.name) {
-                checked = true;
-            }
-        });
-    }
-    return checked;
+function getChecked(group, task, groupTasks) {
+    return groupTasks[group].tasks.includes(task);
 }
 
 export default MeetingTable;
