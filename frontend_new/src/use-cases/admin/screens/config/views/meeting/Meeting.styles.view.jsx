@@ -18,7 +18,8 @@ export const MeetingSelectContainer = styled.div`
 `;
 
 export const NewButtonContainer = styled.div`
-    height: 100%;
+    height: 60%;
+    margin-top: 7px;
     display: flex;
     margin-left: 20px;
     justify-content: flex-start;

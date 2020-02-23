@@ -5,8 +5,7 @@ import {
 
 const initialState = {
     password: null,
-    error: null,
-    data: null
+    error: null
 };
 
 export const PasswordReducer = (state = initialState, action) => {
@@ -14,8 +13,7 @@ export const PasswordReducer = (state = initialState, action) => {
         case SUBMIT_PASSWORD_SUCCESSFUL:
             return Object.assign({}, state, {
                 error: null,
-                password: action.payload.password,
-                data: action.payload.data
+                password: action.payload.password
             });
         case SUBMIT_PASSWORD_FAILED:
             return Object.assign({}, state, {

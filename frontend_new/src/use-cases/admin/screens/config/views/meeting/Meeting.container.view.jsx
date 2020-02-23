@@ -3,7 +3,7 @@ import Meeting from "./Meeting.view";
 import { onMeetingSelected } from "./Meeting.action-creators.view";
 
 const mapStateToProps = state => ({
-    meetings: state.root.PasswordReducer.data.meetings,
+    meetings: state.root.MeetingReducer.meetings,
     selectedMeetingID: state.root.MeetingReducer.selectedMeetingID,
     selectedMeeting: state.root.MeetingReducer.selectedMeeting
 });
