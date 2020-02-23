@@ -7,11 +7,10 @@ import {
     StyledTableBody
 } from "./MeetingTable.styles.view";
 import { MeetingTableContainer } from "../../Meeting.styles.view";
-import { DigitCheckbox } from "@cthit/react-digit-components";
 import { Checkbox } from "@material-ui/core";
+import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
 
 export const MeetingTable = p => {
-    console.log("PPP", p);
     const { tasks, groups, groups_tasks } = p;
 
     return (
@@ -24,8 +23,8 @@ export const MeetingTable = p => {
                             <StyledTableCell align="right" key={task.name}>
                                 {task.display_name}
                                 <Checkbox
-                                    checked={true} // Add checkall later!
-                                    indeterminate={false}
+                                    checked={task.mode == TASK_MODE_ALL} // Add checkall later!
+                                    indeterminate={task.mode == TASK_MODE_SOME}
                                     onChange={() => {
                                         console.log("TASK", task);
                                     }}

@@ -7,6 +7,7 @@ import {
     MEETING_NUMBER_UPDATED
 } from "./views/general-meeting/GeneralMeeting.actions.view";
 import { GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
+import { TASK_MODE_NONE, TASK_MODE_SOME, TASK_MODE_ALL } from "./TaskModes";
 
 const initialState = {
     meetings: null,
@@ -14,7 +15,8 @@ const initialState = {
     selectedMeeting: null,
     groups: null,
     tasks: null,
-    groupCodes: null
+    groupCodes: null,
+    tasksMode: null
 };
 
 export const MeetingReducer = (state = initialState, action) => {
@@ -29,11 +31,17 @@ export const MeetingReducer = (state = initialState, action) => {
             const meetingID = action.payload.meeting;
             const meeting = state.meetings[meetingID];
             const groupCodes = getGroupCodes(meeting, state.groups);
+            const newTasksMode = getTasksMode(
+                meeting.groups_tasks,
+                state.tasks,
+                state.groups
+            );
 
             return Object.assign({}, state, {
                 selectedMeetingID: meetingID,
                 selectedMeeting: meeting,
-                groupCodes: groupCodes
+                groupCodes: groupCodes,
+                tasksMode: newTasksMode
             });
         case MEETING_DATE_UPDATED:
             return updateMeeting(
@@ -77,13 +85,29 @@ export const MeetingReducer = (state = initialState, action) => {
                 state.selectedMeeting
             );
 
-            return updateMeeting(
-                Object.assign({}, state.selectedMeeting, {
-                    groups_tasks: groups_tasks
-                }),
-                state.meetings,
-                state.selectedMeetingID,
-                state
+            const checkedGroups = groups_tasks[action.payload.task.name];
+            const tasksMode = state.tasksMode.map(task => {
+                if (task.name === action.payload.task.name) {
+                    return Object.assign({}, task, {
+                        mode: getTaskMode(checkedGroups, state.groups)
+                    });
+                }
+                return task;
+            });
+
+            return Object.assign(
+                {},
+                updateMeeting(
+                    Object.assign({}, state.selectedMeeting, {
+                        groups_tasks: groups_tasks
+                    }),
+                    state.meetings,
+                    state.selectedMeetingID,
+                    state
+                ),
+                {
+                    tasksMode: tasksMode
+                }
             );
         default:
             return state;
@@ -145,4 +169,42 @@ function getGroupCodes(meeting, groups) {
             code: code
         };
     });
+}
+
+function getTasksMode(groups_tasks, tasks, allGroups) {
+    return Array.from(tasks).map(task => {
+        const groups = groups_tasks[task.name];
+        let mode = TASK_MODE_NONE;
+
+        mode = getTaskMode(groups, allGroups);
+
+        return {
+            name: task.name,
+            displayName: task.display_name,
+            mode: mode
+        };
+    });
+}
+
+function getTaskMode(checkedGroups, allGroups) {
+    let mode = TASK_MODE_NONE;
+
+    if (checkedGroups) {
+        if (checkedGroups.length > 0) {
+            mode = TASK_MODE_ALL;
+            allGroups.forEach(g1 => {
+                let found = false;
+                checkedGroups.forEach(g2 => {
+                    if (g1.name === g2.name) {
+                        found = true;
+                    }
+                });
+
+                if (found === false) {
+                    mode = TASK_MODE_SOME;
+                }
+            });
+        }
+    }
+    return mode;
 }
