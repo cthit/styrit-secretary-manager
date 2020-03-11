@@ -62,6 +62,52 @@ export const MeetingReducer = (state = initialState, action) => {
                 groupTasks: groupTasks,
                 taskMode: taskMode
             });
+        case GROUP_TASK_CHANGED:
+            const newGroupsTasks = updateTasks(
+                action.payload.group,
+                action.payload.task,
+                state.groupTasks
+            );
+            return Object.assign({}, state, {
+                groupTasks: newGroupsTasks
+            });
+        // General meeting information.
+        case MEETING_DATE_UPDATED:
+            return updateMeeting(
+                Object.assign({}, state.selectedMeeting, {
+                    date: action.payload.date
+                }),
+                state.meetings,
+                state.selectedMeetingID,
+                state
+            );
+        case MEETING_LAST_UPLOAD_UPDATED:
+            return updateMeeting(
+                Object.assign({}, state.selectedMeeting, {
+                    last_upload_date: action.payload.date
+                }),
+                state.meetings,
+                state.selectedMeetingID,
+                state
+            );
+        case MEETING_STUDY_PERIOD_UPDATED:
+            return updateMeeting(
+                Object.assign({}, state.selectedMeeting, {
+                    lp: action.payload.study_period
+                }),
+                state.meetings,
+                state.selectedMeetingID,
+                state
+            );
+        case MEETING_NUMBER_UPDATED:
+            return updateMeeting(
+                Object.assign({}, state.selectedMeeting, {
+                    meeting_no: action.payload.meeting_no
+                }),
+                state.meetings,
+                state.selectedMeetingID,
+                state
+            );
         default:
             return state;
     }
@@ -85,6 +131,15 @@ function getGroupsTasks(allGroups, groups_tasks) {
     return groupsTasks;
 }
 
+function updateMeeting(newMeetingObject, meetingsList, id, state) {
+    meetingsList[id] = newMeetingObject;
+
+    return Object.assign({}, state, {
+        selectedMeeting: newMeetingObject,
+        meetings: meetingsList
+    });
+}
+
 function getTasksMode(allTasks, groupsTasks) {
     const taskMode = {};
     Object.keys(allTasks).forEach(task => {
@@ -104,6 +159,26 @@ function getTasksMode(allTasks, groupsTasks) {
         }
     });
     return taskMode;
+}
+
+function updateTasks(group, task, groupTasks) {
+    let tasks_list = groupTasks[group].tasks.slice();
+    let index = -1;
+    tasks_list.forEach((t, i) => {
+        if (t === task) {
+            index = i;
+        }
+    });
+
+    if (index > -1) {
+        tasks_list = tasks_list.slice(index);
+    } else {
+        tasks_list.push(task);
+    }
+    groupTasks[task] = Object.assign({}, groupTasks[group], {
+        tasks: tasks_list
+    });
+    return groupTasks;
 }
 
 // export const MeetingReducer = (state = initialState, action) => {
