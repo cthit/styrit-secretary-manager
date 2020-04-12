@@ -5,7 +5,6 @@ import {
 } from "./Upload.actions.screen";
 import { putFiles } from "../../../../api/put.Files.api";
 import { handleError } from "../../../../common/functions/handleError";
-import { DigitDialogActions } from "@cthit/react-digit-components";
 
 export function onUpload(file, task) {
     return {
@@ -47,17 +46,6 @@ function onAccept(response) {
     alert(msg);
 
     return onConfirmFilesUploaded();
-
-    // Add this later if we can get it to work.
-    let dialogData = {
-        title: "Fil(er) upladdade!",
-        description: msg,
-        confirmButtonText: "Ok",
-        cancelButtonText: "Fortsätt ladda upp filer med samma kod ",
-        onConfirm: () => onConfirmFilesUploaded
-    };
-
-    return DigitDialogActions.digitDialogOpen(dialogData);
 }
 
 function onError(error) {
