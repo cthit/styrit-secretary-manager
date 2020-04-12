@@ -35,8 +35,8 @@ export function onMeetingStudyPeriodUpdated(num) {
         num = 0;
     }
 
-    if (num > 999) {
-        num = 999;
+    if (num > 4) {
+        num = 4;
     }
 
     return dispatch =>
@@ -54,8 +54,8 @@ export function onMeetingNumberUpdated(num) {
         num = 0;
     }
 
-    if (num > 999) {
-        num = 999;
+    if (num > 10) {
+        num = 10;
     }
 
     return dispatch =>
