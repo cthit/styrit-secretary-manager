@@ -1,17 +1,17 @@
 import React from "react";
 import {
     StyledTable,
-    StyledTableHead,
+    StyledTableBody,
     StyledTableCell,
-    StyledTableRow,
-    StyledTableBody
+    StyledTableHead,
+    StyledTableRow
 } from "./MeetingTable.styles.view";
 import { MeetingTableContainer } from "../../Meeting.styles.view";
 import { Checkbox } from "@material-ui/core";
 import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
 
 export const MeetingTable = props => {
-    const { groups, tasks, tasksMode, groupTasks } = props;
+    const {groups, tasks, tasksMode, groupTasks} = props;
 
     return (
         <MeetingTableContainer>
@@ -71,6 +71,7 @@ export const MeetingTable = props => {
 };
 
 function getChecked(group, task, groupTasks) {
+    console.log("GROUP", group, ", TASK", task, "GROUPTASKS,", groupTasks);
     return groupTasks[group].tasks.includes(task);
 }
 

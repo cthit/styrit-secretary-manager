@@ -1,23 +1,13 @@
-import {MEETING_SELECTED, NEW_MEETING} from "./Meeting.actions.view";
+import { MEETING_SELECTED, NEW_MEETING } from "./Meeting.actions.view";
 import { SUBMIT_PASSWORD_SUCCESSFUL } from "../../../password/Password.actions.screen";
 import {
     MEETING_DATE_UPDATED,
     MEETING_LAST_UPLOAD_UPDATED,
-    MEETING_STUDY_PERIOD_UPDATED,
-    MEETING_NUMBER_UPDATED
+    MEETING_NUMBER_UPDATED,
+    MEETING_STUDY_PERIOD_UPDATED
 } from "./views/general-meeting/GeneralMeeting.actions.view";
 import { GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
-import { TASK_MODE_NONE, TASK_MODE_SOME, TASK_MODE_ALL } from "./TaskModes";
-
-// const initialState = {
-//     meetings: null,
-//     selectedMeetingID: 0,
-//     selectedMeeting: null,
-//     groups: null,
-//     tasks: null,
-//     groupCodes: null,
-//     tasksMode: null
-// };
+import { TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME } from "./TaskModes";
 
 const initialState = {
     meetings: null,
@@ -126,7 +116,7 @@ export const MeetingReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 selectedMeetingID: newMeeting.id,
                 selectedMeeting: newMeeting,
-                groupsTasks: newMeetingGroupsTasks,
+                groupTasks: newMeetingGroupsTasks,
                 taskMode: getTasksMode(state.tasks, newMeetingGroupsTasks),
                 meetings: newMeetings
             });
@@ -151,6 +141,7 @@ function getGroupsTasks(allGroups, groups_tasks) {
             groupsTasks[group.name].code = group.code;
         });
     });
+    console.log("GetGroupsTasks", groupsTasks);
     return groupsTasks;
 }
 
