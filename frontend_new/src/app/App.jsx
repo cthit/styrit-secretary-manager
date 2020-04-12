@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { DigitHeader, DigitDialog } from "@cthit/react-digit-components";
-import { Switch, Route } from "react-router-dom";
+import { DigitDialog, DigitHeader } from "@cthit/react-digit-components";
 import Main from "../use-cases/main";
 import DebugHeader from "../use-cases/debug";
-import Admin from "../use-cases/admin";
 import HeaderButtons from "../common/views/headerbuttons";
+import { Route, Switch } from "react-router";
+import Admin from "../use-cases/admin";
+import { MainContainer } from "./App.styles.";
 
 class App extends Component {
     state = {
@@ -30,12 +31,14 @@ class App extends Component {
                     title="Dokumentinsamling"
                     renderHeader={() => <HeaderButtons />}
                     renderMain={() => (
-                        <Switch>
-                            <Route path="/admin" component={Admin} />
-                            <Route path="/" component={Main} />
-                        </Switch>
+                        <MainContainer>
+                            <Switch>
+                                <Route path="/admin" component={Admin} />
+                                <Route path="/" component={Main} />
+                            </Switch>
+                        </MainContainer>
                     )}
-                ></DigitHeader>
+                />
             </div>
         );
     }

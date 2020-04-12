@@ -6,7 +6,7 @@ import {DigitProviders} from "@cthit/react-digit-components";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import {rootReducer} from "./app/App.reducer";
 import {Provider} from "react-redux";
-import {applyMiddleware, createStore} from "redux";
+import {applyMiddleware, createStore, combineReducers} from "redux";
 import {unregister} from "./serviceWorker";
 import logger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
@@ -26,11 +26,18 @@ const theme = createMuiTheme({
     }
 });
 
-const store = createStore(rootReducer, applyMiddleware(logger, thunkMiddleware));
+function getReducer(root) {
+    return combineReducers({
+        root
+    })
+}
+
+const store = createStore(getReducer(rootReducer), applyMiddleware(logger, thunkMiddleware));
+const reducers = combineReducers({rootReducer})
 
 ReactDOM.render(
     <Provider store={store}>
-        <DigitProviders theme={theme} rootReducer={{root: rootReducer}}>
+        <DigitProviders theme={theme} rootReducer={{root: { reducers }}}>
             <App />
         </DigitProviders>
     </Provider>,
