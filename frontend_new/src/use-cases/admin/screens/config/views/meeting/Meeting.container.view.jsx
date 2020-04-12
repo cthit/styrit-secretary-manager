@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import Meeting from "./Meeting.view";
-import { onMeetingSelected } from "./Meeting.action-creators.view";
+import {onMeetingSelected, onNewMeeting} from "./Meeting.action-creators.view";
 
 const mapStateToProps = state => ({
     meetings: state.root.MeetingReducer.meetings,
@@ -9,7 +9,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onMeetingSelected: meeting => dispatch(onMeetingSelected(meeting))
+    onMeetingSelected: meeting => dispatch(onMeetingSelected(meeting)),
+    onNewMeeting: () => dispatch(onNewMeeting())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Meeting);

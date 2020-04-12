@@ -31,7 +31,7 @@ export const Meeting = props => {
                 />
                 <NewButtonContainer>
                     {/* text="New Meeting" raised primary /> */}
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" onClick={props.onNewMeeting}>
                         New Meeting
                     </Button>
                 </NewButtonContainer>
