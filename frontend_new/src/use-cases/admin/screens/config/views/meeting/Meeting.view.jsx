@@ -15,6 +15,7 @@ import MeetingTable from "./views/meeting-table";
 import { Button } from "@material-ui/core";
 
 export const Meeting = props => {
+    console.log("MEETINGS: ", props.meetings);
     return (
         <MeetingContainer>
             <MeetingSelectContainer>
@@ -26,6 +27,7 @@ export const Meeting = props => {
                         props.onMeetingSelected(e.target.value);
                     }}
                     value={props.selectedMeetingID}
+                    disabled={!props.meetings || Object.keys(props.meetings).length === 0}
                 />
                 <NewButtonContainer>
                     {/* text="New Meeting" raised primary /> */}
