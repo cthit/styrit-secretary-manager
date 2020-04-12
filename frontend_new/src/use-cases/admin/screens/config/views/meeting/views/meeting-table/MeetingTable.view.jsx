@@ -28,7 +28,7 @@ export const MeetingTable = props => {
                                         tasksMode[task] === TASK_MODE_SOME
                                     }
                                     onChange={() => {
-                                        console.log("TASK", task);
+                                        console.log("ALL TASK CLICKED FOR", task);
                                     }}
                                 />
                             </StyledTableCell>
@@ -71,7 +71,6 @@ export const MeetingTable = props => {
 };
 
 function getChecked(group, task, groupTasks) {
-    console.log("GROUP", group, ", TASK", task, "GROUPTASKS,", groupTasks);
     return groupTasks[group].tasks.includes(task);
 }
 

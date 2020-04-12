@@ -59,7 +59,8 @@ export const MeetingReducer = (state = initialState, action) => {
                 state.groupTasks
             );
             return Object.assign({}, state, {
-                groupTasks: newGroupsTasks
+                groupTasks: newGroupsTasks,
+                taskMode: getTasksMode(state.tasks, newGroupsTasks)
             });
         // General meeting information.
         case MEETING_DATE_UPDATED:
@@ -176,21 +177,22 @@ function getTasksMode(allTasks, groupsTasks) {
 }
 
 function updateTasks(group, task, groupTasks) {
-    let tasks_list = groupTasks[group].tasks.slice();
-    let index = -1;
-    tasks_list.forEach((t, i) => {
-        if (t === task) {
-            index = i;
+    const newGroupTasks = Object.assign({}, groupTasks);
+    let newTasksList = []
+    let found = false;
+    newGroupTasks[group].tasks.forEach(currTask => {
+        if (currTask === task) {
+            found = true;
+        } else {
+            newTasksList.push(currTask);
         }
-    });
+    })
 
-    if (index > -1) {
-        tasks_list = tasks_list.slice(index);
-    } else {
-        tasks_list.push(task);
+    if (found === false) {
+        newTasksList.push(task);
     }
-    groupTasks[task] = Object.assign({}, groupTasks[group], {
-        tasks: tasks_list
+    newGroupTasks[group] = Object.assign({}, groupTasks[group], {
+        tasks: newTasksList
     });
-    return groupTasks;
+    return newGroupTasks;
 }
