@@ -1,72 +1,72 @@
 version: "2"
 services:
-    db:
-        image: postgres
-        restart: always
-        environment:
-            POSTGRES_USER: secretary
-            POSTGRES_DB: postgres
-            POSTGRES_PASSWORD: password
-        ports:
-            - 5432:5432
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: secretary
+      POSTGRES_DB: secretary
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
 
-    adminer:
-        image: adminer
-        restart: always
-        ports:
-            - 8081:8080
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
 
-    # backend:
-    #     image: styrit_secretary_manager_backend
-    #     links:
-    #         - gotify
-    #     depends_on:
-    #         - db
-    #     build:
-    #         context: ./backend/
-    #         dockerfile: dev.Dockerfile
-    #     environment:
-    #         gotify_auth_key: "123abc"
-    #         frontend_admin_pass: "asd123"
-    #         SECRETARY_POSTGRES_USER: secretary
-    #         SECRETARY_POSTGRES_PASSWORD: password
-    #         SECRETARY_POSTGRES_HOST: db
-    #         SECRETARY_POSTGRES_DB: postgres
-    #         SECRETARY_POSTGRES_PORT: 5432
-    #         PYTHONUNBUFFERED: 0
-    #     ports:
-    #         - 5000:5000
-    #     volumes:
-    #         - ./backend/:/usr/src/secretary-manager/backend
+  # backend:
+  #     image: styrit_secretary_manager_backend
+  #     links:
+  #         - gotify
+  #     depends_on:
+  #         - db
+  #     build:
+  #         context: ./backend/
+  #         dockerfile: dev.Dockerfile
+  #     environment:
+  #         gotify_auth_key: "123abc"
+  #         frontend_admin_pass: "asd123"
+  #         SECRETARY_POSTGRES_USER: secretary
+  #         SECRETARY_POSTGRES_PASSWORD: password
+  #         SECRETARY_POSTGRES_HOST: db
+  #         SECRETARY_POSTGRES_DB: secretary
+  #         SECRETARY_POSTGRES_PORT: 5432
+  #         PYTHONUNBUFFERED: 0
+  #     ports:
+  #         - 5000:5000
+  #     volumes:
+  #         - ./backend/:/usr/src/secretary-manager/backend
 
-    # frontend:
-    #     image: styrit_secretary_manager_frontend_dev
-    #     build:
-    #         context: ./frontend/
-    #         dockerfile: dev.Dockerfile
-    #     ports:
-    #         - 3000:3000
-    #     volumes:
-    #         - ./frontend:/usr/src/secretary-manager/frontend
-    #     environment:
-    #         - DEBUG_MODE=true
+  # frontend:
+  #     image: styrit_secretary_manager_frontend_dev
+  #     build:
+  #         context: ./frontend/
+  #         dockerfile: dev.Dockerfile
+  #     ports:
+  #         - 3000:3000
+  #     volumes:
+  #         - ./frontend:/usr/src/secretary-manager/frontend
+  #     environment:
+  #         - DEBUG_MODE=true
 
-    frontend:
-        image: styrit_secretary_manager_frontend_dev_new
-        build:
-            context: ./frontend_new/
-            dockerfile: dev.Dockerfile
-        ports:
-            - 3000:3000
-        volumes:
-            - ./frontend_new:/usr/src/secretary-manager/frontend_new
-        environment:
-            - DEBUG_MODE=false
+  frontend:
+    image: styrit_secretary_manager_frontend_dev_new
+    build:
+      context: ./frontend_new/
+      dockerfile: dev.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend_new:/usr/src/secretary-manager/frontend_new
+    environment:
+      - DEBUG_MODE=false
 
-    gotify:
-        image: cthit/gotify:latest
-        environment:
-            GOTIFY_PRE-SHARED-KEY: "123abc"
-            GOTIFY_MOCK-MODE: "true"
-        ports:
-            - 8080:8080
+  gotify:
+    image: cthit/gotify:latest
+    environment:
+      GOTIFY_PRE-SHARED-KEY: "123abc"
+      GOTIFY_MOCK-MODE: "true"
+    ports:
+      - 8080:8080
