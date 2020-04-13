@@ -1,33 +1,30 @@
 import React from "react";
 import {
-    DigitSelect,
-    DigitButton,
-    DigitCheckbox
-} from "@cthit/react-digit-components";
-import {
+    MeetingConfContainer,
     MeetingContainer,
     MeetingSelectContainer,
-    NewButtonContainer,
-    MeetingConfContainer
+    NewButtonContainer
 } from "./Meeting.styles.view";
 import GeneralMeeting from "./views/general-meeting/";
 import MeetingTable from "./views/meeting-table";
 import { Button } from "@material-ui/core";
+import { DigitAutocompleteSelectSingle } from "@cthit/react-digit-components";
 
 export const Meeting = props => {
     console.log("MEETINGS: ", props.meetings);
     return (
         <MeetingContainer>
             <MeetingSelectContainer>
-                <DigitSelect
+                <DigitAutocompleteSelectSingle
                     upperLabel={"Meeting"}
                     outlined
-                    valueToTextMap={getMeetingsMap(props.meetings)}
+                    options={getMeetingSelectArray(props.meetings)}
                     onChange={e => {
                         props.onMeetingSelected(e.target.value);
                     }}
                     value={props.selectedMeetingID}
                     disabled={!props.meetings || Object.keys(props.meetings).length === 0}
+                    noOptionsText={"Create a meeting"}
                 />
                 <NewButtonContainer>
                     {/* text="New Meeting" raised primary /> */}
@@ -48,12 +45,15 @@ export const Meeting = props => {
 
 export default Meeting;
 
-function getMeetingsMap(meetings) {
-    let meetingsMap = {};
-    Object.keys(meetings).forEach(key => {
-        meetingsMap[key] = getName(meetings[key]);
-    });
-    return meetingsMap;
+function getMeetingSelectArray(meetings) {
+    let meetingArr = [];
+    Object.keys(meetings).forEach(id => {
+        meetingArr.push({
+            text: getName(meetings[id]),
+            value: id
+        })
+    })
+    return meetingArr;
 }
 
 function getName(meeting) {

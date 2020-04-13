@@ -1,6 +1,14 @@
-import {MEETING_SELECTED, NEW_MEETING} from "./Meeting.actions.view";
+import { MEETING_SELECTED, NEW_MEETING, NO_MEETING_SELECTED } from "./Meeting.actions.view";
 
 export function onMeetingSelected(meeting_id) {
+    if (meeting_id === null) {
+        return {
+            type: NO_MEETING_SELECTED,
+            payload: {},
+            error: false
+        }
+    }
+
     return {
         type: MEETING_SELECTED,
         payload: {
@@ -13,9 +21,7 @@ export function onMeetingSelected(meeting_id) {
 export function onNewMeeting() {
     return {
         type: NEW_MEETING,
-        payload: {
-
-        },
+        payload: {},
         error: false
     }
 }

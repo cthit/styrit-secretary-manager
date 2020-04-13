@@ -1,4 +1,4 @@
-import { MEETING_SELECTED, NEW_MEETING } from "./Meeting.actions.view";
+import { MEETING_SELECTED, NEW_MEETING, NO_MEETING_SELECTED } from "./Meeting.actions.view";
 import { SUBMIT_PASSWORD_SUCCESSFUL } from "../../../password/Password.actions.screen";
 import {
     MEETING_DATE_UPDATED,
@@ -11,10 +11,10 @@ import { TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME } from "./TaskModes";
 
 const initialState = {
     meetings: null,
-    selectedMeetingID: 0,
-    selectedMeeting: null,
     groups: {}, // A dictionary from a group name to a group display name.
     tasks: {}, // A dictionary from a task name to a task display name.
+    selectedMeetingID: 0,
+    selectedMeeting: null,
     taskMode: {}, // A dictionary from a task name to a task mode.
     groupTasks: {} // A dictionary from a group to all its code and tasks.
 };
@@ -52,6 +52,14 @@ export const MeetingReducer = (state = initialState, action) => {
                 groupTasks: groupTasks,
                 taskMode: taskMode
             });
+        case NO_MEETING_SELECTED:
+            return Object.assign({}, state, {
+                selectedMeetingID: initialState.selectedMeetingID,
+                selectedMeeting: initialState.selectedMeeting,
+                taskMode: initialState.taskMode,
+                groupTasks: initialState.groupTasks
+
+            })
         case GROUP_TASK_CHANGED:
             const newGroupsTasks = updateTasks(
                 action.payload.group,
