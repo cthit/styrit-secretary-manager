@@ -8,26 +8,24 @@ import {
 export function onMeetingDateUpdated(newDate) {
     let date = newDate.toISOString();
 
-    return dispatch =>
-        dispatch({
-            type: MEETING_DATE_UPDATED,
-            payload: {
-                date: date
-            },
-            error: false
-        });
+    return {
+        type: MEETING_DATE_UPDATED,
+        payload: {
+            date: date
+        },
+        error: false
+    };
 }
 
 export function onMeetingLastUploadUpdated(newDate) {
     let date = newDate.toISOString();
-    return dispatch =>
-        dispatch({
-            type: MEETING_LAST_UPLOAD_UPDATED,
-            payload: {
-                date: date
-            },
-            error: false
-        });
+    return {
+        type: MEETING_LAST_UPLOAD_UPDATED,
+        payload: {
+            date: date
+        },
+        error: false
+    };
 }
 
 export function onMeetingStudyPeriodUpdated(num) {
@@ -39,14 +37,13 @@ export function onMeetingStudyPeriodUpdated(num) {
         num = 4;
     }
 
-    return dispatch =>
-        dispatch({
-            type: MEETING_STUDY_PERIOD_UPDATED,
-            payload: {
-                study_period: num
-            },
-            error: false
-        });
+    return {
+        type: MEETING_STUDY_PERIOD_UPDATED,
+        payload: {
+            study_period: num
+        },
+        error: false
+    };
 }
 
 export function onMeetingNumberUpdated(num) {
@@ -58,12 +55,11 @@ export function onMeetingNumberUpdated(num) {
         num = 10;
     }
 
-    return dispatch =>
-        dispatch({
-            type: MEETING_NUMBER_UPDATED,
-            payload: {
-                meeting_no: num
-            },
-            error: false
-        });
+    return {
+        type: MEETING_NUMBER_UPDATED,
+        payload: {
+            meeting_no: num
+        },
+        error: false
+    };
 }

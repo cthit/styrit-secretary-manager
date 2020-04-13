@@ -3,7 +3,6 @@ import { TextField } from "@material-ui/core";
 
 export const NumbersTextField = props => (
     <TextField
-        defaultValue={props.defaultValue}
         label={props.label}
         value={props.value}
         onChange={event => {
@@ -17,10 +16,10 @@ export const NumbersTextField = props => (
 );
 
 NumbersTextField.defaultProps = {
-    defaultValue: 0,
     label: "NumberTextField",
     value: 0,
-    onChange: val => {}
+    onChange: val => {
+    }
 };
 
 export default NumbersTextField;
