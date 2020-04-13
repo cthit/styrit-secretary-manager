@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./app";
-import {DigitProviders} from "@cthit/react-digit-components";
+import { DigitProviders } from "@cthit/react-digit-components";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import {rootReducer} from "./app/App.reducer";
-import {Provider} from "react-redux";
-import {applyMiddleware, createStore, combineReducers} from "redux";
-import {unregister} from "./serviceWorker";
+import { rootReducer } from "./app/App.reducer";
+import { Provider } from "react-redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
+import { unregister } from "./serviceWorker";
 import logger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 
@@ -33,11 +33,10 @@ function getReducer(root) {
 }
 
 const store = createStore(getReducer(rootReducer), applyMiddleware(logger, thunkMiddleware));
-const reducers = combineReducers({rootReducer})
 
 ReactDOM.render(
     <Provider store={store}>
-        <DigitProviders theme={theme} rootReducer={{root: { reducers }}}>
+        <DigitProviders theme={theme}>
             <App />
         </DigitProviders>
     </Provider>,
