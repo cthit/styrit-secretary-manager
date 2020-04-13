@@ -6,7 +6,7 @@ import {
     MEETING_NUMBER_UPDATED,
     MEETING_STUDY_PERIOD_UPDATED
 } from "./views/general-meeting/GeneralMeeting.actions.view";
-import { GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
+import { ALL_GROUPS_TASK_CHANGED, GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
 import { TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME } from "./TaskModes";
 
 const initialState = {
@@ -35,6 +35,28 @@ export const MeetingReducer = (state = initialState, action) => {
                 meetings: action.payload.data.meetings,
                 groups: groupsMap,
                 tasks: tasksMap
+            });
+        case NEW_MEETING:
+            const newMeeting = {
+                id: "new",
+                groups_tasks: {},
+                date: new Date(),
+                last_upload_date: new Date(),
+                lp: 0,
+                meeting_no: 0
+            }
+            const oldMeetings = state.meetings;
+            oldMeetings[newMeeting.id] = newMeeting;
+            const newMeetings = Object.assign({}, oldMeetings);
+
+            const newMeetingGroupsTasks = getGroupsTasks(state.groups, newMeeting.groups_tasks);
+
+            return Object.assign({}, state, {
+                selectedMeetingID: newMeeting.id,
+                selectedMeeting: newMeeting,
+                groupTasks: newMeetingGroupsTasks,
+                taskMode: getTasksMode(state.tasks, newMeetingGroupsTasks),
+                meetings: newMeetings
             });
         case MEETING_SELECTED:
             const meetingID = action.payload.meeting;
@@ -70,6 +92,18 @@ export const MeetingReducer = (state = initialState, action) => {
                 groupTasks: newGroupsTasks,
                 taskMode: getTasksMode(state.tasks, newGroupsTasks)
             });
+        case ALL_GROUPS_TASK_CHANGED:
+            const updatedTask = action.payload.task;
+            const newGroupsTasks2 = updateAllTasks(
+                updatedTask,
+                state.taskMode[updatedTask],
+                state.groupTasks
+            );
+
+            return Object.assign({}, state, {
+                groupTasks: newGroupsTasks2,
+                taskMode: getTasksMode(state.tasks, newGroupsTasks2)
+            })
         // General meeting information.
         case MEETING_DATE_UPDATED:
             return updateMeeting(
@@ -107,28 +141,6 @@ export const MeetingReducer = (state = initialState, action) => {
                 state.selectedMeetingID,
                 state
             );
-        case NEW_MEETING:
-            const newMeeting = {
-                id: "new",
-                groups_tasks: {},
-                date: new Date(),
-                last_upload_date: new Date(),
-                lp: 0,
-                meeting_no: 0
-            }
-            const oldMeetings = state.meetings;
-            oldMeetings[newMeeting.id] = newMeeting;
-            const newMeetings = Object.assign({}, oldMeetings);
-
-            const newMeetingGroupsTasks = getGroupsTasks(state.groups, newMeeting.groups_tasks);
-
-            return Object.assign({}, state, {
-                selectedMeetingID: newMeeting.id,
-                selectedMeeting: newMeeting,
-                groupTasks: newMeetingGroupsTasks,
-                taskMode: getTasksMode(state.tasks, newMeetingGroupsTasks),
-                meetings: newMeetings
-            });
 
         default:
             return state;
@@ -201,6 +213,25 @@ function updateTasks(group, task, groupTasks) {
     }
     newGroupTasks[group] = Object.assign({}, groupTasks[group], {
         tasks: newTasksList
+    });
+    return newGroupTasks;
+}
+
+function updateAllTasks(task, taskMode, groupTasks) {
+    let newGroupTasks = Object.assign({}, groupTasks);
+
+    Object.keys(groupTasks).forEach(group => {
+        let newTaskList = []
+        groupTasks[group].tasks.forEach(groupTask => {
+            if (!(groupTask === task)) {
+                newTaskList.push(groupTask);
+            }
+        });
+
+        if (taskMode !== TASK_MODE_ALL) {
+            newTaskList.push(task);
+        }
+        newGroupTasks[group].tasks = newTaskList;
     });
     return newGroupTasks;
 }

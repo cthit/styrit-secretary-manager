@@ -28,7 +28,7 @@ export const MeetingTable = props => {
                                         tasksMode[task] === TASK_MODE_SOME
                                     }
                                     onChange={() => {
-                                        console.log("ALL TASK CLICKED FOR", task);
+                                        props.onAllTaskClicked(task)
                                     }}
                                 />
                             </StyledTableCell>

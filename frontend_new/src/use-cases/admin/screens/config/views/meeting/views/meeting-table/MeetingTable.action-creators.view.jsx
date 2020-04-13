@@ -1,4 +1,4 @@
-import { GROUP_TASK_CHANGED } from "./MeetingTable.actions.view";
+import { ALL_GROUPS_TASK_CHANGED, GROUP_TASK_CHANGED } from "./MeetingTable.actions.view";
 
 export function onGroupTaskClicked(task, group) {
     return {
@@ -9,4 +9,14 @@ export function onGroupTaskClicked(task, group) {
         },
         error: false
     };
+}
+
+export function onAllTasksClicked(task) {
+    return {
+        type: ALL_GROUPS_TASK_CHANGED,
+        payload: {
+            task: task
+        },
+        error: false
+    }
 }

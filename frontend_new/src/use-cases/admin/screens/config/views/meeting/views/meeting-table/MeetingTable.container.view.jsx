@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import MeetingTable from "./MeetingTable.view";
-import { onGroupTaskClicked } from "./MeetingTable.action-creators.view";
+import { onAllTasksClicked, onGroupTaskClicked } from "./MeetingTable.action-creators.view";
 
 const mapStateToProps = state => ({
     groups: state.root.MeetingReducer.groups,
@@ -11,7 +11,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onGroupTaskClicked: (task, group) =>
-        dispatch(onGroupTaskClicked(task, group))
+        dispatch(onGroupTaskClicked(task, group)),
+    onAllTaskClicked: task => dispatch(onAllTasksClicked(task))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MeetingTable);

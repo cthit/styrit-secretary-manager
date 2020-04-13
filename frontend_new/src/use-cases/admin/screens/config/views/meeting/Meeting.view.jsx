@@ -11,7 +11,6 @@ import { Button } from "@material-ui/core";
 import { DigitAutocompleteSelectSingle } from "@cthit/react-digit-components";
 
 export const Meeting = props => {
-    console.log("MEETINGS: ", props.meetings);
     return (
         <MeetingContainer>
             <MeetingSelectContainer>
