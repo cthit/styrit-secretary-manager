@@ -59,7 +59,8 @@ export const MeetingActions = props => {
             <MeetingActionButtonContainer>
                 <DigitText.Text
                     text={"Download the archive for this meeting (with all documents that have been uploaded currently)"} />
-                <MeetingActionButton variant={"contained"} color={"primary"} disabled>
+                <MeetingActionButton variant={"contained"} color={"primary"}
+                                     onClick={() => props.downloadArchive(props.meeting.id)}>
                     Download archive
                 </MeetingActionButton>
             </MeetingActionButtonContainer>

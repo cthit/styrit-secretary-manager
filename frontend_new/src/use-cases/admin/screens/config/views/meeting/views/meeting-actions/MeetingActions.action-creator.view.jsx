@@ -3,6 +3,7 @@ import { MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL } from "./MeetingActions.a
 import { handleError } from "../../../../../../../../common/functions/handleError";
 import { putEmails } from "../../../../../../../../api/put.Emails.api";
 import { postDeadline } from "../../../../../../../../api/post.Deadline.api";
+import { postArchive } from "../../../../../../../../api/post.Archive.api";
 
 export function saveMeeting(meeting, groupTasks, allTasks, password) {
     meeting.groups_tasks = getGroupTasksToSend(allTasks, groupTasks);
@@ -31,6 +32,14 @@ export function startDeadlineCheck(meetingID, password) {
         onDeadlineAccepted(response);
     }).catch(error => {
         onDeadlineError(error);
+    })
+}
+
+export function downloadArchive(meetingID) {
+    postArchive(meetingID).then(response => {
+        onArchiveSuccessful(response);
+    }).catch(error => {
+        onArchiveError(error);
     })
 }
 
@@ -85,4 +94,12 @@ function onDeadlineAccepted(response) {
 
 function onDeadlineError(error) {
     alert("Failed to send start deadlinecheck, '" + handleError(error, "").payload.message + "'");
+}
+
+function onArchiveSuccessful(response) {
+    window.open("http://" + response.data);
+}
+
+function onArchiveError(error) {
+    alert("Failed to download archive, '" + handleError(error, "").payload.message + "'");
 }
