@@ -1,8 +1,27 @@
-import { postMeeting } from "../../../../../../../../../../api/post.Meting.api";
+import { postMeeting } from "../../../../../../../../api/post.Meting.api";
 import { MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL } from "./MeetingActions.actions.view";
-import { handleError } from "../../../../../../../../../../common/functions/handleError";
+import { handleError } from "../../../../../../../../common/functions/handleError";
 
-export function saveMeeting(meeting, password) {
+export function saveMeeting(meeting, groupTasks, allTasks, password) {
+    let meetingGTs = {};
+
+    console.log("alltasks:", allTasks);
+
+    Object.keys(allTasks).forEach(task => {
+        meetingGTs[task] = [];
+    })
+
+    Object.keys(groupTasks).forEach(group => {
+        groupTasks[group].tasks.forEach(task => {
+            meetingGTs[task].push({
+                name: group,
+                code: groupTasks[group].code
+            })
+        })
+    })
+
+    meeting.groups_tasks = meetingGTs;
+
     return dispatch => {
         postMeeting(meeting, password)
             .then(response => {

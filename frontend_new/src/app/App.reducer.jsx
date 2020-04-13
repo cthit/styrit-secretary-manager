@@ -5,6 +5,7 @@ import { PasswordReducer } from "../use-cases/admin/screens/password/Password.re
 import { ConfigReducer } from "../use-cases/admin/screens/config/Config.reducer.screen";
 import { MeetingReducer } from "../use-cases/admin/screens/config/views/meeting/Meeting.reducer.view";
 import { INIT } from "./App.actions";
+import { MeetingActionsReducer } from "../use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.reducer.view";
 
 export const rootReducer = combineReducers({
     CodeReducer,
@@ -12,7 +13,8 @@ export const rootReducer = combineReducers({
     UploadReducer,
     PasswordReducer,
     ConfigReducer,
-    MeetingReducer
+    MeetingReducer,
+    MeetingActionsReducer
 });
 
 export function init(

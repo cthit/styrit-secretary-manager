@@ -8,7 +8,7 @@ import {
 } from "./views/general-meeting/GeneralMeeting.actions.view";
 import { ALL_GROUPS_TASK_CHANGED, GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
 import { TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME } from "./TaskModes";
-import { MEETING_SAVE_SUCCESSFUL } from "./views/meeting-table/views/meeting-actions/MeetingActions.actions.view";
+import { MEETING_SAVE_SUCCESSFUL } from "./views/meeting-actions/MeetingActions.actions.view";
 
 const initialState = {
     meetings: null,

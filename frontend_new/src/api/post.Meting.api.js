@@ -5,6 +5,7 @@ export function postMeeting(meeting, password) {
         pass: password,
         meeting: meeting
     }
-    
+
+    console.log("POSTING TO SERVER :", data);
     return postRequest("/admin/config/meeting", data, false);
 }

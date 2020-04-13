@@ -11,8 +11,9 @@ export const MeetingActions = props => (
 
         {/* MEETING SAVE  */}
         <MeetingActionButtonContainer>
+            {props.errorMsg !== "" && <DigitText.Text bold text={props.errorMsg} color={"error"} />}
             <MeetingActionButton variant={"contained"} color={"primary"}
-                                 onClick={() => props.saveMeeting(props.meeting, props.password)}>
+                                 onClick={() => props.saveMeeting(props.meeting, props.groupTasks, props.tasks, props.password)}>
                 Save meeting settings
             </MeetingActionButton>
         </MeetingActionButtonContainer>

@@ -9,7 +9,7 @@ import {
 import { MeetingTableContainer } from "../../Meeting.styles.view";
 import { Checkbox } from "@material-ui/core";
 import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
-import MeetingActions from "./views/meeting-actions/MeetingActions.container.view";
+import MeetingActions from "../meeting-actions/MeetingActions.container.view";
 
 export const MeetingTable = props => {
     const {groups, tasks, tasksMode, groupTasks} = props;
