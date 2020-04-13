@@ -1,12 +1,12 @@
 import React from "react";
-import {DigitButton, DigitForm, DigitText, DigitTextField, useDigitFormField} from "@cthit/react-digit-components";
+import { DigitButton, DigitForm, DigitText, DigitTextField, useDigitFormField } from "@cthit/react-digit-components";
 import * as yup from "yup";
-import {FormContainer} from "./Code.styles.screen";
+import { FormContainer } from "./Code.styles.screen";
 
 const CodeField = () => {
     const fieldValues = useDigitFormField("code");
-    return <DigitTextField {...fieldValues} upperLabel="Kod" outlined medium
-                           style={{marginBottom: "20px", minWidth: "325px"}} />;
+    return <DigitTextField {...fieldValues} size={{width: "325px"}} upperLabel="Kod" outlined medium
+                           style={{marginBottom: "20px"}} />;
 };
 
 
