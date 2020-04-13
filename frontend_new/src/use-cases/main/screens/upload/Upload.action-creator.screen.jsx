@@ -1,8 +1,4 @@
-import {
-    ON_UPLOAD,
-    ON_SUBMIT_FILES_FAILED,
-    ON_FILEUPLOAD_FINISHED
-} from "./Upload.actions.screen";
+import { ON_FILEUPLOAD_FINISHED, ON_SUBMIT_FILES_FAILED, ON_UPLOAD } from "./Upload.actions.screen";
 import { putFiles } from "../../../../api/put.Files.api";
 import { handleError } from "../../../../common/functions/handleError";
 
@@ -38,7 +34,7 @@ function onAccept(response) {
     }
 
     let msg =
-        "Om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil.";
+        "File uppladad, om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil.";
     if (overwrite) {
         msg = msg + "\nSkrev över tidigare uppladdad fil.";
     }
