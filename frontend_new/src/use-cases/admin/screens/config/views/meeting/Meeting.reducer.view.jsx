@@ -8,6 +8,7 @@ import {
 } from "./views/general-meeting/GeneralMeeting.actions.view";
 import { ALL_GROUPS_TASK_CHANGED, GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
 import { TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME } from "./TaskModes";
+import { MEETING_SAVE_SUCCESSFUL } from "./views/meeting-table/views/meeting-actions/MeetingActions.actions.view";
 
 const initialState = {
     meetings: null,
@@ -22,20 +23,17 @@ const initialState = {
 export const MeetingReducer = (state = initialState, action) => {
     switch (action.type) {
         case SUBMIT_PASSWORD_SUCCESSFUL:
-            const groupsMap = {};
-            action.payload.data.groups.forEach(group => {
-                groupsMap[group.name] = group.display_name;
-            });
-            const tasksMap = {};
-            action.payload.data.tasks.forEach(task => {
-                tasksMap[task.name] = task.display_name;
-            });
-
+            return Object.assign({}, state, getMeetingsData(action.payload.data));
+        case MEETING_SAVE_SUCCESSFUL:
+            const receivedMeeting = action.payload.meeting;
+            const receivedGroupTasks = getGroupsTasks(state.groups, receivedMeeting.groups_tasks);
             return Object.assign({}, state, {
-                meetings: action.payload.data.meetings,
-                groups: groupsMap,
-                tasks: tasksMap
-            });
+                selectedMeeting: receivedMeeting,
+                selectedMeetingID: receivedMeeting.id,
+                groupTasks: receivedGroupTasks,
+                taskMode: getTasksMode(state.tasks, receivedGroupTasks)
+            })
+
         case NEW_MEETING:
             const newMeeting = {
                 id: "new",
@@ -162,7 +160,6 @@ function getGroupsTasks(allGroups, groups_tasks) {
             groupsTasks[group.name].code = group.code;
         });
     });
-    console.log("GetGroupsTasks", groupsTasks);
     return groupsTasks;
 }
 
@@ -234,4 +231,25 @@ function updateAllTasks(task, taskMode, groupTasks) {
         newGroupTasks[group].tasks = newTaskList;
     });
     return newGroupTasks;
+}
+
+function getMeetingsData(data) {
+
+    const groupsMap = {};
+    data.groups.forEach(group => {
+        groupsMap[group.name] = group.display_name;
+    });
+    const tasksMap = {};
+    data.tasks.forEach(task => {
+        tasksMap[task.name] = task.display_name;
+    });
+
+    return {
+        meetings: data.meetings,
+        groups: groupsMap,
+        tasks: tasksMap,
+        selectedMeeting: null,
+        selectedMeetingID: 0
+    };
+
 }

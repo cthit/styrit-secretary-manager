@@ -1,12 +1,5 @@
 import styled from "styled-components";
-import {
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    TableCell,
-    Checkbox
-} from "@material-ui/core";
+import { Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 
 export const MeetingTableContainer = styled.div`
     min-width: 100%;
