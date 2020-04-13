@@ -40,7 +40,7 @@ export const MeetingReducer = (state = initialState, action) => {
                 groups_tasks: {},
                 date: new Date(),
                 last_upload_date: new Date(),
-                lp: 0,
+                lp: 1,
                 meeting_no: 0
             }
             const oldMeetings = state.meetings;

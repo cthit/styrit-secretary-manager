@@ -29,7 +29,7 @@ export function onMeetingLastUploadUpdated(newDate) {
 }
 
 export function onMeetingStudyPeriodUpdated(num) {
-    if (isNaN(num) || num < 0) {
+    if (isNaN(num) || num < 1) {
         num = 0;
     }
 
