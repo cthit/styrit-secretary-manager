@@ -2,6 +2,7 @@ import { postMeeting } from "../../../../../../../../api/post.Meting.api";
 import { MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL } from "./MeetingActions.actions.view";
 import { handleError } from "../../../../../../../../common/functions/handleError";
 import { putEmails } from "../../../../../../../../api/put.Emails.api";
+import { postDeadline } from "../../../../../../../../api/post.Deadline.api";
 
 export function saveMeeting(meeting, groupTasks, allTasks, password) {
     meeting.groups_tasks = getGroupTasksToSend(allTasks, groupTasks);
@@ -25,6 +26,13 @@ export function sendMail(meetingID, password) {
     })
 }
 
+export function startDeadlineCheck(meetingID, password) {
+    postDeadline(meetingID, password).then(response => {
+        onDeadlineAccepted(response);
+    }).catch(error => {
+        onDeadlineError(error);
+    })
+}
 
 function getGroupTasksToSend(allTasks, groupTasks) {
     let meetingGTs = {}
@@ -68,5 +76,13 @@ function onEmailsSentAccepted(response) {
 }
 
 function onEmailsSentError(error) {
-    alert("Failed to send emails error message '" + handleError(error, "").payload.message + "'");
+    alert("Failed to send emails, '" + handleError(error, "").payload.message + "'");
+}
+
+function onDeadlineAccepted(response) {
+    alert("Deadline check started successfully");
+}
+
+function onDeadlineError(error) {
+    alert("Failed to send start deadlinecheck, '" + handleError(error, "").payload.message + "'");
 }
