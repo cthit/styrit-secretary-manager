@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import MeetingActions from "./MeetingActions.view";
-import { saveMeeting } from "./MeetingActions.action-creator.view";
+import { saveMeeting, sendMail } from "./MeetingActions.action-creator.view";
 
 const mapStateToProps = state => ({
     meeting: state.root.MeetingReducer.selectedMeeting,
@@ -11,7 +11,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    saveMeeting: (meeting, groupTasks, allTasks, password) => dispatch(saveMeeting(meeting, groupTasks, allTasks, password))
+    saveMeeting: (meeting, groupTasks, allTasks, password) => dispatch(saveMeeting(meeting, groupTasks, allTasks, password)),
+    sendEmails: (meetingID, password) => sendMail(meetingID, password)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MeetingActions);
