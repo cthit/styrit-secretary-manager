@@ -33,7 +33,6 @@ export const General = props => (
                                     size={{
                                         width: "100%"
                                     }}
-                                    flex={1}
                                     onChange={e => props.onConfigChange(config.key, e.target.value)}
                                 />
                             </ConfigContainer>
@@ -59,7 +58,8 @@ export const General = props => (
                 }
             })}
             <HLine />
-            <DigitButton primary raised text={"Save"} size={{width: "100%"}} />
+            <DigitButton primary raised text={"Save"} size={{width: "100%"}}
+                         onClick={() => props.onConfigSave(props.password, props.configs)} />
         </ConfigListContainer>
     </GeneralConfigContainer>
 );
