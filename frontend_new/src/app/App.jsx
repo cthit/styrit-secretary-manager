@@ -8,16 +8,9 @@ import Admin from "../use-cases/admin";
 import { MainContainer } from "./App.styles.";
 
 class App extends Component {
-    state = {
-        debug: false
-    };
-
     constructor(props) {
-        super();
+        super(props);
         props.init();
-        console.log("FUCKIGN HELL!? ", props);
-        this.state.debug = props.debug.debug;
-        props.helper("asd123");
     }
 
     render() {

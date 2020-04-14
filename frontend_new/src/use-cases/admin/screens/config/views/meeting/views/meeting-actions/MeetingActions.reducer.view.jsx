@@ -11,8 +11,8 @@ export const MeetingActionsReducer = (state = initialState, action) => {
                 errorMsg: action.payload.message
             })
         case MEETING_SAVE_SUCCESSFUL:
-            alert("Meeting saved successfully!");
-            break;
+            alert("Meeting saved successfully!")
+            return state
         case NEW_MEETING:
             return Object.assign({}, state, {
                 errorMsg: initialState.errorMsg
