@@ -6,7 +6,7 @@ import { InfoCard, Space } from "./Password.styles.screen";
 
 const PasswordField = () => {
     const fieldValues = useDigitFormField("password");
-    return <DigitTextField {...fieldValues} upperLabel="Lösenord" outlined medium password
+    return <DigitTextField {...fieldValues} upperLabel="Lösenord" outlined medium password size={{width: "325px"}}
                            autocomplete={"password"} />;
 };
 
@@ -27,7 +27,7 @@ export const Password = props => (
                 )}
                 <PasswordField />
                 <Space />
-                <DigitButton primary raised submit text="Logga in" />
+                <DigitButton primary raised submit size={{width: "325px"}} text="Logga in" />
             </FormContainer>
         )}
     />

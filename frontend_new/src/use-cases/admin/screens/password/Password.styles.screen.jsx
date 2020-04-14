@@ -15,5 +15,5 @@ export const InfoCard = styled.div`
 `;
 
 export const Space = styled.div`
-  min-height: 20px;
+  min-height: 10px;
 `;
