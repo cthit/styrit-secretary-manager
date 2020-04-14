@@ -1,10 +1,9 @@
 import React from "react";
 import { ConfigContainer, ConfigListContainer, GeneralConfigContainer, HLine } from "./General.styles.view.jsx.";
-import { DigitButton, DigitText, DigitTextArea, DigitTextField } from "@cthit/react-digit-components";
+import { DigitButton, DigitTextArea, DigitTextField } from "@cthit/react-digit-components";
 
 export const General = props => (
     <GeneralConfigContainer>
-        <DigitText.Heading5 text={"Configs"} />
         <ConfigListContainer>
             {props.configs.map((config, index) => {
                 switch (config.type) {
