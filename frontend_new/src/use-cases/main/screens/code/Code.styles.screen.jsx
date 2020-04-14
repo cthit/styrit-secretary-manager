@@ -14,3 +14,7 @@ export const CodeTextField = styled(TextField)`
     min-width: 325px;
     margin: 20px;
 `;
+
+export const VSpace = styled.div`
+  height: 10px;
+`;
