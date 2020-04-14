@@ -33,6 +33,7 @@ export const General = props => (
                                     size={{
                                         width: "100%"
                                     }}
+                                    flex={1}
                                     onChange={e => props.onConfigChange(config.key, e.target.value)}
                                 />
                             </ConfigContainer>
@@ -47,6 +48,7 @@ export const General = props => (
                                     size={{
                                         width: "100%"
                                     }}
+                                    rows={10}
                                     onChange={e => props.onConfigChange(config.key, e.target.value)}
                                 />
                             </ConfigContainer>

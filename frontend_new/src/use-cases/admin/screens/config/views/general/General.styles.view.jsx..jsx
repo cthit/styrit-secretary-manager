@@ -11,6 +11,7 @@ export const GeneralConfigContainer = styled.div`
 
 export const ConfigListContainer = styled.div`
   width: 80%;
+  max-width: 1000px;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
