@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    GeneralTextFieldContainer,
-    GeneralInfoContainer,
-    GeneralMeetingInfoGroup,
-    GeneralMeetingInfoContainer
-} from "./GeneralMeeting.styles.view";
+import { GeneralMeetingInfoContainer, GeneralMeetingInfoGroup } from "./GeneralMeeting.styles.view";
 import NumbersTextField from "../../../../../../../../common/elements/NumberTextField";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib

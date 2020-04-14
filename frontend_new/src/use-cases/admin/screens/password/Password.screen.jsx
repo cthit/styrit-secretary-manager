@@ -1,12 +1,13 @@
 import React from "react";
-import {DigitButton, DigitForm, DigitText, DigitTextField, useDigitFormField} from "@cthit/react-digit-components";
+import { DigitButton, DigitForm, DigitText, DigitTextField, useDigitFormField } from "@cthit/react-digit-components";
 import * as yup from "yup";
-import {FormContainer} from "../../../../common/ui/formcontainer/FormContainer.styles";
-import {InfoCard, Space} from "./Password.styles.screen";
+import { FormContainer } from "../../../../common/ui/formcontainer/FormContainer.styles";
+import { InfoCard, Space } from "./Password.styles.screen";
 
 const PasswordField = () => {
     const fieldValues = useDigitFormField("password");
-    return <DigitTextField {...fieldValues} upperLabel="Lösenord" outlined medium password/>;
+    return <DigitTextField {...fieldValues} upperLabel="Lösenord" outlined medium password
+                           autocomplete={"password"} />;
 };
 
 export const Password = props => (
@@ -19,14 +20,14 @@ export const Password = props => (
         render={({errors}) => (
             <FormContainer>
                 <InfoCard>
-                    <DigitText.Text text="Inloggning för sekreterare endast!"/>
+                    <DigitText.Text text="Inloggning, endast för sekreterare!" />
                 </InfoCard>
                 {props.error && (
-                    <DigitText.Text text={props.error} color="error" bold/>
+                    <DigitText.Text text={props.error} color="error" bold />
                 )}
-                <PasswordField/>
-                <Space/>
-                <DigitButton primary raised submit text="Logga in"/>
+                <PasswordField />
+                <Space />
+                <DigitButton primary raised submit text="Logga in" />
             </FormContainer>
         )}
     />

@@ -11,3 +11,7 @@ export const ButtonGroup = styled.div`
 export const ButtonContainer = styled.div`
     margin: 10px;
 `;
+
+export const ConfigContainer = styled.div`
+  width: 100%;
+`

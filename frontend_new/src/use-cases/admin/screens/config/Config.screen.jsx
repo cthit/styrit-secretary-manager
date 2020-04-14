@@ -1,12 +1,12 @@
 import React from "react";
-import { ButtonGroup, ButtonContainer } from "./Config.styles.screen";
+import { ButtonContainer, ButtonGroup, ConfigContainer } from "./Config.styles.screen";
 import { DigitButton } from "@cthit/react-digit-components";
-import { meeting_mode, general_mode } from "./Config.modes.screen";
+import { general_mode, meeting_mode } from "./Config.modes.screen";
 import Meeting from "./views/meeting/";
 import General from "./views/general/";
 
 export const Config = props => (
-    <div>
+    <ConfigContainer>
         <ButtonGroup>
             <ButtonContainer>
                 <DigitButton
@@ -29,7 +29,7 @@ export const Config = props => (
         </ButtonGroup>
         {props.mode === meeting_mode && <Meeting />}
         {props.mode === general_mode && <General />}
-    </div>
+    </ConfigContainer>
 );
 
 export default Config;
