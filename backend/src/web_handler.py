@@ -91,12 +91,7 @@ def handle_file(code, task, file):
 # Validate code, return data associated with a validated code.
 class CodeRes(Resource):
     @db_session
-    def post(self):
-        data = request.get_json()
-        if data is None:
-            return {"error": "Missing arguments"}, 400
-
-        code = data["code"]
+    def post(self, code):
         try:
             group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
         except ValueError as err:
@@ -277,7 +272,7 @@ class ArchiveDownload(Resource):
 
 
 api.add_resource(FileRes, '/file')
-api.add_resource(CodeRes, '/code')
+api.add_resource(CodeRes, '/code/<string:code>')
 api.add_resource(MeetingResource, "/admin/config/meeting")
 api.add_resource(AdminResource, "/admin/config")
 api.add_resource(PasswordResource, "/admin")
