@@ -1,12 +1,12 @@
 import React from "react";
 import UploadCard from "./views/uploadcard";
-import { InputGroup, UploadContainer, Space } from "./Upload.styles.screen";
-import { DigitText, DigitButton } from "@cthit/react-digit-components";
+import { InputGroup, Space, UploadContainer } from "./Upload.styles.screen";
+import { DigitButton, DigitText } from "@cthit/react-digit-components";
 
 export const Upload = props => (
     <UploadContainer>
         <InputGroup>
-            <DigitText.Heading5 text={"Hej " + props.group.displayName + "!"} />
+            <DigitText.Text bold={false} text={"Hej " + props.group.displayName + "!"} style={{fontSize: "28px"}} />
             <Space />
             {props.tasks.map(task => (
                 <UploadCard
