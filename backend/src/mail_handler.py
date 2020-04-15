@@ -37,7 +37,6 @@ def get_mail_from_code(code, group, meeting):
 
     date = meeting.date.replace(tzinfo=pytz.utc).astimezone(se_timezone)
     mail_to = group.name + Config["group_email_domain"].value
-    subject = "Dokument till sektionsmöte"
 
     # Setup the message that will be sent to the different groups
     msg = Config["mail_to_groups_message"].value
@@ -50,6 +49,9 @@ def get_mail_from_code(code, group, meeting):
     msg = msg.format(group.display_name, date.day, date.month, last_turnin_time, last_turnin_date,
                      tasks, frontend_url, code, document_template_url,
                      secretary_email, board_display_name, board_email)
+
+    raw_subject = Config["mail_to_groups_subject"].value
+    subject = raw_subject.format(date.day, date.month)
 
     return mail_to, subject, msg
 

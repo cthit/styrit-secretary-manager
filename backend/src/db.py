@@ -95,38 +95,7 @@ db.bind(
     database=config.POSTGRES_DB
 )
 
-@db_session
-def add_column():
-    try:
-        column_exists = db.execute("""
-        SELECT TRUE AS value
-        FROM   pg_attribute
-        WHERE  attrelid = 'meeting'::regclass  -- cast to a registered class (table)
-        AND    attname = 'check_for_deadline'
-        AND    NOT attisdropped  -- exclude dropped (dead) columns
-        -- AND attnum > 0        -- exclude system columns (you may or may not want this)
-        """)
-
-        val = not [v for v in column_exists][0][0]
-    except Exception as e:
-        print("ERROR: " + str(e))
-        val = True
-
-    try:
-        if val:
-            print("ADDING COLUMN")
-            db.execute("ALTER TABLE meeting ADD COLUMN check_for_deadline boolean;")
-            commit()
-            db.execute("UPDATE meeting SET check_for_deadline = 't' WHERE check_for_deadline IS NULL;")
-            commit()
-            db.execute("ALTER TABLE meeting ALTER COLUMN check_for_deadline SET NOT NULL;")
-    except InternalError as e:
-        print("Got internal error, probably due to the database being empty " + str(e))
-
-add_column()
-
 db.generate_mapping(create_tables=True)
-
 
 # Helper methods
 
@@ -141,8 +110,9 @@ def validate_task(task):
         group_name = task["name"]
         if "code" in task:
             code = task["code"]
-            group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
-            return group_meeting.group.name == group_name
+            if code is not None:
+                group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
+                return group_meeting.group.name == group_name
 
         return Group.get(lambda group: group.name == group_name) is not None
     except Exception as e:
