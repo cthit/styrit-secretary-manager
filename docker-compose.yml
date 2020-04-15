@@ -39,29 +39,17 @@ services:
   #     volumes:
   #         - ./backend/:/usr/src/secretary-manager/backend
 
-  # frontend:
-  #     image: styrit_secretary_manager_frontend_dev
-  #     build:
-  #         context: ./frontend/
-  #         dockerfile: dev.Dockerfile
-  #     ports:
-  #         - 3000:3000
-  #     volumes:
-  #         - ./frontend:/usr/src/secretary-manager/frontend
-  #     environment:
-  #         - DEBUG_MODE=true
-
   frontend:
-    image: styrit_secretary_manager_frontend_dev_new
+    image: styrit_secretary_manager_frontend_dev
     build:
-      context: ./frontend_new/
+      context: ./frontend/
       dockerfile: dev.Dockerfile
     ports:
       - 3000:3000
     volumes:
-      - ./frontend_new:/usr/src/secretary-manager/frontend_new
+      - ./frontend:/usr/src/secretary-manager/frontend
     environment:
-      - DEBUG_MODE=false
+      - DEBUG_MODE=true
 
   gotify:
     image: cthit/gotify:latest
