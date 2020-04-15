@@ -86,6 +86,7 @@ def handle_file(code, task, file):
         group_file.date = datetime.datetime.utcnow()
         return True, 200
 
+
 # Validate code, return data associated with a validated code.
 class CodeRes(Resource):
     @db_session
@@ -113,6 +114,7 @@ class CodeRes(Resource):
             "code": code,
             "data": get_data_for_code(code)
         }
+
 
 # Uploads a or a number of files, requires a valid code.
 class FileRes(Resource):
@@ -156,6 +158,7 @@ class AdminResource(Resource):
         msg, status = config_handler.handle_incoming_config(config["config"])
         return msg, status
 
+
 # If the given password is valid, updates / adds the given meeting configs.
 class MeetingResource(Resource):
     def post(self):
@@ -166,6 +169,7 @@ class MeetingResource(Resource):
 
         status, message = config_handler.handle_incoming_meeting_config(config["meeting"])
         return message, status
+
 
 # If the given password is valid, sends out the emails for the given meeting.
 class MailRes(Resource):
@@ -187,6 +191,7 @@ class MailRes(Resource):
             return {"error": "Unable to validate meeting"}, 400
 
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
+
 
 # If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
@@ -224,6 +229,7 @@ class ArchiveDownload(Resource):
     """
     Download a zip file with all the documents for the meeting with the given id.
     """
+
     @db_session
     def get(self, id):
         """
@@ -277,6 +283,7 @@ api.add_resource(PasswordResource, "/admin")
 api.add_resource(MailRes, "/mail")
 api.add_resource(TimerResource, "/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/archive/<string:id>")
+
 
 def host():
     app.run(host="0.0.0.0")
