@@ -141,8 +141,9 @@ def validate_task(task):
         group_name = task["name"]
         if "code" in task:
             code = task["code"]
-            group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
-            return group_meeting.group.name == group_name
+            if code is not None:
+                group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
+                return group_meeting.group.name == group_name
 
         return Group.get(lambda group: group.name == group_name) is not None
     except Exception as e:

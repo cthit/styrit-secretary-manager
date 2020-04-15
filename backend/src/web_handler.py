@@ -25,7 +25,7 @@ def get_data_for_code(code):
     group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
 
     if group_meeting is None:
-        return {"error": "Missing data for code, please send the files manually"}, 404
+        return None
 
     task_tuples = list(orm.select(
         (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
@@ -54,9 +54,12 @@ def handle_file(code, task, file):
     Saves the file to the disk and stores it's location in the database
     """
     task_obj = Task.get(name=task)
-    data = get_data_for_code(code)
     if task_obj is None:
         return {"error": "Report type not found: " + str(task)}, 404
+
+    data = get_data_for_code(code)
+    if data is None:
+        return {"error": "Unable to find meeting for code"}, 404
 
     committee = data["group"]["codeName"]
     year = str(data["year"])
@@ -77,17 +80,20 @@ def handle_file(code, task, file):
 
     if group_file is None:
         GroupMeetingFile(group_task=group_task, file_location=save_loc)
-        return False
+        return False, 200
     else:
         print("Overwriting file " + group_file.file_location + " from " + str(group_file.date) + " (GMT)")
         group_file.date = datetime.datetime.utcnow()
-        return True
+        return True, 200
 
-
+# Validate code, return data associated with a validated code.
 class CodeRes(Resource):
     @db_session
     def post(self):
         data = request.get_json()
+        if data is None:
+            return {"error": "Missing arguments"}, 400
+
         code = data["code"]
         try:
             group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
@@ -101,14 +107,14 @@ class CodeRes(Resource):
 
         current_date = datetime.datetime.utcnow()
         if group_meeting.meeting.last_upload < current_date:
-            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}
+            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}, 401
 
         return {
             "code": code,
             "data": get_data_for_code(code)
         }
 
-
+# Uploads a or a number of files, requires a valid code.
 class FileRes(Resource):
     @db_session
     def put(self):
@@ -119,25 +125,27 @@ class FileRes(Resource):
 
         overwrite = False
         for task in request.files:
-            if handle_file(code, task, request.files[task]):
-                overwrite = True
+            r, code = handle_file(code, task, request.files[task])
+            if code != 200:
+                return r, code
+
+            overwrite = r
+
         return {"overwrite": overwrite}
 
 
+# Validates an admin password.
 def validate_password(response_json):
     if response_json is None or "pass" not in response_json:
-        return {
-                   "Error": "Bad Request"
-               }, 400
+        return {"error": "Bad Request"}, 400
     password = response_json["pass"]
     frontend_admin_pass = os.environ.get("frontend_admin_pass", "asd123")
     if password != frontend_admin_pass:
-        return {
-                   "Error": "Invalid password"
-               }, 401
+        return {"error": "Invalid password"}, 401
     return {}, 200
 
 
+# If the given password is valid, updates the servers configs.
 class AdminResource(Resource):
     def post(self):
         config = request.get_json()
@@ -148,7 +156,7 @@ class AdminResource(Resource):
         msg, status = config_handler.handle_incoming_config(config["config"])
         return msg, status
 
-
+# If the given password is valid, updates / adds the given meeting configs.
 class MeetingResource(Resource):
     def post(self):
         config = request.get_json()
@@ -159,7 +167,7 @@ class MeetingResource(Resource):
         status, message = config_handler.handle_incoming_meeting_config(config["meeting"])
         return message, status
 
-
+# If the given password is valid, sends out the emails for the given meeting.
 class MailRes(Resource):
     @db_session
     def put(self):
@@ -176,11 +184,11 @@ class MailRes(Resource):
                 raise Exception("unable to find meeting with id " + id)
         except Exception as e:
             print("Unable to validate meeting " + str(e))
-            return "Unable to validate meeting", 400
+            return {"error": "Unable to validate meeting"}, 400
 
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
 
-
+# If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
     @db_session
     def post(self, id):
@@ -192,13 +200,14 @@ class TimerResource(Resource):
         # The password was accepted, check the meeting id
         meeting = Meeting.get(id=id)
         if meeting is None:
-            return 404, "Meeting with id " + str(id) + " not found"
+            return {"error": "Meeting with id " + str(id) + " not found"}, 404
 
         # Meeting is valid, set the flag in the database for checking the deadline for the meeting
         print("Starting to check for deadline for meeting with id: " + str(id))
         meeting.check_for_deadline = True
 
 
+# If the password is valid, returns the complete current configs.
 class PasswordResource(Resource):
     def put(self):
         response_json = request.get_json()
@@ -210,6 +219,7 @@ class PasswordResource(Resource):
         return configs, 200
 
 
+# Handles downloading of archives for meetings.
 class ArchiveDownload(Resource):
     """
     Download a zip file with all the documents for the meeting with the given id.
@@ -225,7 +235,7 @@ class ArchiveDownload(Resource):
             archive = None
 
         if archive is None:
-            return "Archive not found", 404
+            return {"error": "Archive not found"}, 404
 
         file_name = archive.archive_location + ".zip"
         file_path_name = os.path.normpath(file_name)
@@ -248,7 +258,7 @@ class ArchiveDownload(Resource):
             meeting = None
 
         if meeting is None:
-            return "Meeting not found", 404
+            return {"error": "Meeting not found"}, 404
 
         archive = end_date_handler.create_archive(meeting)
 
