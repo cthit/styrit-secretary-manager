@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bdae174c-7b71-42cf-a041-9c3084950a3f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/nginx.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/prod.Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/public/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/public/logo192.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/public/logo192.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/public/logo512.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/public/logo512.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/app/App.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/common-ui/BodyContainer/BodyContainer.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/common-ui/BodyContainer/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/common-ui/Divider/Divider.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/common-ui/Divider/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/common-ui/InputGroup/InputGroup.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/common-ui/InputGroup/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/serviceWorker.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/serviceWorker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/admin/Admin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/use-cases/admin/Admin.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/admin/Admin.styles.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/use-cases/admin/Admin.styles.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/admin/ConfigPages/Meetings/Meetings.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/admin/ConfigPages/Meetings/Meetings.styles.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/admin/ConfigPages/Meetings/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/admin/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/use-cases/admin/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/body/Body.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/body/Upload/Upload.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/body/Upload/Upload.styles.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/body/Upload/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/use-cases/body/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/frontend_new.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/saveactions_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev.Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/styr194.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/dictionaries/Administrator.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/saveactions_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/src.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/RequestUtilities.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/post.Archive.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/post.Code.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/post.Config.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/post.Deadline.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/post.Meting.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/put.Emails.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/put.Files.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/put.Password.api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.action-creator.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.actions.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.container.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.reducer.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/App.styles..jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/elements/NumberTextField/NumbersTextField.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/elements/NumberTextField/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/functions/handleError.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/ui/formcontainer/FormContainer.styles.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/views/headerbuttons/HeaderButtons.container.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/views/headerbuttons/HeaderButtons.styles..jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/views/headerbuttons/HeaderButtons.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/views/headerbuttons/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/serviceWorker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/Admin.container.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/Admin.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/Admin.styles.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.action-creator.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.actions.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.container.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.modes.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.reducer.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/Config.styles.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/General.action-creators.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/General.actions.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/General.container.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/General.reducer.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/General.styles.view.jsx..jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/General.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/general/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/Meeting.action-creators.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/Meeting.actions.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/Meeting.container.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/Meeting.reducer.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/Meeting.styles.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/Meeting.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/TaskModes.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/general-meeting/GeneralMeeting.action-creators.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/general-meeting/GeneralMeeting.actions.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/general-meeting/GeneralMeeting.container.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/general-meeting/GeneralMeeting.styles.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/general-meeting/GeneralMeeting.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/general-meeting/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.action-creator.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.actions.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.container.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.reducer.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.styles.view.jsx..jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-actions/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-table/MeetingTable.action-creators.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-table/MeetingTable.actions.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-table/MeetingTable.container.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-table/MeetingTable.styles.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-table/MeetingTable.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/config/views/meeting/views/meeting-table/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/Password.action-creator.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/Password.actions.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/Password.container.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/Password.reducer.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/Password.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/Password.styles.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/admin/screens/password/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/debug/DebugHeader.container.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/debug/DebugHeader.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/debug/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/Main.container.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/Main.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/Code.action-creator.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/Code.actions.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/Code.container.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/Code.reducer.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/Code.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/Code.styles.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/code/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/Upload.action-creator.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/Upload.actions.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/Upload.container.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/Upload.reducer.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/Upload.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/Upload.styles.screen.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/views/uploadcard/UploadCard.styles.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/views/uploadcard/UploadCard.view.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/use-cases/main/screens/upload/views/uploadcard/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="React Component" />
+        <option value="Styles" />
+        <option value="React Reducer" />
+        <option value="React Class" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="feature/rewrite_react_digit_components" />
+                    <option name="lastUsedInstant" value="1586820527" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="fix/data-handling" />
+                    <option name="lastUsedInstant" value="1586820526" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/.." />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="ProjectId" id="1aSXo8IZfySePfwca2a3FdzJmmE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../frontend" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Python Projects\styrit-secretary-manager\frontend_new\src\use-cases\admin\screens\config\views\meeting\views" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bdae174c-7b71-42cf-a041-9c3084950a3f" name="Default Changelist" comment="" />
+      <created>1586730140433</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1586730140433</updated>
+      <workItem from="1586730143167" duration="50355000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1180" y="287" key="FileChooserDialogImpl" timestamp="1586910555832">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1180" y="287" key="FileChooserDialogImpl/0.0.2560.1400/3840.0.1920.1080@0.0.2560.1400" timestamp="1586910555832" />
+    <state x="901" y="177" key="SettingsEditor" timestamp="1586775190621">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="901" y="177" key="SettingsEditor/0.0.2560.1400/3840.0.1920.1080@0.0.2560.1400" timestamp="1586775190621" />
+    <state x="937" y="331" key="run.anything.popup" timestamp="1586821073860">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="937" y="331" key="run.anything.popup/0.0.2560.1400/3840.0.1920.1080@0.0.2560.1400" timestamp="1586821073860" />
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1586909509444">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/3840.0.1920.1080@0.0.2560.1400" timestamp="1586909509444" />
+  </component>
+</project>
