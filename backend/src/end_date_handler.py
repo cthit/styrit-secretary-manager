@@ -31,7 +31,9 @@ def get_mail(meeting, code):
     secretary_email = Config["secretary_email"].value
     msg = msg.format(board_email, meeting.meeting_no, meeting.lp, link, secretary_email)
     to = Config["board_email"].value
-    subject = "Dokument för sektionsmöte {0} lp {1}".format(meeting.meeting_no, meeting.lp)
+    raw_subject = Config["mail_to_board_subject"].value
+    subject = raw_subject.format(meeting.meeting_no, meeting.lp)
+
     return to, subject, msg
 
 

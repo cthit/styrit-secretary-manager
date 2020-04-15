@@ -28,6 +28,7 @@ def setup_general_config():
         {"key": "board_email", "value": "styrit@chalmers.it", "config_type": string},
         {"key": "group_email_domain", "value": "@chalmers.it", "config_type": string},
         {"key": "from_email_address", "value": "admin@chalmers.it", "config_type": string},
+        {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {0}/{1}", "config_type": string},
         {"key": "mail_to_groups_message",
          "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in "
                   "följande dokument: {5}\nDetta görs på sidan: {6}\nAnge koden: {7}\n\nMall för vissa "
@@ -35,6 +36,7 @@ def setup_general_config():
                   "några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} "
                   ": ).",
          "config_type": long_string},
+        {"key": "mail_to_board_subject", "value": "Dokument för sektionsmöte {0} lp {1}", "config_type": string},
         {"key": "mail_to_board_message",
          "value": "\nHej {0}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {1} i lp {2} är nu nådd.\nFör "
                   "nedladdning av dessa dokument klicka på denna länk: {3}\n\nVid frågor, kontakta sekreteraren på {4}",
