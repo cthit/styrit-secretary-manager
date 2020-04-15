@@ -38,8 +38,12 @@ def get_mail(meeting, code):
 @db_session
 def create_archive(meeting):
     folder_loc = "src/b"
-    if not os.path.exists(folder_loc):
-        os.makedirs(folder_loc)
+
+    if os.path.exists(folder_loc):
+        # Delete any old files.
+        shutil.rmtree(folder_loc)
+
+    os.makedirs(folder_loc)
 
     file_paths = get_file_paths(meeting)
 
