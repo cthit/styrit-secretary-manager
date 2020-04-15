@@ -1,5 +1,5 @@
 import { postMeeting } from "../../../../../../../../api/post.Meting.api";
-import { MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL } from "./MeetingActions.actions.view";
+import { MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL, WAITING_FOR_RESULT } from "./MeetingActions.actions.view";
 import { handleError } from "../../../../../../../../common/functions/handleError";
 import { putEmails } from "../../../../../../../../api/put.Emails.api";
 import { postDeadline } from "../../../../../../../../api/post.Deadline.api";
@@ -9,12 +9,15 @@ export function saveMeeting(meeting, groupTasks, allTasks, password) {
     meeting.groups_tasks = getGroupTasksToSend(allTasks, groupTasks);
 
     return dispatch => {
+        dispatch({
+            type: WAITING_FOR_RESULT
+        })
         postMeeting(meeting, password)
             .then(response => {
-                return dispatch(onMeetingSavedAccepted(response));
+                dispatch(onMeetingSavedAccepted(response));
             })
             .catch(error => {
-                return dispatch(onMeetingSavedError(error));
+                dispatch(onMeetingSavedError(error));
             });
     };
 }

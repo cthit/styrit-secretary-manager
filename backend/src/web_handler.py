@@ -74,6 +74,7 @@ def handle_file(code, task, file):
     save_loc = path + "/" + name
     print("Saving file " + str(file) + " in " + path)
     file.save(save_loc)
+
     group_task = GroupMeetingTask.get(
         lambda group_task: str(group_task.group.code) == code and group_task.task == task_obj)
     group_file = GroupMeetingFile.get(group_task=group_task)

@@ -27,10 +27,22 @@ export const MeetingReducer = (state = initialState, action) => {
         case MEETING_SAVE_SUCCESSFUL:
             const receivedMeeting = action.payload.meeting;
             const receivedGroupTasks = getGroupsTasks(state.groups, receivedMeeting.groups_tasks);
+            let newMeetingsDict = {}
+            const savedNewMeeting = state.meetings[receivedMeeting.id] === undefined;
+            if (savedNewMeeting) {
+                newMeetingsDict[receivedMeeting.id] = receivedMeeting;
+            }
+            Object.keys(state.meetings).forEach(key => {
+                if (key !== "new" && receivedMeeting.id !== key) {
+                    newMeetingsDict[key] = state.meetings[key]
+                }
+            })
+
             return Object.assign({}, state, {
                 selectedMeeting: receivedMeeting,
                 selectedMeetingID: receivedMeeting.id,
                 groupTasks: receivedGroupTasks,
+                meetings: newMeetingsDict,
                 taskMode: getTasksMode(state.tasks, receivedGroupTasks)
             })
 
