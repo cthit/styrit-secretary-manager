@@ -5,7 +5,7 @@ import DebugHeader from "../use-cases/debug";
 import HeaderButtons from "../common/views/headerbuttons";
 import { Route, Switch } from "react-router";
 import Admin from "../use-cases/admin";
-import { MainContainer } from "./App.styles.";
+import { AppContainer, MainContainer } from "./App.styles.";
 
 class App extends Component {
     constructor(props) {
@@ -15,7 +15,7 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <AppContainer>
                 <DigitDialog />
                 <DebugHeader />
                 <DigitHeader
@@ -32,7 +32,7 @@ class App extends Component {
                         </MainContainer>
                     )}
                 />
-            </div>
+            </AppContainer>
         );
     }
 }
