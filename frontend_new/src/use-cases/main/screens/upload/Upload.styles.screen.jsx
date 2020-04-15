@@ -12,7 +12,7 @@ export const InputGroup = styled.div`
 export const UploadContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     max-width: 100vw;
 `;
 
