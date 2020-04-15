@@ -1,6 +1,5 @@
-import React from "react";
 import { connect } from "react-redux";
-import { onUpload, onSubmitFiles } from "./Upload.action-creator.screen";
+import { onSubmitFiles, onUpload } from "./Upload.action-creator.screen";
 
 import Upload from "./Upload.screen";
 

@@ -5,6 +5,8 @@ import { Button } from "@material-ui/core";
 export const MeetingActionsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
+  margin-top: 10px;
 `;
 
 export const MeetingActionButtonContainer = styled.div`
