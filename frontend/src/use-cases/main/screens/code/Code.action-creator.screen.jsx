@@ -1,13 +1,11 @@
-import {
-    SUBMIT_CODE_SUCCESSFUL,
-    SUBMIT_CODE_FAILED
-} from "./Code.actions.screen";
+import { SUBMIT_CODE_FAILED, SUBMIT_CODE_SUCCESSFUL } from "./Code.actions.screen";
 import { postCode } from "../../../../api/post.Code.api";
 import { handleError } from "../../../../common/functions/handleError";
 
 export function submitCode(code) {
+    const formattedCode = code.replace(/\s/g, '');
     return dispatch => {
-        postCode(code)
+        postCode(formattedCode)
             .then(response => {
                 return dispatch(onAccept(response));
             })
