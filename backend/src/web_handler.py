@@ -128,9 +128,9 @@ class FileRes(Resource):
 
         overwrite = False
         for task in request.files:
-            r, code = handle_file(code, task, request.files[task])
-            if code != 200:
-                return r, code
+            r, status_code = handle_file(code, task, request.files[task])
+            if status_code != 200:
+                return r, status_code
 
             overwrite = r
 
