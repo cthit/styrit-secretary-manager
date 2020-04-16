@@ -150,6 +150,10 @@ def validate_meeting(meeting_json):
         id = meeting_json["id"]
         date = dateutil.parser.parse(meeting_json["date"])
         last_upload = dateutil.parser.parse(meeting_json["last_upload_date"])
+        # Remove any timezone information.
+        date = date.replace(tzinfo=None)
+        last_upload = last_upload.replace(tzinfo=None)
+
         lp = meeting_json["lp"]
         if not 0 < lp <= 4:
             raise UserError("invalid lp " + str(lp))

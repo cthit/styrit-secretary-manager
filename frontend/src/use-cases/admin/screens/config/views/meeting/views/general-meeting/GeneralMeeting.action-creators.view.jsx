@@ -19,6 +19,7 @@ export function onMeetingDateUpdated(newDate) {
 
 export function onMeetingLastUploadUpdated(newDate) {
     let date = newDate.toISOString();
+
     return {
         type: MEETING_LAST_UPLOAD_UPDATED,
         payload: {
