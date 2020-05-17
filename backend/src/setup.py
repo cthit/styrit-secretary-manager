@@ -21,7 +21,7 @@ def setup_general_config():
 
     config_list = [
         {"key": "frontend_url", "value": "localhost:3000", "config_type": string},
-        {"key": "archive_base_url", "value": "localhost:5000/archive/", "config_type": string},
+        {"key": "archive_base_url", "value": "localhost:5000/api/archive/", "config_type": string},
         {"key": "document_template_url", "value": "https://www.overleaf.com/read/ddjdhxnkxttj", "config_type": string},
         {"key": "gotify_url", "value": "http://gotify:8080/mail", "config_type": string},
         {"key": "secretary_email", "value": "sekreterare@chalmers.it", "config_type": string},
