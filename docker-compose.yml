@@ -48,8 +48,8 @@ services:
             - 3000:3000
         volumes:
             - ./frontend:/usr/src/secretary-manager/frontend
-        # environment:
-        #     - DEBUG_MODE=true
+        environment:
+            - DEBUG_MODE=true
 
     gotify:
         image: cthit/gotify:latest
