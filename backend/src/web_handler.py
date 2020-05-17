@@ -271,14 +271,14 @@ class ArchiveDownload(Resource):
         return redirect_url
 
 
-api.add_resource(FileRes, '/file')
-api.add_resource(CodeRes, '/code/<string:code>')
-api.add_resource(MeetingResource, "/admin/config/meeting")
-api.add_resource(AdminResource, "/admin/config")
-api.add_resource(PasswordResource, "/admin")
-api.add_resource(MailRes, "/mail")
-api.add_resource(TimerResource, "/timer/<string:id>")
-api.add_resource(ArchiveDownload, "/archive/<string:id>")
+api.add_resource(FileRes, '/api/file')
+api.add_resource(CodeRes, '/api/code/<string:code>')
+api.add_resource(MeetingResource, "/api/admin/config/meeting")
+api.add_resource(AdminResource, "/api/admin/config")
+api.add_resource(PasswordResource, "/api/admin")
+api.add_resource(MailRes, "/api/mail")
+api.add_resource(TimerResource, "/api/timer/<string:id>")
+api.add_resource(ArchiveDownload, "/api/archive/<string:id>")
 
 
 def host():
