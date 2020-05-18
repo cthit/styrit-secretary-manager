@@ -1,13 +1,23 @@
 import React from "react";
 import { ButtonContainer, ButtonGroup, ConfigContainer } from "./Config.styles.screen";
 import { DigitButton } from "@cthit/react-digit-components";
-import { general_mode, meeting_mode } from "./Config.modes.screen";
+import { general_mode, meeting_mode, stories_mode } from "./Config.modes.screen";
 import Meeting from "./views/meeting/";
 import General from "./views/general/";
+import Stories from "./views/stories/";
 
 export const Config = props => (
     <ConfigContainer>
         <ButtonGroup>
+            <ButtonContainer>
+                <DigitButton
+                    text="Historical Config"
+                    raised
+                    primary
+                    disabled={props.mode === stories_mode}
+                    onClick={() => props.onModeButtonClicked(stories_mode)}
+                />
+            </ButtonContainer>
             <ButtonContainer>
                 <DigitButton
                     text="Meeting Config"
@@ -29,6 +39,7 @@ export const Config = props => (
         </ButtonGroup>
         {props.mode === meeting_mode && <Meeting />}
         {props.mode === general_mode && <General />}
+        {props.mode === stories_mode && <Stories />}
     </ConfigContainer>
 );
 
