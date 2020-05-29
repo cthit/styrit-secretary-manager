@@ -5,7 +5,6 @@ from pony.orm import db_session
 from src.db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, \
     ArchiveCode
 
-
 @db_session
 def get_config_types():
     arr = []
@@ -19,6 +18,12 @@ def get_config_types():
 
 
 @db_session
+def restore_config_types(json):
+    for config_type in json:
+        ConfigType(config_type["type"])
+
+
+@db_session
 def get_configs():
     arr = []
     configs = Config.select()
@@ -29,6 +34,12 @@ def get_configs():
             "type": config.config_type.type
         })
     return arr
+
+
+@db_session
+def restore_configs(json):
+    for config in json:
+        Config(key=config["key"],value=Config["value"],type=config["type"])
 
 
 @db_session
@@ -125,6 +136,8 @@ def get_archive_codes():
     return arr
 
 
+backup_location = "src/archives/db_backup.json"
+
 def save_tables_to_json():
     db_json = {}
 
@@ -138,10 +151,14 @@ def save_tables_to_json():
     db_json["group_meeting_files"] = get_group_meeting_files()
     db_json["archive_codes"] = get_archive_codes()
 
-    with open("src/archives/db_backup.json", "w+") as file:
+    with open(backup_location, "w+") as file:
         json.dump(db_json, file)
-
 
 
 def backup_db():
     save_tables_to_json()
+
+
+def restore_to_new_db():
+    with open(backup_location) as file:
+        data = json.load(file)
