@@ -2,6 +2,8 @@ from pony.orm import commit
 
 from db import *
 
+from src.db import GroupYear, Group, Task, Config, ConfigType
+
 
 @db_session
 def setup_general_config():
@@ -119,7 +121,10 @@ def setup_general_config():
 
     for group in groups:
         if Group.get(name=group["codeName"]) is None:
-            Group(name=group["codeName"], display_name=group["displayName"])
+            new_group = Group(name=group["codeName"], display_name=group["displayName"])
+
+        if GroupYear.get(group=new_group, year="active") is None:
+            GroupYear(group=new_group, year="active", finished=False)
 
     for task in tasks:
         if Task.get(name=task["codeName"]) is None:

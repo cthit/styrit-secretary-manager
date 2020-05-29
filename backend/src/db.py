@@ -14,6 +14,18 @@ class Group(db.Entity):
     name = PrimaryKey(str)
     display_name = Required(str)
 
+    group_years = Set("GroupYear")
+    groups = Set("GroupMeeting")
+
+
+# A group connected with a year
+class GroupYear(db.Entity):
+    group = Required(Group)
+    year = Required(str)
+    finished = Required(bool)  # Weather or not they have been relieved of responsibility.
+
+    PrimaryKey(group, year)
+
     group_meetings = Set("GroupMeeting")
 
 
@@ -47,6 +59,7 @@ class GroupMeeting(db.Entity):
 
     PrimaryKey(group, meeting)
     group_tasks = Set("GroupMeetingTask")
+    group_years = Required(GroupYear)
 
 
 # The tasks to be done by that Group/Meeting combination
@@ -86,6 +99,7 @@ class Config(db.Entity):
     value = Required(str)
     config_type = Required(ConfigType)
 
+
 db.bind(
     provider="postgres",
     user=config.POSTGRES_USER,
@@ -95,7 +109,42 @@ db.bind(
     database=config.POSTGRES_DB
 )
 
+
+@db_session
+def migrate_db():
+    print(" === MIGRATING DATABASE === ")
+    db.execute("""
+    -- Table: public.groupyear
+    -- DROP TABLE public.groupyear;
+
+    CREATE TABLE public.groupyear
+    (
+        "group" text COLLATE pg_catalog."default" NOT NULL,
+        year text COLLATE pg_catalog."default" NOT NULL,
+        finished boolean NOT NULL,
+        CONSTRAINT groupyear_pkey PRIMARY KEY ("group", year),
+        CONSTRAINT fk_groupyear__group FOREIGN KEY ("group")
+            REFERENCES public."group" (name) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+    )
+    WITH (
+        OIDS = FALSE
+    )
+    TABLESPACE pg_default;
+    
+    ALTER TABLE public.groupyear
+        OWNER to secretary;
+    """)
+
+    for group in Group.select():
+        pass
+
+
 db.generate_mapping(create_tables=True)
+
+# migrate_db()
+
 
 # Helper methods
 
@@ -112,7 +161,7 @@ def validate_task(task):
             code = task["code"]
             if code is not None:
                 group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
-                return group_meeting.group.name == group_name
+                return group_meeting.group.group.name == group_name
 
         return Group.get(lambda group: group.name == group_name) is not None
     except Exception as e:
@@ -182,7 +231,7 @@ def validate_meeting(meeting_json):
             for task in tasks[type]:
                 if validate_task(task):
                     group_meeting = GroupMeeting.get(
-                        lambda group: group.group.name == task["name"] and group.meeting == meeting)
+                        lambda group: group.group.group.name == task["name"] and group.meeting == meeting)
                     found = False
                     if group_meeting is None:
                         group = Group[task["name"]]
