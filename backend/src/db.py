@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 import dateutil.parser
-from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, commit, InternalError
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, commit, InternalError, ProgrammingError
 
 from config import db_config as config
 
@@ -15,7 +15,6 @@ class Group(db.Entity):
     display_name = Required(str)
 
     group_years = Set("GroupYear")
-    groups = Set("GroupMeeting")
 
 
 # A group connected with a year
@@ -53,13 +52,12 @@ class Meeting(db.Entity):
 
 # Contains the code for each group and meeting
 class GroupMeeting(db.Entity):
-    group = Required(Group)
+    group = Required(GroupYear)
     meeting = Required(Meeting)
     code = Required(UUID, auto=True, unique=True)
 
     PrimaryKey(group, meeting)
     group_tasks = Set("GroupMeetingTask")
-    group_years = Required(GroupYear)
 
 
 # The tasks to be done by that Group/Meeting combination
@@ -109,41 +107,7 @@ db.bind(
     database=config.POSTGRES_DB
 )
 
-
-@db_session
-def migrate_db():
-    print(" === MIGRATING DATABASE === ")
-    db.execute("""
-    -- Table: public.groupyear
-    -- DROP TABLE public.groupyear;
-
-    CREATE TABLE public.groupyear
-    (
-        "group" text COLLATE pg_catalog."default" NOT NULL,
-        year text COLLATE pg_catalog."default" NOT NULL,
-        finished boolean NOT NULL,
-        CONSTRAINT groupyear_pkey PRIMARY KEY ("group", year),
-        CONSTRAINT fk_groupyear__group FOREIGN KEY ("group")
-            REFERENCES public."group" (name) MATCH SIMPLE
-            ON UPDATE NO ACTION
-            ON DELETE CASCADE
-    )
-    WITH (
-        OIDS = FALSE
-    )
-    TABLESPACE pg_default;
-    
-    ALTER TABLE public.groupyear
-        OWNER to secretary;
-    """)
-
-    for group in Group.select():
-        pass
-
-
 db.generate_mapping(create_tables=True)
-
-# migrate_db()
 
 
 # Helper methods
