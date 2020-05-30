@@ -107,15 +107,6 @@ db.bind(
     database=config.POSTGRES_DB
 )
 
-
-@db_session
-def drop_db():
-    db.execute("""
-    DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;
-    """)
-
-
 # drop_db()
 db.generate_mapping(create_tables=True)
 
