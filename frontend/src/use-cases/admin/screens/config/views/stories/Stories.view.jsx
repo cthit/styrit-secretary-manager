@@ -21,7 +21,7 @@ export const Stories = props => (
                 outlined
                 options={getGroups(props.groups)}
                 onChange={e => {
-                    console.log("GROUP SELECTED: ", e.target.value)
+                    props.selectGroup(e.target.value)
                 }}
                 value={props.selectedGroup}
                 noOptionsText={"No Groups"}
@@ -32,7 +32,7 @@ export const Stories = props => (
                 outlined
                 options={getYears(props.years)}
                 onChange={e => {
-                    console.log("Year SELECTED: ", e.target.value)
+                    props.selectYear(e.target.value)
                 }}
                 value={props.selectedYear}
                 noOptionsText={"No Years"}
@@ -43,8 +43,20 @@ export const Stories = props => (
                 primary
                 size={{width: "200px"}}
                 text={"Add committee year"}
+                onClick={() => {
+                    console.log("Add groupYear!")
+                    props.addGroupYear()
+                }}
             />
         </StoriesSelectContainer>
+        {
+            props.errorMsg && (
+                <div>
+                    <SmallVSpace />
+                    <DigitText.Text text={props.errorMsg} color="error" bold />
+                </div>
+            )
+        }
         <SmallVSpace />
         <HLine />
         <VSpace />
