@@ -76,7 +76,7 @@ export const Stories = props => (
             )
         }
         <DigitButton raised primary
-                     onClick={() => props.save(props.groupYears)}
+                     onClick={() => props.save(props.groupYears, props.password)}
                      text={"Save stories settings"}
                      size={{width: "400px"}} />
         <DigitText.Text

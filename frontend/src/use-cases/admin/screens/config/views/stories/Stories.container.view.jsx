@@ -15,6 +15,7 @@ const mapStateToProps = state => ({
     groupYears: state.root.StoriesReducer.groupYears,
     selectedGroup: state.root.StoriesReducer.selectedGroup,
     selectedYear: state.root.StoriesReducer.selectedYear,
+    password: state.root.PasswordReducer.password,
     errorMsg: state.root.StoriesReducer.errorMsg,
     saveError: state.root.StoriesReducer.saveError
 });
@@ -24,7 +25,7 @@ const mapDispatchToProps = dispatch => ({
     selectYear: year => dispatch(selectedStoryYear(year)),
     addGroupYear: () => dispatch(addStoryGroupYear()),
     deleteGroupYear: groupYear => dispatch(deleteStoryGroupYear(groupYear)),
-    save: groupYears => dispatch(saveStories(groupYears))
+    save: (groupYears, password) => dispatch(saveStories(groupYears, password))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stories);

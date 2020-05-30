@@ -72,7 +72,7 @@ function onStoriesSavedSuccessful(response) {
     return {
         type: ON_SAVE_STORIES_SUCCESSFUL,
         payload: {
-            storyGroups: response.data.storyGroups,
+            groupYears: response.data.groupYears,
             years: response.data.years
         },
         error: false
@@ -80,5 +80,6 @@ function onStoriesSavedSuccessful(response) {
 }
 
 function onStoriesSavedError(error) {
+    console.log(error.response)
     return handleError(error, ON_SAVE_STORIES_ERROR);
 }

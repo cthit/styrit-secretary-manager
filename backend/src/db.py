@@ -235,3 +235,41 @@ def validate_meeting(meeting_json):
     except Exception as e:
         print("Failed validating meeting " + str(e))
         return None, ""
+
+
+@db_session
+def validate_stories(story_groups):
+    group_list = []
+    try:
+        for story_group in story_groups:
+            r_group = story_group["group"]
+            r_year = int(story_group["year"])
+            r_finished = bool(story_group["finished"])
+
+            if Group.get(name=r_group) is not None:
+                group_list.append({
+                    "group": r_group,
+                    "year": r_year,
+                    "finished": r_finished
+                })
+    except TypeError as e:
+        msg = "Failed validating storyGroups, invalid format"
+        print(msg + ": " + str(e))
+        return False, msg
+    except Exception as e:
+        msg = "Failed validating storyGroups, unknown error"
+        print(msg + ": " + str(e))
+        return False, msg
+
+    # Add / update the objects in the db.
+    for story_group in group_list:
+        group = story_group["group"]
+        year = str(story_group["year"])
+        finished = story_group["finished"]
+        group_year = GroupYear.get(group=group, year=year)
+        if group_year is None:
+            GroupYear(group=group, year=year, finished=finished)
+        else:
+            group_year.finished = story_group["finished"]
+
+    return True, ""

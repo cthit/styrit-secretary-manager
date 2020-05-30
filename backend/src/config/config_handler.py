@@ -5,7 +5,7 @@ from pony.orm import db_session
 
 from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
 
-from src.db import GroupYear
+from src.db import GroupYear, validate_stories
 
 
 def get_config():
@@ -140,7 +140,18 @@ def handle_incoming_config(config):
 def handle_incoming_meeting_config(config):
     meeting, msg = validate_meeting(config)
     if meeting is None:
-        return 400, {"error": "Invalid meeting format\n" + msg}
+        return 400, {"error": "Invalid meeting format\n " + msg}
 
     # Probably return the data for the new meeting?
     return 200, get_config_for_meeting(meeting)
+
+
+def handle_incoming_stories_config(config):
+    success, msg = validate_stories(config)
+    if not success:
+        return 400, {"error": "Unable to validate stories\n " + msg}
+
+    dict = {}
+    dict["groupYears"] = get_group_years()
+    dict["years"] = get_years()
+    return 200, dict

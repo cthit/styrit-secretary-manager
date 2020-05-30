@@ -167,6 +167,17 @@ class MeetingResource(Resource):
         return message, status
 
 
+class StoriesRes(Resource):
+    def post(self):
+        config = request.get_json()
+        r, code = validate_password(config)
+        if code != 200:
+            return r, code
+
+        status, message = config_handler.handle_incoming_stories_config(config["storyGroups"])
+        return message, status
+
+
 # If the given password is valid, sends out the emails for the given meeting.
 class MailRes(Resource):
     @db_session
@@ -279,6 +290,7 @@ api.add_resource(PasswordResource, "/api/admin")
 api.add_resource(MailRes, "/api/mail")
 api.add_resource(TimerResource, "/api/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/api/archive/<string:id>")
+api.add_resource(StoriesRes, "/api/admin/config/stories")
 
 
 def host():
