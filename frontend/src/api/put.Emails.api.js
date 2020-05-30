@@ -1,4 +1,4 @@
-import { putRequest } from "./RequestUtilities";
+import {putRequest} from "./RequestUtilities";
 
 export function putEmails(id, password) {
     let data = {
@@ -6,6 +6,5 @@ export function putEmails(id, password) {
         id: id
     }
 
-    console.log("PUTING TO SERVER :", data);
     return putRequest("/mail", data, false);
 }

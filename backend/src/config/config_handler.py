@@ -5,8 +5,9 @@ from pony.orm import db_session
 
 from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
 
+from src.db import GroupYear
 
-@db_session
+
 def get_config():
     config = {}
     config["meetings"] = get_meetings()
@@ -14,6 +15,7 @@ def get_config():
     config["groups"] = get_groups()
     config["tasks"] = get_tasks()
     config["years"] = get_years()
+    config["groupYears"] = get_group_years()
     return config
 
 
@@ -55,6 +57,7 @@ def get_config_for_meeting(meeting):
 
     return m_js
 
+
 @db_session
 def get_config_list():
     config_list = []
@@ -82,7 +85,8 @@ def get_groups():
 def get_tasks():
     tasks = []
     # We don't want the berattelser as they are handled separately
-    task_list = orm.select((task.name, task.display_name) for task in Task if task.name != "vberattelse" and task.name != "eberattelse")
+    task_list = orm.select(
+        (task.name, task.display_name) for task in Task if task.name != "vberattelse" and task.name != "eberattelse")
     for name, d_name in task_list:
         tasks.append({
             "name": name,
@@ -96,7 +100,22 @@ def get_years():
     years = []
     curr_year = datetime.utcnow().year
     years_back = int(Config["possible_years_back_for_stories"].value)
+    for i in range(years_back):
+        years.append(curr_year - i)
     return years
+
+
+@db_session
+def get_group_years():
+    list = []
+    group_years = GroupYear.select(lambda gy: gy.finished is False and gy.year != "active")
+    for group_year in group_years:
+        list.append({
+            "group": group_year.group.name,
+            "year": group_year.year,
+            "finished": group_year.finished
+        })
+    return list
 
 
 @db_session

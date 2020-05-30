@@ -1,4 +1,4 @@
-import { postRequest } from "./RequestUtilities";
+import {postRequest} from "./RequestUtilities";
 
 export function postMeeting(meeting, password) {
     let data = {
@@ -6,6 +6,5 @@ export function postMeeting(meeting, password) {
         meeting: meeting
     }
 
-    console.log("POSTING TO SERVER :", data);
     return postRequest("/admin/config/meeting", data, false);
 }

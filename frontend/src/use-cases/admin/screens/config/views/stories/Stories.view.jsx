@@ -2,7 +2,6 @@ import React from "react";
 import {
     HLine,
     HSpace,
-    InfoCard,
     SmallVSpace,
     StoriesContainer,
     StoriesSelectContainer,
@@ -43,7 +42,8 @@ export const Stories = props => (
                 primary
                 size={{width: "200px"}}
                 text={"Add committee year"}
-                disabled={props.selectedGroup === null || props.selectedYear === null}
+                // Should be == as we want to check both for null and undefined
+                disabled={props.selectedGroup == null || props.selectedYear == null}
                 onClick={() => {
                     props.addGroupYear()
                 }}
@@ -63,18 +63,26 @@ export const Stories = props => (
         <StoryChipContainer>
             {
                 getGroupYears(props.groupYears, props.groups).map(gy => (
-                    <DigitChip primary label={formatChipLabel(gy)} onDelete={() => props.deleteGroupYear(gy)} />
+                    <DigitChip key={gy.group + "_" + gy.year} primary label={formatChipLabel(gy)}
+                               onDelete={() => props.deleteGroupYear(gy)} />
                 ))
             }
         </StoryChipContainer>
         <VSpace />
         <HLine />
-        <InfoCard>
-            <DigitText.Text
-                text={"Requests that these groups send in their economic and activity stories for their year (Verksamhetsberättelser / ekonomiska berättelser)"} />
-        </InfoCard>
+        {
+            props.saveError && (
+                <DigitText.Text text={props.saveError} color="error" bold />
+            )
+        }
+        <DigitButton raised primary
+                     onClick={() => props.save(props.groupYears)}
+                     text={"Save stories settings"}
+                     size={{width: "400px"}} />
+        <DigitText.Text
+            text={"Requests that these groups send in their economic and activity stories for their year (Verksamhetsberättelser / ekonomiska berättelser)"} />
         <DigitButton disabled={getSendEmailsDisabled(props.groupYears)} text={"Send emails to above groups"} raised
-                     primary />
+                     primary size={{width: "400px"}} />
     </StoriesContainer>
 );
 

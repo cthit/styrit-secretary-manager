@@ -1,9 +1,14 @@
 import {
     ON_ADD_STORY_GROUP_YEAR,
+    ON_SAVE_STORIES_ERROR,
+    ON_SAVE_STORIES_SUCCESSFUL,
     ON_STORY_GROUP_DELETED,
     ON_STORY_GROUP_SELECTED,
     ON_STORY_YEAR_SELECTED
 } from "./Stories.actions.view";
+import {WAITING_FOR_RESULT} from "../meeting/views/meeting-actions/MeetingActions.actions.view";
+import {postStories} from "../../../../../../api/post.Stories.api";
+import {handleError} from "../../../../../../common/functions/handleError";
 
 export function selectedStoryGroup(group) {
     return {
@@ -36,7 +41,7 @@ export function addStoryGroupYear() {
 export function deleteStoryGroupYear(groupYear) {
     const group = groupYear.group.name;
     const year = groupYear.year;
-    
+
     return {
         type: ON_STORY_GROUP_DELETED,
         payload: {
@@ -45,4 +50,35 @@ export function deleteStoryGroupYear(groupYear) {
         },
         error: false
     }
+}
+
+export function saveStories(storyGroups, password) {
+    return dispatch => {
+        dispatch({
+            type: WAITING_FOR_RESULT
+        })
+        postStories(storyGroups, password)
+            .then(response => {
+                dispatch(onStoriesSavedSuccessful(response));
+            })
+            .catch(error => {
+                dispatch(onStoriesSavedError(error));
+            });
+    };
+}
+
+function onStoriesSavedSuccessful(response) {
+    // Make sure our data is up to date with the server
+    return {
+        type: ON_SAVE_STORIES_SUCCESSFUL,
+        payload: {
+            storyGroups: response.data.storyGroups,
+            years: response.data.years
+        },
+        error: false
+    };
+}
+
+function onStoriesSavedError(error) {
+    return handleError(error, ON_SAVE_STORIES_ERROR);
 }

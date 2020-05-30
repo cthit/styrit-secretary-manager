@@ -1,9 +1,9 @@
-import { postMeeting } from "../../../../../../../../api/post.Meting.api";
-import { MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL, WAITING_FOR_RESULT } from "./MeetingActions.actions.view";
-import { handleError } from "../../../../../../../../common/functions/handleError";
-import { putEmails } from "../../../../../../../../api/put.Emails.api";
-import { postDeadline } from "../../../../../../../../api/post.Deadline.api";
-import { postArchive } from "../../../../../../../../api/post.Archive.api";
+import {postMeeting} from "../../../../../../../../api/post.Meting.api";
+import {MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL, WAITING_FOR_RESULT} from "./MeetingActions.actions.view";
+import {handleError} from "../../../../../../../../common/functions/handleError";
+import {putEmails} from "../../../../../../../../api/put.Emails.api";
+import {postDeadline} from "../../../../../../../../api/post.Deadline.api";
+import {postArchive} from "../../../../../../../../api/post.Archive.api";
 
 export function saveMeeting(meeting, groupTasks, allTasks, password) {
     meeting.groups_tasks = getGroupTasksToSend(allTasks, groupTasks);
@@ -65,7 +65,6 @@ function getGroupTasksToSend(allTasks, groupTasks) {
 }
 
 function onMeetingSavedAccepted(response) {
-    console.log("RESPONSE::", response);
 
     // Modify the data here.
     let meeting = response.data;
