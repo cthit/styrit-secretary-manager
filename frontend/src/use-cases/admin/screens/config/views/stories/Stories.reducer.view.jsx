@@ -67,6 +67,10 @@ export const StoriesReducer = (state = initialState, action) => {
 };
 
 function handleAddStoryGroupYear(state) {
+    if (state.selectedGroup === null || state.selectedYear === null) {
+        return state;
+    }
+
     // Make sure that this group is not already in the list!
     const groupYears = state.groupYears;
     let newGroupYears = [];

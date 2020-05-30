@@ -43,8 +43,8 @@ export const Stories = props => (
                 primary
                 size={{width: "200px"}}
                 text={"Add committee year"}
+                disabled={props.selectedGroup === null || props.selectedYear === null}
                 onClick={() => {
-                    console.log("Add groupYear!")
                     props.addGroupYear()
                 }}
             />
@@ -73,7 +73,8 @@ export const Stories = props => (
             <DigitText.Text
                 text={"Requests that these groups send in their economic and activity stories for their year (Verksamhetsberättelser / ekonomiska berättelser)"} />
         </InfoCard>
-        <DigitButton text={"Send emails to above groups"} raised primary />
+        <DigitButton disabled={getSendEmailsDisabled(props.groupYears)} text={"Send emails to above groups"} raised
+                     primary />
     </StoriesContainer>
 );
 
@@ -117,6 +118,16 @@ function getGroupFromName(groupName, groups) {
 
 function formatChipLabel(data) {
     return data.group.displayName + " " + data.year
+}
+
+function getSendEmailsDisabled(groupYears) {
+    let disabled = true;
+    groupYears.forEach(groupYear => {
+        if (groupYear.finished === false) {
+            disabled = false;
+        }
+    })
+    return disabled;
 }
 
 export default Stories;
