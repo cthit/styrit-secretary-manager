@@ -9,7 +9,7 @@ import {
     StoryChipContainer,
     VSpace
 } from "./Stories.styles.view.jsx.";
-import { DigitAutocompleteSelectSingle, DigitButton, DigitChip, DigitText } from "@cthit/react-digit-components";
+import {DigitAutocompleteSelectSingle, DigitButton, DigitChip, DigitText} from "@cthit/react-digit-components";
 
 export const Stories = props => (
     <StoriesContainer>
@@ -19,22 +19,22 @@ export const Stories = props => (
             <DigitAutocompleteSelectSingle
                 upperLabel={"Group"}
                 outlined
-                options={getGroups()}
+                options={getGroups(props.groups)}
                 onChange={e => {
                     console.log("GROUP SELECTED: ", e.target.value)
                 }}
-                value={"prit"}
+                value={props.selectedGroup}
                 noOptionsText={"No Groups"}
             />
             <HSpace />
             <DigitAutocompleteSelectSingle
                 upperLabel={"Year"}
                 outlined
-                options={getYears()}
+                options={getYears(props.years)}
                 onChange={e => {
                     console.log("Year SELECTED: ", e.target.value)
                 }}
-                value={2019}
+                value={props.selectedYear}
                 noOptionsText={"No Years"}
             />
             <HSpace />
@@ -50,7 +50,7 @@ export const Stories = props => (
         <VSpace />
         <StoryChipContainer>
             {
-                getGroupYears().map(gy => (
+                getGroupYears(props.groupYears, props.groups).map(gy => (
                     <DigitChip primary label={formatChipLabel(gy)} onDelete={() => alert("delete")} />
                 ))
             }
@@ -65,87 +65,38 @@ export const Stories = props => (
     </StoriesContainer>
 );
 
-function getGroups() {
-    const arr = [
-        {
-            "text": "P.R.I.T.",
-            "value": "prit"
-        },
-        {
-            "text": "sexIT",
-            "value": "sexit"
-        },
-        {
-            "text": "styrIT",
-            "value": "styrit"
+function getGroups(groups) {
+    return Object.keys(groups).map(group => {
+        return {
+            text: groups[group],
+            value: group
         }
-    ]
-    return arr;
+    })
 }
 
-function getYears() {
-    return [
-        {
-            "text": "2020",
-            "value": 2020
-        },
-        {
-            "text": "2019",
-            "value": 2019
-        },
-        {
-            "text": "2018",
-            "value": 2018
-        },
-        {
-            "text": "2017",
-            "value": 2017
-        },
-        {
-            "text": "2016",
-            "value": 2016
+function getYears(years) {
+    return years.map(year => {
+        return {
+            text: year.toString(),
+            value: year
         }
-    ]
+    })
 }
 
-function getGroupYears() {
-    return [
-        {
-            "group": {
-                "name": "prit",
-                "displayName": "P.R.I.T."
-            },
-            "year": 2020
-        },
-        {
-            "group": {
-                "name": "sexit",
-                "displayName": "sexIT"
-            },
-            "year": 2017
-        },
-        {
-            "group": {
-                "name": "sexit",
-                "displayName": "sexIT"
-            },
-            "year": 2017
-        },
-        {
-            "group": {
-                "name": "nollkit",
-                "displayName": "nollKIT"
-            },
-            "year": 2016
-        },
-        {
-            "group": {
-                "name": "sexit",
-                "displayName": "sexIT"
-            },
-            "year": 2017
+function getGroupYears(groupYears, groups) {
+    return groupYears.map(groupYear => {
+        return {
+            year: groupYear.year,
+            group: getGroupFromName(groupYear.group, groups)
         }
-    ]
+    })
+}
+
+function getGroupFromName(groupName, groups) {
+    return {
+        name: groupName,
+        displayName: groups[groupName]
+    }
 }
 
 function formatChipLabel(data) {
