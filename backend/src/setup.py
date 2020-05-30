@@ -45,7 +45,8 @@ def setup_general_config():
          "config_type": long_string},
         {"key": "board_display_name", "value": "styrIT", "config_type": string},
         {"key": "minutes_after_deadline_to_mail", "value": "5", "config_type": number},
-        {"key": "check_for_deadline_frequency", "value": "5", "config_type": number}
+        {"key": "check_for_deadline_frequency", "value": "5", "config_type": number},
+        {"key": "possible_years_back_for_stories", "value": "5", "config_type": number}
     ]
 
     for config in config_list:

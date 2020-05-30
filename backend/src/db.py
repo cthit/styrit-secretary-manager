@@ -116,7 +116,7 @@ def drop_db():
     """)
 
 
-drop_db()
+# drop_db()
 db.generate_mapping(create_tables=True)
 
 
