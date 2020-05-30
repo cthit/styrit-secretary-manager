@@ -63,7 +63,7 @@ export const Stories = props => (
         <StoryChipContainer>
             {
                 getGroupYears(props.groupYears, props.groups).map(gy => (
-                    <DigitChip primary label={formatChipLabel(gy)} onDelete={() => alert("delete")} />
+                    <DigitChip primary label={formatChipLabel(gy)} onDelete={() => props.deleteGroupYear(gy)} />
                 ))
             }
         </StoryChipContainer>

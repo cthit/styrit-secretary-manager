@@ -1,4 +1,9 @@
-import {ON_ADD_STORY_GROUP_YEAR, ON_STORY_GROUP_SELECTED, ON_STORY_YEAR_SELECTED} from "./Stories.actions.view";
+import {
+    ON_ADD_STORY_GROUP_YEAR,
+    ON_STORY_GROUP_DELETED,
+    ON_STORY_GROUP_SELECTED,
+    ON_STORY_YEAR_SELECTED
+} from "./Stories.actions.view";
 
 const initialState = {
     years: [
@@ -54,6 +59,8 @@ export const StoriesReducer = (state = initialState, action) => {
             })
         case ON_ADD_STORY_GROUP_YEAR:
             return handleAddStoryGroupYear(state)
+        case ON_STORY_GROUP_DELETED:
+            return handleDeleteStoryGroupYear(state, action.payload.group, action.payload.year)
         default:
             return state;
     }
@@ -102,4 +109,24 @@ function handleAddStoryGroupYear(state) {
             errorMsg: ""
         }
     )
+}
+
+function handleDeleteStoryGroupYear(state, group, year) {
+    const oldGroupYears = state.groupYears;
+    let newGroupYears = []
+    oldGroupYears.forEach(groupYear => {
+        if (groupYear.group === group && groupYear.year === year) {
+            newGroupYears.push({
+                group: group,
+                year: year,
+                finished: true
+            })
+        } else {
+            newGroupYears.push(groupYear)
+        }
+    })
+
+    return Object.assign({}, state, {
+        groupYears: newGroupYears
+    })
 }
