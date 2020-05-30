@@ -15,6 +15,7 @@ def get_config_types():
             "type": config_type.type
         })
 
+    print("===SAVING {0} {1}===".format(len(arr), "ConfigTypes"))
     return arr
 
 
@@ -28,6 +29,8 @@ def get_configs():
             "value": config.value,
             "type": config.config_type.type
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "Configs"))
     return arr
 
 
@@ -40,6 +43,8 @@ def get_groups():
             "name": group.name,
             "display_name": group.display_name
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "Groups"))
     return arr
 
 @db_session
@@ -56,6 +61,8 @@ def get_meetings():
             "meeting_no": meeting.meeting_no,
             "check_for_deadline": meeting.check_for_deadline
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "Meetings"))
     return arr
 
 
@@ -69,6 +76,8 @@ def get_group_meetings():
             "meeting": str(meeting.meeting.id),
             "code": str(meeting.code)
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "GroupMeetings"))
     return arr
 
 
@@ -81,6 +90,8 @@ def get_tasks():
             "name": task.name,
             "display_name": task.display_name
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "Tasks"))
     return arr
 
 
@@ -94,6 +105,8 @@ def get_group_meeting_tasks():
             "meeting": str(group_meeting_task.group.meeting.id),
             "task": group_meeting_task.task.name
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "GroupMeetingTasks"))
     return arr
 
 
@@ -109,6 +122,8 @@ def get_group_meeting_files():
             "file_location": group_meeting_file.file_location,
             "date": str(group_meeting_file.date)
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "GroupMeetingFiles"))
     return arr
 
 
@@ -122,6 +137,8 @@ def get_archive_codes():
             "archive_location": archive.archive_location,
             "code": str(archive.code)
         })
+
+    print("===SAVING {0} {1}===".format(len(arr), "ArchiveCodes"))
     return arr
 
 
