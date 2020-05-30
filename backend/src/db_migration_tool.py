@@ -1,9 +1,12 @@
 import json
+from datetime import datetime
+from uuid import UUID
 
-from pony.orm import db_session
+from pony.orm import db_session, TransactionIntegrityError
 
 from src.db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, \
-    ArchiveCode
+    ArchiveCode, GroupYear
+
 
 @db_session
 def get_config_types():
@@ -20,7 +23,10 @@ def get_config_types():
 @db_session
 def restore_config_types(json):
     for config_type in json:
-        ConfigType(config_type["type"])
+        try:
+            ConfigType(type=config_type["type"])
+        except Exception:
+            pass
 
 
 @db_session
@@ -39,7 +45,7 @@ def get_configs():
 @db_session
 def restore_configs(json):
     for config in json:
-        Config(key=config["key"],value=Config["value"],type=config["type"])
+        Config(key=config["key"], value=config["value"], config_type=config["type"])
 
 
 @db_session
@@ -52,6 +58,14 @@ def get_groups():
             "display_name": group.display_name
         })
     return arr
+
+
+@db_session
+def restore_groups(json):
+    for group in json:
+        group = Group(name=group["name"], display_name=group["display_name"])
+        GroupYear(group=group, year="active", finished=False)
+
 
 @db_session
 def get_meetings():
@@ -68,6 +82,18 @@ def get_meetings():
             "check_for_deadline": meeting.check_for_deadline
         })
     return arr
+
+
+@db_session
+def restore_meetings(json):
+    for meeting in json:
+        Meeting(id=UUID(meeting["id"]), year=int(meeting["year"]), date=datetime(meeting["date"]), last_upload=datetime(meeting["last_upload"]), lp=int(meeting["lp"]), meeting_no=int(meeting["meeting_no"]), check_for_deadline=bool(meeting["check_for_deadline"]))
+
+
+#@db_session
+#def restore_meetings(json):
+#    for meeting in json:
+#        Meeting(id=meeting["id"], year=meeting["year"], date=meeting["date"], last_upload=meeting["last_upload"], lp=meeting["lp"], meeting_no=meeting["meeting_no"], check_for_deadlines=meeting["check_for_deadlines"])
 
 
 @db_session
@@ -162,3 +188,7 @@ def backup_db():
 def restore_to_new_db():
     with open(backup_location) as file:
         data = json.load(file)
+        restore_config_types(data["config_types"])
+        restore_configs(data["configs"])
+        restore_groups(data["groups"])
+        restore_meetings(data["meetings"])

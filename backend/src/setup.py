@@ -123,8 +123,8 @@ def setup_general_config():
         if Group.get(name=group["codeName"]) is None:
             new_group = Group(name=group["codeName"], display_name=group["displayName"])
 
-        if GroupYear.get(group=new_group, year="active") is None:
-            GroupYear(group=new_group, year="active", finished=False)
+            if GroupYear.get(group=new_group, year="active") is None:
+                GroupYear(group=new_group, year="active", finished=False)
 
     for task in tasks:
         if Task.get(name=task["codeName"]) is None:
