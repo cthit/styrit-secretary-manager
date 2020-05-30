@@ -11,23 +11,28 @@ const initialState = {
     groupYears: [
         {
             group: "prit",
-            year: 2020
+            year: 2020,
+            finished: false
         },
         {
             group: "sexit",
-            year: 2017
+            year: 2017,
+            finished: false
         },
         {
             group: "styrit",
-            year: 2017
+            year: 2017,
+            finished: false
         },
         {
             group: "nollkit",
-            year: 2016
+            year: 2016,
+            finished: true
         },
         {
             group: "fanbarerit",
-            year: 2017
+            year: 2017,
+            finished: true
         }
     ],
     selectedGroup: null,
@@ -56,28 +61,44 @@ export const StoriesReducer = (state = initialState, action) => {
 
 function handleAddStoryGroupYear(state) {
     // Make sure that this group is not already in the list!
-    let exists = false;
-    state.groupYears.forEach(groupYear => {
+    const groupYears = state.groupYears;
+    let newGroupYears = [];
+    let found = false;
+    let finished = true;
+    groupYears.forEach(groupYear => {
         if (groupYear.group === state.selectedGroup && groupYear.year === state.selectedYear) {
-            exists = true;
+            found = true;
+            if (groupYear.finished) {
+                newGroupYears.push({
+                    group: groupYear.group,
+                    year: groupYear.year,
+                    finished: false
+                })
+            } else {
+                finished = false;
+            }
+        } else {
+            newGroupYears.push(groupYear)
         }
     })
 
-    if (exists) {
-        // The group / year is already in the list.
+    if (found && !finished) {
+        // The group / year is already in the list and is not finished.
         return Object.assign({}, state, {
             errorMsg: "Group / year already selected!"
         })
     }
 
+    if (!found) {
+        newGroupYears.push({
+            group: state.selectedGroup,
+            year: state.selectedYear,
+            finished: false
+        })
+    }
+
     return Object.assign({}, state, {
-            groupYears: [
-                ...state.groupYears,
-                {
-                    group: state.selectedGroup,
-                    year: state.selectedYear
-                }
-            ],
+            groupYears: newGroupYears,
             errorMsg: ""
         }
     )

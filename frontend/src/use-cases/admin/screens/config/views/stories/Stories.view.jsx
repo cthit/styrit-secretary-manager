@@ -96,12 +96,16 @@ function getYears(years) {
 }
 
 function getGroupYears(groupYears, groups) {
-    return groupYears.map(groupYear => {
-        return {
-            year: groupYear.year,
-            group: getGroupFromName(groupYear.group, groups)
+    let arr = []
+    groupYears.forEach(groupYear => {
+        if (groupYear.finished === false) {
+            arr.push({
+                year: groupYear.year,
+                group: getGroupFromName(groupYear.group, groups)
+            })
         }
     })
+    return arr;
 }
 
 function getGroupFromName(groupName, groups) {
