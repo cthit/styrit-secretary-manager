@@ -5,6 +5,7 @@ from pony.orm import db_session
 from src.db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, \
     ArchiveCode
 
+date_format = "%Y-%m-%d %H:%M:%S"
 
 @db_session
 def get_config_types():
@@ -55,8 +56,8 @@ def get_meetings():
         arr.append({
             "id": str(meeting.id),
             "year": meeting.year,
-            "date": str(meeting.date),
-            "last_upload": str(meeting.last_upload),
+            "date": meeting.date.strftime(date_format),
+            "last_upload": meeting.last_upload.strftime(date_format),
             "lp": meeting.lp,
             "meeting_no": meeting.meeting_no,
             "check_for_deadline": meeting.check_for_deadline
@@ -120,7 +121,7 @@ def get_group_meeting_files():
             "meeting": str(group_meeting_file.group_task.group.meeting.id),
             "task": group_meeting_file.group_task.task.name,
             "file_location": group_meeting_file.file_location,
-            "date": str(group_meeting_file.date)
+            "date": group_meeting_file.date.strftime(date_format)
         })
 
     print("===SAVING {0} {1}===".format(len(arr), "GroupMeetingFiles"))
