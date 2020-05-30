@@ -39,8 +39,8 @@ def get_data_for_code(code):
 
     return {
         "group": {
-            "codeName": group_meeting.group.name,
-            "displayName": group_meeting.group.display_name
+            "codeName": group_meeting.group.group.name,
+            "displayName": group_meeting.group.group.display_name
         },
         "study_period": group_meeting.meeting.lp,
         "year": group_meeting.meeting.year,

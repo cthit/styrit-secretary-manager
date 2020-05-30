@@ -18,7 +18,7 @@ def get_config_for_meeting(meeting):
                 tasks[task.name] = []
 
             tasks[task.name].append({
-                "name": group_meeting.group.name,
+                "name": group_meeting.group.group.name,
                 "code": str(group_meeting.code)
             })
 

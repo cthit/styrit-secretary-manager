@@ -36,9 +36,9 @@ def get_mail_from_code(code, group, meeting):
     last_turnin_date = last_upload.strftime("%d/%m")
 
     date = meeting.date.replace(tzinfo=pytz.utc).astimezone(se_timezone)
-    mail_to = group.name + Config["group_email_domain"].value
+    mail_to = group.group.name + Config["group_email_domain"].value
 
-    # Setup the message that will be sent to the different groups
+    # Setup the message that wil(l be sent to the different groups
     msg = Config["mail_to_groups_message"].value
     frontend_url = Config["frontend_url"].value
     document_template_url = Config["document_template_url"].value
@@ -46,7 +46,7 @@ def get_mail_from_code(code, group, meeting):
     board_display_name = Config["board_display_name"].value
     board_email = Config["board_email"].value
 
-    msg = msg.format(group.display_name, date.day, date.month, last_turnin_time, last_turnin_date,
+    msg = msg.format(group.group.display_name, date.day, date.month, last_turnin_time, last_turnin_date,
                      tasks, frontend_url, code, document_template_url,
                      secretary_email, board_display_name, board_email)
 

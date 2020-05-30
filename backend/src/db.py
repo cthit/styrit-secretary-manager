@@ -209,7 +209,8 @@ def validate_meeting(meeting_json):
                     found = False
                     if group_meeting is None:
                         group = Group[task["name"]]
-                        group_meeting = GroupMeeting(group=group, meeting=meeting)
+                        group_year = GroupYear.get(group=group, year="active")
+                        group_meeting = GroupMeeting(group=group_year, meeting=meeting)
                     else:
                         # The task is valid, check if it has an entry in the db
                         for db_task in db_tasks:
