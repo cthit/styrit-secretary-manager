@@ -66,7 +66,8 @@ def get_config():
     config["groups"] = groups
 
     tasks = []
-    task_list = orm.select((task.name, task.display_name) for task in Task)
+    # We don't want the berattelser as they are handled separately
+    task_list = orm.select((task.name, task.display_name) for task in Task if task.name != "vberattelse" and task.name != "eberattelse")
     for name, d_name in task_list:
         tasks.append({
             "name": name,
