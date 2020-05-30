@@ -29,6 +29,8 @@ def restore_config_types(json):
             ConfigType(type=config_type["type"])
         except Exception:
             pass
+    arr = ConfigType.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "ConfigTypes"))
 
 
 @db_session
@@ -50,6 +52,8 @@ def get_configs():
 def restore_configs(json):
     for config in json:
         Config(key=config["key"], value=config["value"], config_type=config["type"])
+    arr = Config.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "Configs"))
 
 
 @db_session
@@ -71,6 +75,8 @@ def restore_groups(json):
     for group in json:
         group = Group(name=group["name"], display_name=group["display_name"])
         GroupYear(group=group, year="active", finished=False)
+    arr = Group.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "Groups"))
 
 
 @db_session
@@ -97,12 +103,14 @@ def restore_meetings(json):
     for meeting in json:
         id = UUID(meeting["id"])
         year = int(meeting["year"])
-        date = datetime.strptime(meeting["date"], "%Y-%m-%d %H:%M:%S")
-        last_upload = datetime.strptime(meeting["last_upload"], "%Y-%m-%d %H:%M:%S")
+        date = datetime.strptime(meeting["date"], date_format)
+        last_upload = datetime.strptime(meeting["last_upload"], date_format)
         lp = int(meeting["lp"])
         meeting_no = int(meeting["meeting_no"])
         check_for_deadline = bool(meeting["check_for_deadline"])
         Meeting(id=id, year=year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no, check_for_deadline=check_for_deadline)
+    arr = Meeting.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "Meetings"))
 
 
 
@@ -126,6 +134,8 @@ def restore_group_meetings(json):
     for group_meeting in json:
         group_year = GroupYear.get(group=group_meeting["group"], year="active")
         GroupMeeting(group=group_year, meeting=UUID(group_meeting["meeting"]), code=UUID(group_meeting["code"]))
+    arr = GroupMeeting.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "GroupMeetings"))
 
 
 @db_session
@@ -146,6 +156,8 @@ def get_tasks():
 def restore_tasks(json):
     for task in json:
         Task(name=task["name"], display_name=task["display_name"])
+    arr = Task.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "Tasks"))
 
 
 @db_session
@@ -170,6 +182,8 @@ def restore_group_meeting_tasks(json):
         meeting = UUID(group_meeting_task["meeting"])
         group_meeting = GroupMeeting.get(group=group, meeting=meeting)
         GroupMeetingTask(group=group_meeting, task=group_meeting_task["task"])
+    arr = GroupMeetingTask.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "GroupMeetingTasks"))
 
 
 @db_session
@@ -195,8 +209,10 @@ def restore_group_meeting_files(json):
         group_year = GroupYear.get(group=group_meeting_file["group"], year="active")
         group_meeting = GroupMeeting.get(group=group_year, meeting=UUID(group_meeting_file["meeting"]))
         group_task = GroupMeetingTask.get(group=group_meeting, task=group_meeting_file["task"])
-        date = datetime.strptime(group_meeting_file["date"], "%Y-%m-%d %H:%M:%S.%f")
+        date = datetime.strptime(group_meeting_file["date"], date_format)
         GroupMeetingFile(group_task=group_task, file_location=group_meeting_file["file_location"], date=date)
+    arr = GroupMeetingFile.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "GroupMeetingFile"))
 
 
 @db_session
@@ -217,7 +233,12 @@ def get_archive_codes():
 @db_session
 def restore_archive_codes(json):
     for archive_code in json:
-        ArchiveCode(meeting=UUID(archive_code["meeting"], archive_location=archive_code["archive_location"], code=UUID(archive_code["code"])))
+        meeting = UUID(archive_code["meeting"])
+        loc = archive_code["archive_location"]
+        code = UUID(archive_code["code"])
+        ArchiveCode(meeting=meeting, archive_location=loc, code=code)
+    arr = ArchiveCode.select()[:]
+    print("===RESTORED {0} {1}===".format(len(arr), "ArchiveCodes"))
 
 
 backup_location = "src/archives/db_backup.json"
@@ -243,7 +264,19 @@ def backup_db():
     save_tables_to_json()
 
 
+@db_session
+def is_restored():
+    groups = Group.select()[:]
+    if len(groups) > 0:
+        return True
+    return False
+
+
 def restore_to_new_db():
+    if is_restored():
+        return
+
+    print("=== RESTORING DB FROM FILE ===")
     with open(backup_location) as file:
         data = json.load(file)
         restore_config_types(data["config_types"])
