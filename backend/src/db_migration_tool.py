@@ -87,13 +87,15 @@ def get_meetings():
 @db_session
 def restore_meetings(json):
     for meeting in json:
-        Meeting(id=UUID(meeting["id"]), year=int(meeting["year"]), date=datetime(meeting["date"]), last_upload=datetime(meeting["last_upload"]), lp=int(meeting["lp"]), meeting_no=int(meeting["meeting_no"]), check_for_deadline=bool(meeting["check_for_deadline"]))
+        id = UUID(meeting["id"])
+        year = int(meeting["year"])
+        date = datetime.strptime(meeting["date"], "%Y-%m-%d %H:%M:%S")
+        last_upload = datetime.strptime(meeting["last_upload"], "%Y-%m-%d %H:%M:%S")
+        lp = int(meeting["lp"])
+        meeting_no = int(meeting["meeting_no"])
+        check_for_deadline = bool(meeting["check_for_deadline"])
+        Meeting(id=id, year=year, date=date, last_upload=last_upload, lp=lp, meeting_no=meeting_no, check_for_deadline=check_for_deadline)
 
-
-#@db_session
-#def restore_meetings(json):
-#    for meeting in json:
-#        Meeting(id=meeting["id"], year=meeting["year"], date=meeting["date"], last_upload=meeting["last_upload"], lp=meeting["lp"], meeting_no=meeting["meeting_no"], check_for_deadlines=meeting["check_for_deadlines"])
 
 
 @db_session
@@ -110,6 +112,13 @@ def get_group_meetings():
 
 
 @db_session
+def restore_group_meetings(json):
+    for group_meeting in json:
+        group_year = GroupYear.get(group=group_meeting["group"], year="active")
+        GroupMeeting(group=group_year, meeting=UUID(group_meeting["meeting"]), code=UUID(group_meeting["code"]))
+
+
+@db_session
 def get_tasks():
     arr = []
     tasks = Task.select()
@@ -119,6 +128,12 @@ def get_tasks():
             "display_name": task.display_name
         })
     return arr
+
+
+@db_session
+def restore_tasks(json):
+    for task in json:
+        Task(name=task["name"], display_name=task["display_name"])
 
 
 @db_session
@@ -132,6 +147,15 @@ def get_group_meeting_tasks():
             "task": group_meeting_task.task.name
         })
     return arr
+
+
+@db_session
+def restore_group_meeting_tasks(json):
+    for group_meeting_task in json:
+        group = GroupYear.get(group=group_meeting_task["group"], year="active")
+        meeting = UUID(group_meeting_task["meeting"])
+        group_meeting = GroupMeeting.get(group=group, meeting=meeting)
+        GroupMeetingTask(group=group_meeting, task=group_meeting_task["task"])
 
 
 @db_session
@@ -150,6 +174,16 @@ def get_group_meeting_files():
 
 
 @db_session
+def restore_group_meeting_files(json):
+    for group_meeting_file in json:
+        group_year = GroupYear.get(group=group_meeting_file["group"], year="active")
+        group_meeting = GroupMeeting.get(group=group_year, meeting=UUID(group_meeting_file["meeting"]))
+        group_task = GroupMeetingTask.get(group=group_meeting, task=group_meeting_file["task"])
+        date = datetime.strptime(group_meeting_file["date"], "%Y-%m-%d %H:%M:%S.%f")
+        GroupMeetingFile(group_task=group_task, file_location=group_meeting_file["file_location"], date=date)
+
+
+@db_session
 def get_archive_codes():
     arr = []
     archive_codes = ArchiveCode.select()
@@ -160,6 +194,12 @@ def get_archive_codes():
             "code": str(archive.code)
         })
     return arr
+
+
+@db_session
+def restore_archive_codes(json):
+    for archive_code in json:
+        ArchiveCode(meeting=UUID(archive_code["meeting"], archive_location=archive_code["archive_location"], code=UUID(archive_code["code"])))
 
 
 backup_location = "src/archives/db_backup.json"
@@ -192,3 +232,8 @@ def restore_to_new_db():
         restore_configs(data["configs"])
         restore_groups(data["groups"])
         restore_meetings(data["meetings"])
+        restore_group_meetings(data["group_meetings"])
+        restore_tasks(data["tasks"])
+        restore_group_meeting_tasks(data["group_meeting_tasks"])
+        restore_group_meeting_files(data["group_meeting_files"])
+        restore_archive_codes(data["archive_codes"])
