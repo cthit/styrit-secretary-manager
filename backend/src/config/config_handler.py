@@ -112,7 +112,7 @@ def get_group_years():
     for group_year in group_years:
         list.append({
             "group": group_year.group.name,
-            "year": group_year.year,
+            "year": int(group_year.year),
             "finished": group_year.finished
         })
     return list
