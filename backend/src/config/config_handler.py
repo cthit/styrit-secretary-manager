@@ -1,7 +1,29 @@
+from datetime import datetime
+
 from pony import orm
 from pony.orm import db_session
 
 from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
+
+
+@db_session
+def get_config():
+    config = {}
+    config["meetings"] = get_meetings()
+    config["general"] = get_config_list()
+    config["groups"] = get_groups()
+    config["tasks"] = get_tasks()
+    config["years"] = get_years()
+    return config
+
+
+@db_session
+def get_meetings():
+    meeting_list = Meeting.select(lambda m: True)
+    meeting_jsons = []
+    for meeting in meeting_list:
+        meeting_jsons.append(get_config_for_meeting(meeting))
+    return meeting_jsons
 
 
 @db_session
@@ -33,28 +55,19 @@ def get_config_for_meeting(meeting):
 
     return m_js
 
-
 @db_session
-def get_config():
-    config = {}
-
-    meeting_list = Meeting.select(lambda m: True)
-    meeting_jsons = []
-    for meeting in meeting_list:
-        meeting_jsons.append(get_config_for_meeting(meeting))
-
-    config["meetings"] = meeting_jsons
-
-    # Add divider
+def get_config_list():
     config_list = []
 
     # Add general config
     conf = list(orm.select((config.key, config.value, config.config_type.type) for config in Config))
     for key, value, type in conf:
         config_list.append({"key": key, "value": value, "type": type})
+    return config_list
 
-    config["general"] = config_list
 
+@db_session
+def get_groups():
     groups = []
     group_list = orm.select((group.name, group.display_name) for group in Group)
     for name, d_name in group_list:
@@ -62,9 +75,11 @@ def get_config():
             "name": name,
             "display_name": d_name
         })
+    return groups
 
-    config["groups"] = groups
 
+@db_session
+def get_tasks():
     tasks = []
     # We don't want the berattelser as they are handled separately
     task_list = orm.select((task.name, task.display_name) for task in Task if task.name != "vberattelse" and task.name != "eberattelse")
@@ -73,9 +88,15 @@ def get_config():
             "name": name,
             "display_name": d_name
         })
+    return tasks
 
-    config["tasks"] = tasks
-    return config
+
+@db_session
+def get_years():
+    years = []
+    curr_year = datetime.utcnow().year
+    years_back = int(Config["possible_years_back_for_stories"].value)
+    return years
 
 
 @db_session
