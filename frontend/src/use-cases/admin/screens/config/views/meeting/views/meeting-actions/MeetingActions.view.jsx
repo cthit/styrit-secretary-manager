@@ -4,7 +4,7 @@ import {
     MeetingActionButtonContainer,
     MeetingActionsContainer
 } from "./MeetingActions.styles.view.jsx.";
-import { DigitText, useDigitDialog } from "@cthit/react-digit-components";
+import {DigitText, useDigitDialog} from "@cthit/react-digit-components";
 
 export const MeetingActions = props => {
     const [openSendMailDialog] = useDigitDialog({
@@ -43,6 +43,20 @@ export const MeetingActions = props => {
                                      onClick={() => openSendMailDialog({description: "Don't forget to save before sending the mail(s)!"})}>
                     Send mails for meeting
                 </MeetingActionButton>
+            </MeetingActionButtonContainer>
+
+            {/* STORIES SEND MAIL */}
+            <MeetingActionButtonContainer>
+                <DigitText.Text
+                    text={"Sends the emails to collect the stories for this meeting (see history config)"} />
+                <MeetingActionButton variant={"contained"} color={"secondary"}
+                                     onClick={() => openSendMailDialog({
+                                         title: "Are you sure you want to send the story email(s)?",
+                                         description: "Don't forget to save (on the history config!) before sending the mail(s)!"
+                                     })}>
+                    Send emails to story groups (see history page)
+                </MeetingActionButton>
+
             </MeetingActionButtonContainer>
 
             {/* START DEADLINE CHECK */}

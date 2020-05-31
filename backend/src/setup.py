@@ -43,6 +43,16 @@ def setup_general_config():
          "value": "\nHej {0}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {1} i lp {2} är nu nådd.\nFör "
                   "nedladdning av dessa dokument klicka på denna länk: {3}\n\nVid frågor, kontakta sekreteraren på {4}",
          "config_type": long_string},
+        {"key": "mail_for_stories_subject", "value": "Dokument för sektionsmöte {0} lp {1}", "config_type": string},
+        {"key": "mail_for_stories",
+         "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in "
+                  "följande dokument: {5}\nDetta görs på sidan: {6}\nAnge koden: {7}\n\nMall för vissa "
+                  "dokument finns här: {8}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n "
+                  "Kontakta revisorerna på revisorer@chalmers.it för mer information om vad som behövs göras innan ni "
+                  "kan bli rekomenderade att bli ansvarsbefriade.\n\nOm ni har "
+                  "några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} "
+                  ": ).",
+         "config_type": long_string},
         {"key": "board_display_name", "value": "styrIT", "config_type": string},
         {"key": "minutes_after_deadline_to_mail", "value": "5", "config_type": number},
         {"key": "check_for_deadline_frequency", "value": "5", "config_type": number},

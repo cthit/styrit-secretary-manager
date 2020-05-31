@@ -200,6 +200,21 @@ class MailRes(Resource):
         threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
 
 
+class MailStoriesRes(Resource):
+    def put(self):
+        data = request.get_json()
+        r, code = validate_password(data)
+        if code != 200:
+            return r, code
+
+        try:
+            id = data["id"]
+        except Exception as e:
+            return {"error": "Missing meeting id"}, 400
+
+        threading.Thread(target=mail_handler.send_story_emails, args=(id,)).start()
+
+
 # If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
     @db_session
@@ -287,6 +302,7 @@ api.add_resource(CodeRes, '/api/code/<string:code>')
 api.add_resource(MeetingResource, "/api/admin/config/meeting")
 api.add_resource(AdminResource, "/api/admin/config")
 api.add_resource(PasswordResource, "/api/admin")
+api.add_resource(MailStoriesRes, "/api/mail/stories")
 api.add_resource(MailRes, "/api/mail")
 api.add_resource(TimerResource, "/api/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/api/archive/<string:id>")

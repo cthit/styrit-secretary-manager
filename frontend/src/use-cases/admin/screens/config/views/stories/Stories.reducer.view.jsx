@@ -4,7 +4,9 @@ import {
     ON_SAVE_STORIES_SUCCESSFUL,
     ON_STORY_GROUP_DELETED,
     ON_STORY_GROUP_SELECTED,
-    ON_STORY_YEAR_SELECTED
+    ON_STORY_YEAR_SELECTED,
+    SEND_STORY_EMAILS_FAILED,
+    SEND_STORY_EMAILS_SUCCESSFUL
 } from "./Stories.actions.view";
 import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
 
@@ -20,36 +22,31 @@ const initialState = {
 export const StoriesReducer = (state = initialState, action) => {
     switch (action.type) {
         case SUBMIT_PASSWORD_SUCCESSFUL:
-            return Object.assign({}, state, {
+            return assignState(state, {
                 years: action.payload.data.years,
-                groupYears: action.payload.data.groupYears,
-                errorMsg: "",
-                saveError: ""
+                groupYears: action.payload.data.groupYears
             })
         case ON_STORY_GROUP_SELECTED:
-            return Object.assign({}, state, {
-                selectedGroup: action.payload.group,
-                errorMsg: "",
-                saveError: ""
+            return assignState(state, {
+                selectedGroup: action.payload.group
             })
         case ON_STORY_YEAR_SELECTED:
-            return Object.assign({}, state, {
-                selectedYear: action.payload.year,
-                errorMsg: "",
-                saveError: ""
+            return assignState(state, {
+                selectedYear: action.payload.year
             })
         case ON_SAVE_STORIES_SUCCESSFUL:
-            return Object.assign({}, state, {
+            return assignState(state, {
                 groupYears: action.payload.groupYears,
                 years: action.payload.years,
-                errorMsg: "",
-                saveError: ""
-            });
+            })
         case ON_SAVE_STORIES_ERROR:
-            return Object.assign({}, state, {
-                errorMsg: "",
+            return assignState(state, {
                 saveError: action.payload.message
-            });
+            })
+        case SEND_STORY_EMAILS_SUCCESSFUL:
+            return assignState(state)
+        case SEND_STORY_EMAILS_FAILED:
+            return assignState(state)
         case ON_ADD_STORY_GROUP_YEAR:
             return handleAddStoryGroupYear(state)
         case ON_STORY_GROUP_DELETED:
@@ -58,6 +55,15 @@ export const StoriesReducer = (state = initialState, action) => {
             return state;
     }
 };
+
+function assignState(state, data = {}) {
+    const completeData = Object.assign({}, {
+        errorMsg: "",
+        saveError: ""
+    }, data)
+
+    return Object.assign({}, state, completeData)
+}
 
 function handleAddStoryGroupYear(state) {
     // Should be == because it can also be undefined.
@@ -89,9 +95,8 @@ function handleAddStoryGroupYear(state) {
 
     if (found && !finished) {
         // The group / year is already in the list and is not finished.
-        return Object.assign({}, state, {
-            errorMsg: "Group / year already selected!",
-            saveError: ""
+        return assignState(state, {
+            errorMsg: "Group / year already selected!"
         })
     }
 
@@ -103,12 +108,9 @@ function handleAddStoryGroupYear(state) {
         })
     }
 
-    return Object.assign({}, state, {
-            groupYears: newGroupYears,
-            errorMsg: "",
-            saveError: ""
-        }
-    )
+    return assignState(state, {
+        groupYears: newGroupYears
+    })
 }
 
 function handleDeleteStoryGroupYear(state, group, year) {
@@ -126,9 +128,7 @@ function handleDeleteStoryGroupYear(state, group, year) {
         }
     })
 
-    return Object.assign({}, state, {
-        groupYears: newGroupYears,
-        errorMsg: "",
-        saveError: ""
+    return assignState(state, {
+        groupYears: newGroupYears
     })
 }

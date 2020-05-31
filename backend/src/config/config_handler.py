@@ -143,7 +143,33 @@ def handle_incoming_meeting_config(config):
         return 400, {"error": "Invalid meeting format\n " + msg}
 
     # Probably return the data for the new meeting?
+    update_story_group_meetings(meeting)
     return 200, get_config_for_meeting(meeting)
+
+
+@db_session
+def get_story_groups():
+    return orm.select(gy for gy in GroupYear if gy.year != "active")[:]
+
+
+@db_session
+def update_story_group_meetings(meeting : Meeting):
+    """
+    Makes sure that all the story groups have meeting ids for the given meeting.
+    :param meeting: the meeting to update for.
+    :return group_meetings, a list of the GroupMeetings for the given story_groups
+    """
+    story_groups = get_story_groups()
+    group_meetings = []
+    for story_group in story_groups:
+        group = story_group.group.name
+        year = story_group.year
+        meeting = meeting.id
+        group_meeting = GroupMeeting.get(group=group, year=year, meeting=meeting)
+        if group_meeting is None:
+            group_meeting = GroupMeeting(group=group, year=year, meeting=meeting)
+        group_meetings.append(group_meeting)
+    return group_meetings
 
 
 def handle_incoming_stories_config(config):

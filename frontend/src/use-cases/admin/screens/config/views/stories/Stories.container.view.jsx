@@ -6,7 +6,8 @@ import {
     deleteStoryGroupYear,
     saveStories,
     selectedStoryGroup,
-    selectedStoryYear
+    selectedStoryYear,
+    sendStoryEmails
 } from "./Stories.action-creators.view";
 
 const mapStateToProps = state => ({
@@ -25,7 +26,8 @@ const mapDispatchToProps = dispatch => ({
     selectYear: year => dispatch(selectedStoryYear(year)),
     addGroupYear: () => dispatch(addStoryGroupYear()),
     deleteGroupYear: groupYear => dispatch(deleteStoryGroupYear(groupYear)),
-    save: (groupYears, password) => dispatch(saveStories(groupYears, password))
+    save: (groupYears, password) => dispatch(saveStories(groupYears, password)),
+    sendStoryEmails: password => dispatch(sendStoryEmails(password))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stories);

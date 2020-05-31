@@ -8,83 +8,96 @@ import {
     StoryChipContainer,
     VSpace
 } from "./Stories.styles.view.jsx.";
-import {DigitAutocompleteSelectSingle, DigitButton, DigitChip, DigitText} from "@cthit/react-digit-components";
+import {
+    DigitAutocompleteSelectSingle,
+    DigitButton,
+    DigitChip,
+    DigitText,
+    useDigitDialog
+} from "@cthit/react-digit-components";
 
-export const Stories = props => (
-    <StoriesContainer>
-        <DigitText.Heading5 text={"Ansvarsbefrielse"} />
-        <VSpace />
-        <StoriesSelectContainer>
-            <DigitAutocompleteSelectSingle
-                upperLabel={"Group"}
-                outlined
-                options={getGroups(props.groups)}
-                onChange={e => {
-                    props.selectGroup(e.target.value)
-                }}
-                value={props.selectedGroup}
-                noOptionsText={"No Groups"}
-            />
-            <HSpace />
-            <DigitAutocompleteSelectSingle
-                upperLabel={"Year"}
-                outlined
-                options={getYears(props.years)}
-                onChange={e => {
-                    props.selectYear(e.target.value)
-                }}
-                value={props.selectedYear}
-                noOptionsText={"No Years"}
-            />
-            <HSpace />
-            <DigitButton
-                raised
-                primary
-                size={{width: "200px"}}
-                text={"Add committee year"}
-                // Should be == as we want to check both for null and undefined
-                disabled={props.selectedGroup == null || props.selectedYear == null}
-                onClick={() => {
-                    props.addGroupYear()
-                }}
-            />
-        </StoriesSelectContainer>
-        {
-            props.errorMsg && (
-                <div>
-                    <SmallVSpace />
-                    <DigitText.Text text={props.errorMsg} color="error" bold />
-                </div>
-            )
+export const Stories = props => {
+    const [openSendMailDialog] = useDigitDialog({
+        title: "Are you sure you want to send the mail(s)?",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        onConfirm: () => props.sendStoryEmails(props.password),
+        onCancel: () => {
         }
-        <SmallVSpace />
-        <HLine />
-        <VSpace />
-        <StoryChipContainer>
+    })
+
+    return (
+        <StoriesContainer>
+            <DigitText.Heading5 text={"Ansvarsbefrielse"} />
+            <VSpace />
+            <StoriesSelectContainer>
+                <DigitAutocompleteSelectSingle
+                    upperLabel={"Group"}
+                    outlined
+                    options={getGroups(props.groups)}
+                    onChange={e => {
+                        props.selectGroup(e.target.value)
+                    }}
+                    value={props.selectedGroup}
+                    noOptionsText={"No Groups"}
+                />
+                <HSpace />
+                <DigitAutocompleteSelectSingle
+                    upperLabel={"Year"}
+                    outlined
+                    options={getYears(props.years)}
+                    onChange={e => {
+                        props.selectYear(e.target.value)
+                    }}
+                    value={props.selectedYear}
+                    noOptionsText={"No Years"}
+                />
+                <HSpace />
+                <DigitButton
+                    raised
+                    primary
+                    size={{width: "200px"}}
+                    text={"Add committee year"}
+                    // Should be == as we want to check both for null and undefined
+                    disabled={props.selectedGroup == null || props.selectedYear == null}
+                    onClick={() => {
+                        props.addGroupYear()
+                    }}
+                />
+            </StoriesSelectContainer>
             {
-                getGroupYears(props.groupYears, props.groups).map(gy => (
-                    <DigitChip key={gy.group.name + "_" + gy.year} primary label={formatChipLabel(gy)}
-                               onDelete={() => props.deleteGroupYear(gy)} />
-                ))
+                props.errorMsg && (
+                    <div>
+                        <SmallVSpace />
+                        <DigitText.Text text={props.errorMsg} color="error" bold />
+                    </div>
+                )
             }
-        </StoryChipContainer>
-        <VSpace />
-        <HLine />
-        {
-            props.saveError && (
-                <DigitText.Text text={props.saveError} color="error" bold />
-            )
-        }
-        <DigitButton raised primary
-                     onClick={() => props.save(props.groupYears, props.password)}
-                     text={"Save stories settings"}
-                     size={{width: "400px"}} />
-        <DigitText.Text
-            text={"Requests that these groups send in their economic and activity stories for their year (Verksamhetsberättelser / ekonomiska berättelser)"} />
-        <DigitButton disabled={getSendEmailsDisabled(props.groupYears)} text={"Send emails to above groups"} raised
-                     primary size={{width: "400px"}} />
-    </StoriesContainer>
-);
+            <SmallVSpace />
+            <HLine />
+            <VSpace />
+            <StoryChipContainer>
+                {
+                    getGroupYears(props.groupYears, props.groups).map(gy => (
+                        <DigitChip key={gy.group.name + "_" + gy.year} primary label={formatChipLabel(gy)}
+                                   onDelete={() => props.deleteGroupYear(gy)} />
+                    ))
+                }
+            </StoryChipContainer>
+            <VSpace />
+            <HLine />
+            {
+                props.saveError && (
+                    <DigitText.Text text={props.saveError} color="error" bold />
+                )
+            }
+            <DigitButton raised primary
+                         onClick={() => props.save(props.groupYears, props.password)}
+                         text={"Save stories settings"}
+                         size={{width: "400px"}} />
+        </StoriesContainer>
+    );
+}
 
 function getGroups(groups) {
     return Object.keys(groups).map(group => {
