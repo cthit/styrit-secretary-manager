@@ -11,7 +11,8 @@ export const MeetingActions = props => {
         title: "Are you sure you want to send the mail(s)?",
         confirmButtonText: "Yes",
         cancelButtonText: "No",
-        onConfirm: () => props.sendEmails(props.meeting.id, props.password),
+        onConfirm: () => {
+        },
         onCancel: () => {
         }
     })
@@ -19,7 +20,8 @@ export const MeetingActions = props => {
         title: "Are you sure you want to start the deadline check for this meeting?",
         confirmButtonText: "Yes",
         cancelButtonText: "No",
-        onConfirm: () => props.startDeadlineCheck(props.meeting.id, props.password),
+        onConfirm: () => {
+        },
         onCancel: () => {
         }
     })
@@ -30,6 +32,7 @@ export const MeetingActions = props => {
             {/* MEETING SAVE  */}
             <MeetingActionButtonContainer>
                 {props.errorMsg !== "" && <DigitText.Text bold text={props.errorMsg} color={"error"} />}
+                <DigitText.Text text={"Saves the settings for the selected meeting"} />
                 <MeetingActionButton variant={"contained"} color={"primary"}
                                      onClick={() => props.saveMeeting(props.meeting, props.groupTasks, props.tasks, props.password)}>
                     Save meeting settings
@@ -40,7 +43,15 @@ export const MeetingActions = props => {
             <MeetingActionButtonContainer>
                 <DigitText.Text text={"Sends the emails for this meeting"} />
                 <MeetingActionButton variant={"contained"} color={"secondary"}
-                                     onClick={() => openSendMailDialog({description: "Don't forget to save before sending the mail(s)!"})}>
+                                     onClick={() => {
+                                         openSendMailDialog({
+                                                 description: "Don't forget to save before sending the mail(s)!",
+                                                 onConfirm: () => {
+                                                     props.sendEmails(props.meeting.id, props.password)
+                                                 }
+                                             }
+                                         )
+                                     }}>
                     Send mails for meeting
                 </MeetingActionButton>
             </MeetingActionButtonContainer>
@@ -52,7 +63,8 @@ export const MeetingActions = props => {
                 <MeetingActionButton variant={"contained"} color={"secondary"}
                                      onClick={() => openSendMailDialog({
                                          title: "Are you sure you want to send the story email(s)?",
-                                         description: "Don't forget to save (on the history config!) before sending the mail(s)!"
+                                         description: "Don't forget to save (on the history config!) before sending the mail(s)!",
+                                         onConfirm: () => props.sendStoryEmails(props.meeting.id, props.password)
                                      })}>
                     Send emails to story groups (see history page)
                 </MeetingActionButton>
@@ -64,7 +76,11 @@ export const MeetingActions = props => {
                 <DigitText.Text
                     text={"Flags that the deadline should be checked for, when the deadline is met an email will be sent to the board with the archive"} />
                 <MeetingActionButton variant={"contained"} color={"secondary"}
-                                     onClick={() => openStartDeadlineCheck({})}>
+                                     onClick={() => openStartDeadlineCheck({
+                                         onConfirm: () => {
+                                             props.startDeadlineCheck(props.meeting.id, props.password)
+                                         }
+                                     })}>
                     Start deadline check
                 </MeetingActionButton>
             </MeetingActionButtonContainer>

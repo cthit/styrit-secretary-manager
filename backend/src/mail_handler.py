@@ -9,7 +9,7 @@ from pony.orm import db_session
 from db import GroupMeeting, GroupMeetingTask, Config
 
 from src.config.config_handler import update_story_group_meetings
-from src.db import GroupYear, Meeting
+from src.db import GroupYear, Meeting, Group
 
 
 @db_session
@@ -81,14 +81,15 @@ def send_mails(meeting):
 
 
 @db_session
-def get_story_group_email(group : GroupYear):
+def get_story_group_email_address(group : GroupYear):
     domain = Config["group_email_domain"].value
-    return group.name + group.year[-2:] + domain
+    return group.group.name + group.year[-2:] + domain
 
 
 @db_session
-def get_story_group_name(group : GroupYear):
-    return group.display_name + group.year[-2:]
+def get_story_group_name(group_name : str, year: str):
+    g = Group.get(name=group_name)
+    return g.display_name + year[-2:]
 
 
 @db_session
@@ -96,14 +97,15 @@ def get_meeting_from_id(id : UUID):
     meeting = Meeting.get(id=id)
     if Meeting is None:
         return None, 404
-    return meeting
+    return meeting, 200
 
 
+@db_session
 def get_story_group_email(group: GroupMeeting):
     meeting = group.meeting
     code = group.code
     tasks = get_tasks_for_group(group)
-    name = get_story_group_name(group.group)
+    name = get_story_group_name(group.group.group.name, group.group.year)
 
     # Convert the datetime to the swedish timezone
     se_timezone = pytz.timezone(pytz.country_timezones["SE"][0])
@@ -125,7 +127,7 @@ def get_story_group_email(group: GroupMeeting):
                      tasks, frontend_url, code, document_template_url,
                      secretary_email, board_display_name, board_email)
 
-    mail_to = get_story_group_email(group.group)
+    mail_to = get_story_group_email_address(group.group)
     raw_subject = Config["mail_for_stories_subject"].value
     subject = raw_subject.format(date.day, date.month)
     return mail_to, msg, subject
@@ -143,6 +145,7 @@ def send_story_emails(meeting_id):
         send_email(mail_to, subject, msg)
 
 
+@db_session
 def send_email(mail_to, subject, msg):
     gotify_auth_key = environ.get("gotify_auth_key", "123abc")
     auth = "pre-shared: " + str(gotify_auth_key)

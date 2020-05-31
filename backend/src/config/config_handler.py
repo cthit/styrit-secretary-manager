@@ -5,7 +5,7 @@ from pony.orm import db_session
 
 from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
 
-from src.db import GroupYear, validate_stories
+from src.db import GroupYear, validate_stories, create_group_meeting
 
 
 def get_config():
@@ -149,11 +149,11 @@ def handle_incoming_meeting_config(config):
 
 @db_session
 def get_story_groups():
-    return orm.select(gy for gy in GroupYear if gy.year != "active")[:]
+    return orm.select(gy for gy in GroupYear if gy.year != "active" and gy.finished is False)[:]
 
 
 @db_session
-def update_story_group_meetings(meeting : Meeting):
+def update_story_group_meetings(meeting: Meeting):
     """
     Makes sure that all the story groups have meeting ids for the given meeting.
     :param meeting: the meeting to update for.
@@ -162,12 +162,7 @@ def update_story_group_meetings(meeting : Meeting):
     story_groups = get_story_groups()
     group_meetings = []
     for story_group in story_groups:
-        group = story_group.group.name
-        year = story_group.year
-        meeting = meeting.id
-        group_meeting = GroupMeeting.get(group=group, year=year, meeting=meeting)
-        if group_meeting is None:
-            group_meeting = GroupMeeting(group=group, year=year, meeting=meeting)
+        group_meeting = create_group_meeting(meeting.id, story_group.group.name, story_group.year)
         group_meetings.append(group_meeting)
     return group_meetings
 

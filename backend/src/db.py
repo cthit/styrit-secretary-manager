@@ -159,6 +159,17 @@ class UserError(Exception):
 
 
 @db_session
+def create_group_meeting(meeting_id, group_name, year):
+    meeting = Meeting.get(id=meeting_id)
+    group = Group.get(name=group_name)
+    group_year = GroupYear.get(group=group, year=year)
+    group_meeting = GroupMeeting.get(meeting=meeting_id, group=group_year)
+    if group_meeting is None:
+        group_meeting = GroupMeeting(meeting=meeting, group=group_year)
+    return group_meeting
+
+
+@db_session
 def validate_meeting(meeting_json):
     try:
         id = meeting_json["id"]
@@ -199,9 +210,7 @@ def validate_meeting(meeting_json):
                         lambda group: group.group.group.name == task["name"] and group.meeting == meeting)
                     found = False
                     if group_meeting is None:
-                        group = Group[task["name"]]
-                        group_year = GroupYear.get(group=group, year="active")
-                        group_meeting = GroupMeeting(group=group_year, meeting=meeting)
+                        group_meeting = create_group_meeting(meeting.id, task["name"], "active")
                     else:
                         # The task is valid, check if it has an entry in the db
                         for db_task in db_tasks:

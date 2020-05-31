@@ -1,9 +1,16 @@
 import {postMeeting} from "../../../../../../../../api/post.Meting.api";
-import {MEETING_SAVE_FAILED, MEETING_SAVE_SUCCESSFUL, WAITING_FOR_RESULT} from "./MeetingActions.actions.view";
+import {
+    MEETING_SAVE_FAILED,
+    MEETING_SAVE_SUCCESSFUL,
+    SEND_STORY_EMAILS_FAILED,
+    SEND_STORY_EMAILS_SUCCESSFUL,
+    WAITING_FOR_RESULT
+} from "./MeetingActions.actions.view";
 import {handleError} from "../../../../../../../../common/functions/handleError";
 import {putEmails} from "../../../../../../../../api/put.Emails.api";
 import {postDeadline} from "../../../../../../../../api/post.Deadline.api";
 import {postArchive} from "../../../../../../../../api/post.Archive.api";
+import {putStoryEmails} from "../../../../../../../../api/put.StoryEmails.api";
 
 export function saveMeeting(meeting, groupTasks, allTasks, password) {
     meeting.groups_tasks = getGroupTasksToSend(allTasks, groupTasks);
@@ -64,6 +71,20 @@ function getGroupTasksToSend(allTasks, groupTasks) {
     return meetingGTs;
 }
 
+export function sendStoryEmails(password, meeting) {
+    return dispatch => {
+        dispatch({
+            type: WAITING_FOR_RESULT
+        })
+        putStoryEmails(meeting, password)
+            .then(response => {
+                dispatch(onSendStoryEmailsSuccessful(response))
+            }).catch(error => {
+            dispatch(onSendStoryEmailsFailed(error))
+        })
+    }
+}
+
 function onMeetingSavedAccepted(response) {
 
     // Modify the data here.
@@ -105,3 +126,18 @@ function onArchiveSuccessful(response) {
 function onArchiveError(error) {
     alert("Failed to download archive, '" + handleError(error, "").payload.message + "'");
 }
+
+function onSendStoryEmailsSuccessful(response) {
+    alert("Send story emails successful!");
+    return {
+        type: SEND_STORY_EMAILS_SUCCESSFUL,
+        payload: {},
+        error: false
+    }
+}
+
+function onSendStoryEmailsFailed(error) {
+    alert("Failed sending emails for stories")
+    return handleError(error, SEND_STORY_EMAILS_FAILED)
+}
+

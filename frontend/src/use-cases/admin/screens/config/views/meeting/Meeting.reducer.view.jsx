@@ -1,17 +1,17 @@
-import { MEETING_SELECTED, NEW_MEETING, NO_MEETING_SELECTED } from "./Meeting.actions.view";
-import { SUBMIT_PASSWORD_SUCCESSFUL } from "../../../password/Password.actions.screen";
+import {MEETING_SELECTED, NEW_MEETING, NO_MEETING_SELECTED} from "./Meeting.actions.view";
+import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
 import {
     MEETING_DATE_UPDATED,
     MEETING_LAST_UPLOAD_UPDATED,
     MEETING_NUMBER_UPDATED,
     MEETING_STUDY_PERIOD_UPDATED
 } from "./views/general-meeting/GeneralMeeting.actions.view";
-import { ALL_GROUPS_TASK_CHANGED, GROUP_TASK_CHANGED } from "./views/meeting-table/MeetingTable.actions.view";
-import { TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME } from "./TaskModes";
-import { MEETING_SAVE_SUCCESSFUL } from "./views/meeting-actions/MeetingActions.actions.view";
+import {ALL_GROUPS_TASK_CHANGED, GROUP_TASK_CHANGED} from "./views/meeting-table/MeetingTable.actions.view";
+import {TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME} from "./TaskModes";
+import {MEETING_SAVE_SUCCESSFUL} from "./views/meeting-actions/MeetingActions.actions.view";
 
 const initialState = {
-    meetings: null,
+    meetings: {},
     groups: {}, // A dictionary from a group name to a group display name.
     tasks: {}, // A dictionary from a task name to a task display name.
     selectedMeetingID: 0,

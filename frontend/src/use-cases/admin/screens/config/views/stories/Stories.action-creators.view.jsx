@@ -4,14 +4,11 @@ import {
     ON_SAVE_STORIES_SUCCESSFUL,
     ON_STORY_GROUP_DELETED,
     ON_STORY_GROUP_SELECTED,
-    ON_STORY_YEAR_SELECTED,
-    SEND_STORY_EMAILS_FAILED,
-    SEND_STORY_EMAILS_SUCCESSFUL
+    ON_STORY_YEAR_SELECTED
 } from "./Stories.actions.view";
 import {WAITING_FOR_RESULT} from "../meeting/views/meeting-actions/MeetingActions.actions.view";
 import {postStories} from "../../../../../../api/post.Stories.api";
 import {handleError} from "../../../../../../common/functions/handleError";
-import {putStoryEmails} from "../../../../../../api/put.StoryEmails.api";
 
 export function selectedStoryGroup(group) {
     return {
@@ -70,22 +67,9 @@ export function saveStories(storyGroups, password) {
     };
 }
 
-export function sendStoryEmails(password) {
-    return dispatch => {
-        dispatch({
-            type: WAITING_FOR_RESULT
-        })
-        putStoryEmails(password)
-            .then(response => {
-                dispatch(onSendStoryEmailsSuccessful(response))
-            }).catch(error => {
-            dispatch(onSendStoryEmailsFailed(error))
-        })
-    }
-}
-
 function onStoriesSavedSuccessful(response) {
     // Make sure our data is up to date with the server
+    alert("Successfully saved stories!");
     return {
         type: ON_SAVE_STORIES_SUCCESSFUL,
         payload: {
@@ -97,19 +81,6 @@ function onStoriesSavedSuccessful(response) {
 }
 
 function onStoriesSavedError(error) {
-    console.log(error.response)
+    alert("Failed to save stories");
     return handleError(error, ON_SAVE_STORIES_ERROR);
-}
-
-function onSendStoryEmailsSuccessful(response) {
-    alert("Send story emails successful!");
-    return {
-        type: SEND_STORY_EMAILS_SUCCESSFUL,
-        payload: {},
-        error: false
-    }
-}
-
-function onSendStoryEmailsFailed(error) {
-    return handleError(error, SEND_STORY_EMAILS_FAILED)
 }

@@ -4,9 +4,7 @@ import {
     ON_SAVE_STORIES_SUCCESSFUL,
     ON_STORY_GROUP_DELETED,
     ON_STORY_GROUP_SELECTED,
-    ON_STORY_YEAR_SELECTED,
-    SEND_STORY_EMAILS_FAILED,
-    SEND_STORY_EMAILS_SUCCESSFUL
+    ON_STORY_YEAR_SELECTED
 } from "./Stories.actions.view";
 import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
 
@@ -43,10 +41,6 @@ export const StoriesReducer = (state = initialState, action) => {
             return assignState(state, {
                 saveError: action.payload.message
             })
-        case SEND_STORY_EMAILS_SUCCESSFUL:
-            return assignState(state)
-        case SEND_STORY_EMAILS_FAILED:
-            return assignState(state)
         case ON_ADD_STORY_GROUP_YEAR:
             return handleAddStoryGroupYear(state)
         case ON_STORY_GROUP_DELETED:

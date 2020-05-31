@@ -1,9 +1,9 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 
 import Admin from "./Admin";
 
 const mapStateToProps = state => ({
-    meetings: state.root.MeetingReducer.meetings
+    passwordVerified: state.root.PasswordReducer.passwordVerified
 });
 
 const mapDispatchToProps = dispatch => ({});
