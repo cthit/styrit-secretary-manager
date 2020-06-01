@@ -207,7 +207,7 @@ def validate_meeting(meeting_json):
             for task in tasks[type]:
                 if validate_task(task):
                     group_meeting = GroupMeeting.get(
-                        lambda group: group.group.group.name == task["name"] and group.meeting == meeting)
+                        lambda group: group.group.group.name == task["name"] and group.meeting == meeting and group.group.year == "active")
                     found = False
                     if group_meeting is None:
                         group_meeting = create_group_meeting(meeting.id, task["name"], "active")
