@@ -59,14 +59,14 @@ export const MeetingActions = props => {
             {/* STORIES SEND MAIL */}
             <MeetingActionButtonContainer>
                 <DigitText.Text
-                    text={"Sends the emails to collect the stories for this meeting (see history config)"} />
+                    text={"Sends the emails to collect the stories for this meeting (see stories)"} />
                 <MeetingActionButton variant={"contained"} color={"secondary"}
                                      onClick={() => openSendMailDialog({
                                          title: "Are you sure you want to send the story email(s)?",
                                          description: "Don't forget to save (on the history config!) before sending the mail(s)!",
                                          onConfirm: () => props.sendStoryEmails(props.meeting.id, props.password)
                                      })}>
-                    Send emails to story groups (see history page)
+                    Send emails to story groups (see stories)
                 </MeetingActionButton>
 
             </MeetingActionButtonContainer>
