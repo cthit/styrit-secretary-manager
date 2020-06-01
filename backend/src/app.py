@@ -5,7 +5,7 @@ import web_handler
 
 import end_date_handler
 
-from src.db_migration_tool import backup_db
+from db_migration_tool import backup_db
 
 if __name__ == '__main__':
     setup.setup_db()
