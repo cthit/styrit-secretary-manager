@@ -2,7 +2,7 @@ from pony.orm import commit
 
 from db import *
 
-from src.db import GroupYear, Group, Task, Config, ConfigType
+from db import GroupYear, Group, Task, Config, ConfigType
 
 
 @db_session

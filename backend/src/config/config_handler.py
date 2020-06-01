@@ -5,7 +5,7 @@ from pony.orm import db_session
 
 from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
 
-from src.db import GroupYear, validate_stories, create_group_meeting
+from db import GroupYear, validate_stories, create_group_meeting
 
 
 def get_config():

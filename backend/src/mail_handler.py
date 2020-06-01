@@ -8,8 +8,8 @@ from pony.orm import db_session
 
 from db import GroupMeeting, GroupMeetingTask, Config
 
-from src.config.config_handler import update_story_group_meetings
-from src.db import GroupYear, Meeting, Group
+from config.config_handler import update_story_group_meetings
+from db import GroupYear, Meeting, Group
 
 
 @db_session
