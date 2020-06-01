@@ -2,7 +2,7 @@ import json
 
 from pony.orm import db_session
 
-from src.db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, \
+from db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, \
     ArchiveCode
 
 date_format = "%Y-%m-%d %H:%M:%S"
