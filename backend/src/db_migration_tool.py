@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pony.orm import db_session, TransactionIntegrityError
 
-from db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, ArchiveCode
+from db import ConfigType, Config, Group, GroupMeeting, Meeting, GroupMeetingFile, GroupMeetingTask, Task, ArchiveCode, GroupYear
 
 date_format = "%Y-%m-%d %H:%M:%S"
 
