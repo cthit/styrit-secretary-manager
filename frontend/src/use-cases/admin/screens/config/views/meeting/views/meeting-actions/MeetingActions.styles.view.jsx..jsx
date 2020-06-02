@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Button } from "@material-ui/core";
 
 
 export const MeetingActionsContainer = styled.div`
@@ -18,6 +17,3 @@ export const MeetingActionButtonContainer = styled.div`
   padding-top: 10px;
 `;
 
-export const MeetingActionButton = styled(Button)`
-  width: 100%;
-`

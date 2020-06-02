@@ -5,7 +5,8 @@ import {
     MEETING_STUDY_PERIOD_UPDATED
 } from "./GeneralMeeting.actions.view";
 
-export function onMeetingDateUpdated(newDate) {
+export function onMeetingDateUpdated(e) {
+    const newDate = e.target.value;
     let date = newDate.toISOString();
 
     return {
@@ -17,7 +18,8 @@ export function onMeetingDateUpdated(newDate) {
     };
 }
 
-export function onMeetingLastUploadUpdated(newDate) {
+export function onMeetingLastUploadUpdated(e) {
+    const newDate = e.target.value;
     let date = newDate.toISOString();
 
     return {

@@ -7,8 +7,7 @@ import {
 } from "./Meeting.styles.view";
 import GeneralMeeting from "./views/general-meeting/";
 import MeetingTable from "./views/meeting-table";
-import { Button } from "@material-ui/core";
-import { DigitAutocompleteSelectSingle } from "@cthit/react-digit-components";
+import { DigitAutocompleteSelectSingle, DigitButton } from "@cthit/react-digit-components";
 
 export const Meeting = props => (
     <MeetingContainer>
@@ -25,10 +24,7 @@ export const Meeting = props => (
                 noOptionsText={"Create a meeting"}
             />
             <NewButtonContainer>
-                {/* text="New Meeting" raised primary /> */}
-                <Button variant="contained" color="primary" onClick={props.onNewMeeting}>
-                    New Meeting
-                </Button>
+                <DigitButton raised primary onClick={props.onNewMeeting} text={"New Meeting"} size={{height: "40px"}} />
             </NewButtonContainer>
         </MeetingSelectContainer>
         {props.selectedMeeting && (

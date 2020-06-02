@@ -1,55 +1,42 @@
 import React from "react";
 import { GeneralMeetingInfoContainer, GeneralMeetingInfoGroup } from "./GeneralMeeting.styles.view";
 import NumbersTextField from "../../../../../../../../common/elements/NumberTextField";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns"; // choose your lib
+import { DigitDateAndTimePicker } from "@cthit/react-digit-components";
 
 export const GeneralMeeting = props => (
-    <GeneralMeetingInfoGroup>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <GeneralMeetingInfoGroup>
             <GeneralMeetingInfoContainer>
-                <DateTimePicker
-                    autoOk
-                    ampm={false}
-                    inputVariant="outlined"
-                    label="Date"
-                    value={formatDate(props.meeting.date)}
-                    onChange={props.onDateUpdated}
-                    format="dd/MM/yyyy HH:mm"
+                <DigitDateAndTimePicker upperLabel="Date"
+                                        value={formatDate(props.meeting.date)}
+                                        outlined
+                                        onChange={props.onDateUpdated} />
+            </GeneralMeetingInfoContainer>
+            <GeneralMeetingInfoContainer>
+                <DigitDateAndTimePicker upperLabel="Deadline"
+                                        value={formatDate(props.meeting.last_upload_date)}
+                                        outlined
+                                        onChange={props.onDeadlineUpdated} />
+            </GeneralMeetingInfoContainer>
+            <GeneralMeetingInfoContainer>
+                <NumbersTextField
+                    label="Study period"
+                    value={props.meeting.lp}
+                    onChange={props.onStudyPeriodUpdated}
                 />
             </GeneralMeetingInfoContainer>
             <GeneralMeetingInfoContainer>
-                <DateTimePicker
-                    autoOk
-                    ampm={false}
-                    inputVariant="outlined"
-                    label="Deadline"
-                    value={formatDate(props.meeting.last_upload_date)}
-                    onChange={props.onDeadlineUpdated}
-                    format="dd/MM/yyyy HH:mm"
+                <NumbersTextField
+                    label="Meeting number"
+                    value={props.meeting.meeting_no}
+                    onChange={props.onMeetingNumberUpdated}
                 />
             </GeneralMeetingInfoContainer>
-        </MuiPickersUtilsProvider>
-        <GeneralMeetingInfoContainer>
-            <NumbersTextField
-                label="Study period"
-                value={props.meeting.lp}
-                onChange={props.onStudyPeriodUpdated}
-            />
-        </GeneralMeetingInfoContainer>
-        <GeneralMeetingInfoContainer>
-            <NumbersTextField
-                label="Meeting number"
-                value={props.meeting.meeting_no}
-                onChange={props.onMeetingNumberUpdated}
-            />
-        </GeneralMeetingInfoContainer>
-    </GeneralMeetingInfoGroup>
-);
+        </GeneralMeetingInfoGroup>
+    )
+;
 
 export default GeneralMeeting;
 
 function formatDate(date) {
-    let dateD = new Date(date);
-    return dateD.toISOString();
+    return new Date(date);
 }

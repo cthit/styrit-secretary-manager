@@ -1,9 +1,9 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { DigitTextField } from "@cthit/react-digit-components";
 
 export const NumbersTextField = props => (
-    <TextField
-        label={props.label}
+    <DigitTextField
+        upperLabel={props.label}
         value={props.value}
         onChange={event => {
             const val = event.target.value;
@@ -11,7 +11,7 @@ export const NumbersTextField = props => (
                 props.onChange(parseInt(val, 10));
             }
         }}
-        variant="outlined"
+        outlined
     />
 );
 

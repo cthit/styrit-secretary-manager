@@ -7,9 +7,9 @@ import {
     StyledTableRow
 } from "./MeetingTable.styles.view";
 import { MeetingTableContainer } from "../../Meeting.styles.view";
-import { Checkbox } from "@material-ui/core";
 import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
 import MeetingActions from "../meeting-actions/MeetingActions.container.view";
+import { DigitCheckbox } from "@cthit/react-digit-components";
 
 export const MeetingTable = props => {
     const {groups, tasks, tasksMode, groupTasks} = props;
@@ -23,7 +23,7 @@ export const MeetingTable = props => {
                         {Object.keys(tasks).map(task => (
                             <StyledTableCell align="right" key={task}>
                                 {tasks[task]}
-                                <Checkbox
+                                <DigitCheckbox
                                     checked={tasksMode[task] === TASK_MODE_ALL}
                                     indeterminate={
                                         tasksMode[task] === TASK_MODE_SOME
@@ -45,7 +45,7 @@ export const MeetingTable = props => {
                             </StyledTableCell>
                             {Object.keys(tasks).map(task => (
                                 <StyledTableCell align="right" key={task}>
-                                    <Checkbox
+                                    <DigitCheckbox
                                         checked={getChecked(
                                             group,
                                             task,

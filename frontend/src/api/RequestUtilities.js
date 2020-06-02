@@ -22,7 +22,7 @@ export function getRequest(endpoint, includePassword = true) {
         // Do something here!
     }
 
-    return axios.get(path + endpoint, { headers });
+    return axios.get(path + endpoint, {headers});
 }
 
 export function postRequest(endpoint, data, includePassword = true) {
@@ -37,7 +37,7 @@ export function postRequest(endpoint, data, includePassword = true) {
         // Do something here!
     }
 
-    return axios.post(path + endpoint, data, { headers });
+    return axios.post(path + endpoint, data, {headers});
 }
 
 export function putRequest(endpoint, data, includePassword = true) {
@@ -52,5 +52,5 @@ export function putRequest(endpoint, data, includePassword = true) {
         // Do something here!
     }
 
-    return axios.put(path + endpoint, data, { headers });
+    return axios.put(path + endpoint, data, {headers});
 }

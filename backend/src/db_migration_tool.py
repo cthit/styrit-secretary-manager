@@ -276,14 +276,18 @@ def restore_to_new_db():
         return
 
     print("=== RESTORING DB FROM FILE ===")
-    with open(backup_location) as file:
-        data = json.load(file)
-        restore_config_types(data["config_types"])
-        restore_configs(data["configs"])
-        restore_groups(data["groups"])
-        restore_meetings(data["meetings"])
-        restore_group_meetings(data["group_meetings"])
-        restore_tasks(data["tasks"])
-        restore_group_meeting_tasks(data["group_meeting_tasks"])
-        restore_group_meeting_files(data["group_meeting_files"])
-        restore_archive_codes(data["archive_codes"])
+
+    try:
+        with open(backup_location) as file:
+            data = json.load(file)
+            restore_config_types(data["config_types"])
+            restore_configs(data["configs"])
+            restore_groups(data["groups"])
+            restore_meetings(data["meetings"])
+            restore_group_meetings(data["group_meetings"])
+            restore_tasks(data["tasks"])
+            restore_group_meeting_tasks(data["group_meeting_tasks"])
+            restore_group_meeting_files(data["group_meeting_files"])
+            restore_archive_codes(data["archive_codes"])
+    except FileNotFoundError:
+        print("=== No backup file found ===")
