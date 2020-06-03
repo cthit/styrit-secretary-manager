@@ -6,10 +6,10 @@ import {
     StyledTableHead,
     StyledTableRow
 } from "./MeetingTable.styles.view";
-import { MeetingTableContainer } from "../../Meeting.styles.view";
-import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
+import {MeetingTableContainer} from "../../Meeting.styles.view";
+import {TASK_MODE_ALL, TASK_MODE_SOME} from "../../TaskModes";
 import MeetingActions from "../meeting-actions/MeetingActions.container.view";
-import { DigitCheckbox } from "@cthit/react-digit-components";
+import {DigitCheckbox} from "@cthit/react-digit-components";
 
 export const MeetingTable = props => {
     const {groups, tasks, tasksMode, groupTasks} = props;
@@ -24,10 +24,8 @@ export const MeetingTable = props => {
                             <StyledTableCell align="right" key={task}>
                                 {tasks[task]}
                                 <DigitCheckbox
-                                    checked={tasksMode[task] === TASK_MODE_ALL}
-                                    indeterminate={
-                                        tasksMode[task] === TASK_MODE_SOME
-                                    }
+                                    value={tasksMode[task] === TASK_MODE_ALL || tasksMode[task] === TASK_MODE_SOME}
+                                    primary
                                     onChange={() => {
                                         props.onAllTaskClicked(task)
                                     }}
@@ -46,7 +44,8 @@ export const MeetingTable = props => {
                             {Object.keys(tasks).map(task => (
                                 <StyledTableCell align="right" key={task}>
                                     <DigitCheckbox
-                                        checked={getChecked(
+                                        primary
+                                        value={getChecked(
                                             group,
                                             task,
                                             groupTasks
