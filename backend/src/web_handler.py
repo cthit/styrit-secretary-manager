@@ -1,9 +1,12 @@
+import base64
 import datetime
 import os
 import threading
+import urllib
 import uuid
 
-from flask import Flask, request, current_app, send_from_directory, send_file, redirect
+import requests
+from flask import Flask, request, current_app, send_from_directory, send_file, redirect, session, Response
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -13,11 +16,69 @@ import end_date_handler
 import mail_handler
 
 from config import config_handler
+from config.gamma_config import SECRET_KEY, GAMMA_ME_URI, GAMMA_CLIENT_ID, GAMMA_REDIRECT_URI, GAMMA_AUTHORIZATION_URI, \
+    GAMMA_TOKEN_URI, GAMMA_SECRET
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
+
 
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+
+# ==================
+# Gamma stuff
+
+app.secret_key = SECRET_KEY
+
+class GammaMeRes(Resource):
+    def get(self):
+        if "token" in session:
+            headers = {
+                "Authorization": "Bearer " + session["token"]
+            }
+            res = requests.get(GAMMA_ME_URI, headers=headers)
+            if res.ok:
+                return Response(response=res, status=200)
+
+        response_type = "response_type=code"
+        client_id = "client_id=" + GAMMA_CLIENT_ID
+        redirect_uri = "redirect_uri=" +  GAMMA_REDIRECT_URI
+
+        response = GAMMA_AUTHORIZATION_URI + "?" + response_type + "&" + client_id + "&" + redirect_uri
+        return response, 401
+
+
+class GammaAuthRes(Resource):
+    def post(self):
+
+        data = {
+            'grant_type': 'authorization_code',
+            'client_id': GAMMA_CLIENT_ID,
+            'redirect_uri': GAMMA_REDIRECT_URI,
+            'code': request.get_json()["code"]
+        }
+
+        c = GAMMA_CLIENT_ID + ":" + GAMMA_SECRET
+
+        encodedBytes = base64.b64encode(c.encode("utf-8"))
+        encodedStr = str(encodedBytes, "utf-8")
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + encodedStr
+        }
+
+        res = requests.post(GAMMA_TOKEN_URI + "?" + urllib.parse.urlencode(data), headers=headers)
+        if res.ok:
+            access_token = res.json()["access_token"]
+            session["token"] = access_token
+            return "", 200
+        else:
+            return "", 500
+
+
+# ==================
 
 
 @db_session
@@ -307,6 +368,10 @@ api.add_resource(MailRes, "/api/mail")
 api.add_resource(TimerResource, "/api/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/api/archive/<string:id>")
 api.add_resource(StoriesRes, "/api/admin/config/stories")
+
+# Gamma
+api.add_resource(GammaMeRes, "/api/me")
+api.add_resource(GammaAuthRes, "/api/auth")
 
 
 def host():

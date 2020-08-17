@@ -1,7 +1,7 @@
 import React from "react";
-import { DigitButton, DigitDesign } from "@cthit/react-digit-components";
-import { Route, Switch } from "react-router-dom";
-import { HeaderButtonsContainer } from "./HeaderButtons.styles.";
+import {DigitButton, DigitDesign} from "@cthit/react-digit-components";
+import {Route, Switch} from "react-router-dom";
+import {HeaderButtonsContainer} from "./HeaderButtons.styles.";
 
 export const HeaderButtons = props => (
     <HeaderButtonsContainer>
