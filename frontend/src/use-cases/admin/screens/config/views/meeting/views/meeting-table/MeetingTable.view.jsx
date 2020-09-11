@@ -72,9 +72,6 @@ export const MeetingTable = props => {
 };
 
 function getChecked(group, task, groupTasks) {
-    if (group === "armit") {
-        console.log("Should be true no? ", group, task, groupTasks, groupTasks[group].tasks.includes(task));
-    }
     return groupTasks[group].tasks.includes(task);
 }
 

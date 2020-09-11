@@ -7,7 +7,10 @@ import {
 } from "./Meeting.styles.view";
 import GeneralMeeting from "./views/general-meeting/";
 import MeetingTable from "./views/meeting-table";
-import { DigitAutocompleteSelectSingle, DigitButton } from "@cthit/react-digit-components";
+import {
+    DigitAutocompleteSelectSingle,
+    DigitButton
+} from "@cthit/react-digit-components";
 
 export const Meeting = props => (
     <MeetingContainer>
@@ -24,13 +27,14 @@ export const Meeting = props => (
                 noOptionsText={"Create a meeting"}
             />
             <NewButtonContainer>
-                <DigitButton raised primary onClick={props.onNewMeeting} text={"New Meeting"} size={{height: "40px"}} />
+                <DigitButton raised primary onClick={props.onNewMeeting}
+                             text={"New Meeting"} size={{height: "40px"}}/>
             </NewButtonContainer>
         </MeetingSelectContainer>
         {props.selectedMeeting && (
             <MeetingConfContainer>
-                <GeneralMeeting />
-                <MeetingTable />
+                <GeneralMeeting/>
+                <MeetingTable/>
             </MeetingConfContainer>
         )}
     </MeetingContainer>
@@ -42,9 +46,9 @@ function getMeetingSelectArray(meetings) {
     let meetingArr = [];
     Object.keys(meetings).forEach(id => {
         meetingArr.push({
-            text: getName(meetings[id]),
-            value: id
-        })
+                            text: getName(meetings[id]),
+                            value: id
+                        })
     })
     return meetingArr;
 }

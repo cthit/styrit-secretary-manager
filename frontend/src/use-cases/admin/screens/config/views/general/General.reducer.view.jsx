@@ -13,11 +13,12 @@ export const GeneralReducer = (state = initialState, action) => {
             let newConfigs = [];
             state.configs.forEach(config => {
                 if (action.payload.config === config.key) {
-                    newConfigs.push({
-                                        key: config.key,
-                                        value: action.payload.value,
-                                        type: config.type
-                                    })
+                    newConfigs.push(
+                        {
+                            key: config.key,
+                            value: action.payload.value,
+                            type: config.type
+                        })
                 } else {
                     newConfigs.push(config);
                 }

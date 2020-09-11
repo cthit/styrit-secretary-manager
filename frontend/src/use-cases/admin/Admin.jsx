@@ -4,9 +4,9 @@ import Config from "./screens/config";
 
 export const Admin = props => {
     if (props.passwordVerified) {
-        return <Config />;
+        return <Config/>;
     } else {
-        return <Password />;
+        return <Password/>;
     }
 };
 
