@@ -170,6 +170,17 @@ def create_group_meeting(meeting_id, group_name, year):
 
 
 @db_session
+def create_group_meeting_task(meeting_id, group_name, year, task_name):
+    group_year = GroupYear.get(group=group_name, year=year)
+    task = Task[task_name]
+    group = GroupMeeting.get(meeting=meeting_id, group=group_year)
+    group_meeting_task = GroupMeetingTask.get(group=group, task=task)
+    if group_meeting_task is None:
+        group_meeting_task = GroupMeetingTask(group=group, task=task)
+    return group_meeting_task
+
+
+@db_session
 def validate_meeting(meeting_json):
     try:
         id = meeting_json["id"]

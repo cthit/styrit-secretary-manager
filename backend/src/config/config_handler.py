@@ -3,7 +3,7 @@ from datetime import datetime
 from pony import orm
 from pony.orm import db_session
 
-from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting
+from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting, create_group_meeting_task
 
 from db import GroupYear, validate_stories, create_group_meeting
 
@@ -163,6 +163,8 @@ def update_story_group_meetings(meeting: Meeting):
     group_meetings = []
     for story_group in story_groups:
         group_meeting = create_group_meeting(meeting.id, story_group.group.name, story_group.year)
+        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year, "vberattelse")
+        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year, "eberattelse")
         group_meetings.append(group_meeting)
     return group_meetings
 
