@@ -6,7 +6,7 @@ import HeaderButtons from "../common/views/headerbuttons";
 import {Route, Switch} from "react-router";
 import Admin from "../use-cases/admin";
 import {AppContainer, MainContainer} from "./App.styles.";
-import {Gamma} from "../common/gamma/Gamma";
+import {NotAuthorized} from "../use-cases/admin/screens/not-authorized/NotAuthorized";
 
 class App extends Component {
     constructor(props) {
@@ -17,19 +17,21 @@ class App extends Component {
     render() {
         return (
             <AppContainer>
-                <Gamma />
-                <DigitDialog />
-                <DebugHeader />
+                {/*<Gamma />*/}
+                <DigitDialog/>
+                <DebugHeader/>
                 <DigitHeader
                     dense
                     headerHeight="56px"
                     title="Dokumentinsamling"
-                    renderHeader={() => <HeaderButtons />}
+                    renderHeader={() => <HeaderButtons/>}
                     renderMain={() => (
                         <MainContainer>
                             <Switch>
-                                <Route path="/admin" component={Admin} />
-                                <Route path="/" component={Main} />
+                                <Route path="/auth/account/callback"
+                                       component={NotAuthorized}/>
+                                <Route path="/admin" component={Admin}/>
+                                <Route path="/" component={Main}/>
                             </Switch>
                         </MainContainer>
                     )}

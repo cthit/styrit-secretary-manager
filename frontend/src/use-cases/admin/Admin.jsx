@@ -1,12 +1,19 @@
 import React from "react";
-import Password from "./screens/password";
 import Config from "./screens/config";
+import {useGamma, useGammaMe} from "@cthit/react-digit-components";
+import {isVerified} from "../../common/functions/isAuthorized";
+import {NotAuthorized} from "./screens/not-authorized/NotAuthorized";
 
 export const Admin = props => {
-    if (props.passwordVerified) {
-        return <Config />;
+    useGamma()
+    const me = useGammaMe()
+    console.log("ME: ", me)
+
+    if (isVerified(me)) {
+        return <Config/>;
     } else {
-        return <Password />;
+        props.notAuthorized()
+        return <NotAuthorized/>
     }
 };
 

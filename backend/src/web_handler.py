@@ -3,10 +3,9 @@ import datetime
 import os
 import threading
 import urllib
-import uuid
 
 import requests
-from flask import Flask, request, current_app, send_from_directory, send_file, redirect, session, Response
+from flask import Flask, request, send_file, session, Response
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony import orm
@@ -14,22 +13,20 @@ from pony.orm import db_session
 
 import end_date_handler
 import mail_handler
-
 from config import config_handler
 from config.gamma_config import SECRET_KEY, GAMMA_ME_URI, GAMMA_CLIENT_ID, GAMMA_REDIRECT_URI, GAMMA_AUTHORIZATION_URI, \
     GAMMA_TOKEN_URI, GAMMA_SECRET
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 
-
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
 
 # ==================
 # Gamma stuff
 
 app.secret_key = SECRET_KEY
+
 
 class GammaMeRes(Resource):
     def get(self):
@@ -43,7 +40,7 @@ class GammaMeRes(Resource):
 
         response_type = "response_type=code"
         client_id = "client_id=" + GAMMA_CLIENT_ID
-        redirect_uri = "redirect_uri=" +  GAMMA_REDIRECT_URI
+        redirect_uri = "redirect_uri=" + GAMMA_REDIRECT_URI
 
         response = GAMMA_AUTHORIZATION_URI + "?" + response_type + "&" + client_id + "&" + redirect_uri
         return response, 401

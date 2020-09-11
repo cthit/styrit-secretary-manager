@@ -8,22 +8,27 @@ export const HeaderButtons = props => (
         <Switch>
             <Route
                 path="/admin"
-                component={() => (
-                    <DigitDesign.Link to={"/"}>
-                        <DigitButton raised secondary text={"Standard vy"} />
-                    </DigitDesign.Link>
-                )}
+                component={Admin}
             />
+            <Route
+                path="/auth/account/callback"
+                component={Admin}/>
             <Route
                 path="/"
                 component={() => (
                     <DigitDesign.Link to={"/admin"}>
-                        <DigitButton raised secondary text="Admin vy" />
+                        <DigitButton raised secondary text="Admin vy"/>
                     </DigitDesign.Link>
                 )}
             />
         </Switch>
     </HeaderButtonsContainer>
 );
+
+const Admin = () => (
+    <DigitDesign.Link to={"/"}>
+        <DigitButton raised secondary text={"Standard vy"}/>
+    </DigitDesign.Link>
+)
 
 export default HeaderButtons;
