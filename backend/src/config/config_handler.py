@@ -31,7 +31,7 @@ def get_meetings():
 @db_session
 def get_config_for_meeting(meeting):
     # Select all codes and tasks
-    groups = GroupMeeting.select(lambda group: group.meeting == meeting)
+    groups = GroupMeeting.select(lambda group: group.meeting == meeting and group.group.year == "active")
     tasks = {}
 
     for group_meeting in groups:

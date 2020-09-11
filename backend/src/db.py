@@ -198,6 +198,10 @@ def validate_meeting(meeting_json):
             raise UserError("invalid meeting number " + str(meeting_no))
 
         if id == "new":
+            meeting = Meeting.select(lambda m: m.year == date.year and m.lp == lp and m.meeting_no == meeting_no)[:]
+            if len(meeting) > 0:
+                return None, "A meeting already exists for year {0}, lp {1}, meeting number {2}".format(date.year, lp, meeting_no)
+
             # The meeting does not exist, we want to create the tasks for it
             meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp,
                               meeting_no=meeting_no, check_for_deadline=False)
