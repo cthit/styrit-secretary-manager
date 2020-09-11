@@ -2,42 +2,48 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./app";
-import { DigitProviders } from "@cthit/react-digit-components";
+import {DigitProviders} from "@cthit/react-digit-components";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { rootReducer } from "./app/App.reducer";
-import { Provider } from "react-redux";
-import { applyMiddleware, combineReducers, createStore } from "redux";
-import { unregister } from "./serviceWorker";
+import {rootReducer} from "./app/App.reducer";
+import {Provider} from "react-redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
+import {unregister} from "./serviceWorker";
 import logger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#3f51b5",
-            dark: "#002984",
-            light: "#757de8"
-        },
-        secondary: {
-            main: "#ffa500",
-            dark: "#c67600",
-            light: "#ffd64a"
+const theme = createMuiTheme(
+    {
+        palette: {
+            primary: {
+                main: "#3f51b5",
+                dark: "#002984",
+                light: "#757de8"
+            },
+            secondary: {
+                main: "#ffa500",
+                dark: "#c67600",
+                light: "#ffd64a"
+            }
         }
-    }
-});
+    });
 
 function getReducer(root) {
     return combineReducers({
-        root
-    })
+                               root
+                           })
 }
 
-const store = createStore(getReducer(rootReducer), applyMiddleware(logger, thunkMiddleware));
+let middleware = [thunkMiddleware]
+if (process.env.NODE_ENV !== "production") {
+    middleware.push(logger);
+}
+
+const store = createStore(getReducer(rootReducer), applyMiddleware(...middleware));
 
 ReactDOM.render(
     <Provider store={store}>
         <DigitProviders theme={theme}>
-            <App />
+            <App/>
         </DigitProviders>
     </Provider>,
     document.getElementById("root")
