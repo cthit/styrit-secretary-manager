@@ -129,7 +129,7 @@ def get_story_group_email(group: GroupMeeting):
 
     mail_to = get_story_group_email_address(group.group)
     raw_subject = Config["mail_for_stories_subject"].value
-    subject = raw_subject.format(date.day, date.month)
+    subject = raw_subject.format(meeting.meeting_no, meeting.lp)
     return mail_to, msg, subject
 
 
