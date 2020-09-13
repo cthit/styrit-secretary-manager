@@ -104,6 +104,10 @@ def setup_general_config():
         {
             "codeName": "styrit",
             "displayName": "styrIT"
+        },
+        {
+            "codeName": "equalit",
+            "displayName": "EqualIT"
         }
     ]
 
