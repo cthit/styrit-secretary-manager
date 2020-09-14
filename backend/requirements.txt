@@ -5,3 +5,4 @@ pony
 psycopg2
 requests
 python-dateutil
+pyjwt

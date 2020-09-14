@@ -6,7 +6,7 @@ import HeaderButtons from "../common/views/headerbuttons";
 import {Route, Switch} from "react-router";
 import Admin from "../use-cases/admin";
 import {AppContainer, MainContainer} from "./App.styles.";
-import {NotAuthorized} from "../use-cases/admin/screens/not-authorized/NotAuthorized";
+import {Gamma} from "../common/gamma/Gamma";
 
 class App extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class App extends Component {
     render() {
         return (
             <AppContainer>
-                {/*<Gamma />*/}
+                <Gamma/>
                 <DigitDialog/>
                 <DebugHeader/>
                 <DigitHeader
@@ -28,8 +28,6 @@ class App extends Component {
                     renderMain={() => (
                         <MainContainer>
                             <Switch>
-                                <Route path="/auth/account/callback"
-                                       component={NotAuthorized}/>
                                 <Route path="/admin" component={Admin}/>
                                 <Route path="/" component={Main}/>
                             </Switch>

@@ -3,7 +3,9 @@ import datetime
 import os
 import threading
 import urllib
+from functools import wraps
 
+import jwt
 import requests
 from flask import Flask, request, send_file, session, Response
 from flask_cors import CORS
@@ -28,6 +30,23 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = SECRET_KEY
 
 
+def auth_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "token" in session:
+            authorities = jwt.decode(jwt=session['token'], options={'verify_signature': False})["authorities"]
+            token = jwt.decode(jwt=session['token'], options={'verify_signature': False})
+
+            asd = 0
+            asd = 2 + asd
+            # if not GAMMA_ADMIN_AUTHORITY in authorities:
+            #     return Response(status=403)
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 class GammaMeRes(Resource):
     def get(self):
         if "token" in session:
@@ -48,7 +67,6 @@ class GammaMeRes(Resource):
 
 class GammaAuthRes(Resource):
     def post(self):
-
         data = {
             'grant_type': 'authorization_code',
             'client_id': GAMMA_CLIENT_ID,
@@ -74,6 +92,11 @@ class GammaAuthRes(Resource):
         else:
             return "", 500
 
+
+class AuthVerification(Resource):
+    @auth_required
+    def get(self):
+        return {"isAuthorized": True}
 
 # ==================
 
@@ -368,6 +391,7 @@ api.add_resource(StoriesRes, "/api/admin/config/stories")
 
 # Gamma
 api.add_resource(GammaMeRes, "/api/me")
+api.add_resource(AuthVerification, "/api/auth/verify")
 api.add_resource(GammaAuthRes, "/api/auth")
 
 
