@@ -15,9 +15,10 @@ from db import GroupYear, Meeting, Group
 @db_session
 def get_groups_for_meeting(meeting):
     """
-    Returns all the GroupMeetings for the meeting
+    Returns all the (active) GroupMeetings for the meeting
     """
-    groups = list(GroupMeeting.select(lambda group_meeting: group_meeting.meeting == meeting))
+    groups = list(GroupMeeting.select(
+        lambda group_meeting: group_meeting.meeting == meeting and group_meeting.group.year == "active"))
     return groups
 
 
@@ -81,19 +82,19 @@ def send_mails(meeting):
 
 
 @db_session
-def get_story_group_email_address(group : GroupYear):
+def get_story_group_email_address(group: GroupYear):
     domain = Config["group_email_domain"].value
     return group.group.name + group.year[-2:] + domain
 
 
 @db_session
-def get_story_group_name(group_name : str, year: str):
+def get_story_group_name(group_name: str, year: str):
     g = Group.get(name=group_name)
     return g.display_name + year[-2:]
 
 
 @db_session
-def get_meeting_from_id(id : UUID):
+def get_meeting_from_id(id: UUID):
     meeting = Meeting.get(id=id)
     if Meeting is None:
         return None, 404
@@ -133,7 +134,6 @@ def get_story_group_email(group: GroupMeeting):
     return mail_to, msg, subject
 
 
-
 def send_story_emails(meeting_id):
     meeting, code = get_meeting_from_id(meeting_id)
     if code != 200 or meeting is None:
@@ -156,10 +156,8 @@ def send_email(mail_to, subject, msg):
             "from": mail_from,
             "subject": subject,
             "body": msg}
-    r = None
     try:
         r = requests.post(url=url, json=data, headers=header)
-        print("status_code" + str(r.status_code) + "\n" + "reason " + str(r.reason))
+        print("Sent email to {0}, status code {1}, reason {2}".format(mail_to, r.status_code, r.reason))
     except Exception as e:
         print("Encontered an error while contacting gotify: " + str(e))
-
