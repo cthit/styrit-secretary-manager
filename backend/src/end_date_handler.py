@@ -26,10 +26,10 @@ def get_file_paths(meeting):
 @db_session
 def get_mail(meeting, code):
     msg = Config["mail_to_board_message"].value
-    board_email = Config["board_display_name"].value
+    board_name = Config["board_display_name"].value
     link = Config["archive_base_url"].value + str(code)
     secretary_email = Config["secretary_email"].value
-    msg = msg.format(board_email, meeting.meeting_no, meeting.lp, link, secretary_email)
+    msg = msg.format(board_name, meeting.meeting_no, meeting.lp, link, secretary_email)
     to = Config["board_email"].value
     raw_subject = Config["mail_to_board_subject"].value
     subject = raw_subject.format(meeting.meeting_no, meeting.lp)
