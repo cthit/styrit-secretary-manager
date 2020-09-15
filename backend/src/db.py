@@ -8,7 +8,6 @@ from config import db_config as config
 
 db = Database()
 
-
 # A group
 class Group(db.Entity):
     name = PrimaryKey(str)
@@ -95,6 +94,7 @@ class ConfigType(db.Entity):
 class Config(db.Entity):
     key = PrimaryKey(str)
     value = Required(str)
+    description = Required(str)
     config_type = Required(ConfigType)
 
 
@@ -107,7 +107,45 @@ db.bind(
     database=config.POSTGRES_DB
 )
 
-# drop_db()
+@db_session
+def add_column():
+    db_initiated = db.execute("""
+    SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name   = 'config'
+    );
+   """)
+
+    if not db_initiated.fetchone()[0]:
+        # The database is not yet initialized and hence does not contain any data.
+        return
+
+    column_exists = db.execute("""
+    SELECT EXISTS (
+        FROM   pg_attribute 
+        WHERE  attrelid = 'config'::regclass  -- cast to a registered class (table)
+        AND    attname = 'description'
+        AND    NOT attisdropped  -- exclude dropped (dead) columns
+    )
+    """)
+
+    exists = True
+    try:
+        exists = column_exists.rowcount > 0 and column_exists.fetchone()[0]
+    except Exception as e:
+        print("ERROR MIGRATING DB: {0}".format(str(e)))
+
+    if not exists:
+        print("ADDING COLUMN")
+        db.execute("""
+        ALTER TABLE config
+        ADD COLUMN description text NOT NULL DEFAULT 'none'; 
+        """)
+
+add_column()
+
+
+
 db.generate_mapping(create_tables=True)
 
 
