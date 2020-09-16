@@ -1,13 +1,15 @@
 import React from "react";
 import UploadCard from "./views/uploadcard";
-import { InputGroup, Space, UploadContainer } from "./Upload.styles.screen";
-import { DigitButton, DigitText } from "@cthit/react-digit-components";
+import {InputGroup, Space, UploadContainer} from "./Upload.styles.screen";
+import {DigitButton, DigitText} from "@cthit/react-digit-components";
 
 export const Upload = props => (
     <UploadContainer>
         <InputGroup>
-            <DigitText.Text bold={false} text={"Hej " + props.group.displayName + "!"} style={{fontSize: "28px"}} />
-            <Space />
+            <DigitText.Text bold={false}
+                            text={formatGroupName(props.group)}
+                            style={{fontSize: "28px"}}/>
+            <Space/>
             {props.tasks.map(task => (
                 <UploadCard
                     props={{
@@ -19,7 +21,7 @@ export const Upload = props => (
                 />
             ))}
             {props.error && (
-                <DigitText.Text text={props.error} color="error" bold />
+                <DigitText.Text text={props.error} color="error" bold/>
             )}
             <DigitButton
                 text="Skicka in"
@@ -37,5 +39,14 @@ export const Upload = props => (
         </InputGroup>
     </UploadContainer>
 );
+
+function formatGroupName(group) {
+    let groupText = "";
+    if (group.year !== "active") {
+        groupText = " " + group.year;
+    }
+    return "Hej " + group.displayName + groupText + "!"
+}
+
 
 export default Upload;
