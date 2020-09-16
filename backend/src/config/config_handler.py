@@ -6,6 +6,7 @@ from pony.orm import db_session
 from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting, create_group_meeting_task
 
 from db import GroupYear, validate_stories, create_group_meeting
+from queries.ConfigQueries import get_config_list
 
 
 def get_config():
@@ -56,17 +57,6 @@ def get_config_for_meeting(meeting):
     }
 
     return m_js
-
-
-@db_session
-def get_config_list():
-    config_list = []
-
-    # Add general config
-    conf = list(orm.select((config.key, config.value, config.config_type.type) for config in Config))
-    for key, value, type in conf:
-        config_list.append({"key": key, "value": value, "type": type})
-    return config_list
 
 
 @db_session

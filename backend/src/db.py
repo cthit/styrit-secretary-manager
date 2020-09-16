@@ -8,6 +8,7 @@ from config import db_config as config
 
 db = Database()
 
+
 # A group
 class Group(db.Entity):
     name = PrimaryKey(str)
@@ -107,6 +108,7 @@ db.bind(
     database=config.POSTGRES_DB
 )
 
+
 @db_session
 def add_column():
     db_initiated = db.execute("""
@@ -121,12 +123,11 @@ def add_column():
         return
 
     column_exists = db.execute("""
-    SELECT EXISTS (
-        FROM   pg_attribute 
-        WHERE  attrelid = 'config'::regclass  -- cast to a registered class (table)
-        AND    attname = 'description'
-        AND    NOT attisdropped  -- exclude dropped (dead) columns
-    )
+    SELECT 1
+    FROM   pg_attribute 
+    WHERE  attrelid = 'config'::regclass  -- cast to a registered class (table)
+    AND    attname = 'description'
+    AND    NOT attisdropped  -- exclude dropped (dead) columns
     """)
 
     exists = True
@@ -142,9 +143,8 @@ def add_column():
         ADD COLUMN description text NOT NULL DEFAULT 'none'; 
         """)
 
+
 add_column()
-
-
 
 db.generate_mapping(create_tables=True)
 
@@ -238,7 +238,8 @@ def validate_meeting(meeting_json):
         if id == "new":
             meeting = Meeting.select(lambda m: m.year == date.year and m.lp == lp and m.meeting_no == meeting_no)[:]
             if len(meeting) > 0:
-                return None, "A meeting already exists for year {0}, lp {1}, meeting number {2}".format(date.year, lp, meeting_no)
+                return None, "A meeting already exists for year {0}, lp {1}, meeting number {2}".format(date.year, lp,
+                                                                                                        meeting_no)
 
             # The meeting does not exist, we want to create the tasks for it
             meeting = Meeting(year=date.year, date=date, last_upload=last_upload, lp=lp,
@@ -260,7 +261,8 @@ def validate_meeting(meeting_json):
             for task in tasks[type]:
                 if validate_task(task):
                     group_meeting = GroupMeeting.get(
-                        lambda group: group.group.group.name == task["name"] and group.meeting == meeting and group.group.year == "active")
+                        lambda group: group.group.group.name == task[
+                            "name"] and group.meeting == meeting and group.group.year == "active")
                     found = False
                     if group_meeting is None:
                         group_meeting = create_group_meeting(meeting.id, task["name"], "active")
