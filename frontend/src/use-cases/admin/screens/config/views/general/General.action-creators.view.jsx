@@ -1,6 +1,9 @@
-import { CONFIG_CHANGED } from "./General.actions.view";
-import { postConfig } from "../../../../../../api/post.Config.api";
-import { handleError } from "../../../../../../common/functions/handleError";
+import {
+    CONFIG_CHANGED,
+    CONFIG_HELP_BUTTON_CLICKED
+} from "./General.actions.view";
+import {postConfig} from "../../../../../../api/post.Config.api";
+import {handleError} from "../../../../../../common/functions/handleError";
 
 export function onConfigChange(configKey, newVal) {
     return {
@@ -19,6 +22,16 @@ export function saveConfig(password, configs) {
     }).catch(error => {
         onSaveConfigFailed(error);
     })
+}
+
+export function configHelpButtonPressed(configIndex) {
+    return {
+        type: CONFIG_HELP_BUTTON_CLICKED,
+        payload: {
+            configIndex: configIndex
+        },
+        error: false
+    }
 }
 
 function onSaveConfigAccepted(response) {

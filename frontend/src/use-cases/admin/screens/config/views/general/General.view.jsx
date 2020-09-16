@@ -4,8 +4,7 @@ import {
     ConfigListContainer,
     GeneralConfigContainer,
     HelpCard,
-    HLine,
-    LeftCol
+    HLine
 } from "./General.styles.view.jsx.";
 import {
     DigitButton,
@@ -17,21 +16,25 @@ import {
 } from "@cthit/react-digit-components";
 import HelpIcon from '@material-ui/icons/Help';
 
-const markdown =
-    " - {0} = the first ever cool thing. \n " +
-    " - {1} = The second cool thing ever"
+
+const test = "asd <br/> bsd"
 
 export const General = props => (
     <GeneralConfigContainer>
-        <LeftCol/>
         <ConfigListContainer>
             {props.configs.map((config, index) => {
                 return (
                     <ConfigContainer key={index}>
                         {getRightConfig(config, props)}
                         <DigitIconButton icon={HelpIcon}
-                                         size={{width: "56px"}}
-                                         primary/>
+                                         size={{width: "56px", height: "56px"}}
+                                         secondary={props.selectedConfigIndex === index}
+                                         primary={props.selectedConfigIndex !== index}
+                                         onClick={() => {
+                                             props.configHelpButtonPressed(index);
+                                             console.log("ASD", props.selectedConfigIndex, " --- ", index);
+                                         }}
+                        />
                     </ConfigContainer>
                 )
             })}
@@ -39,11 +42,15 @@ export const General = props => (
             <DigitButton primary raised text={"Save"} size={{width: "100%"}}
                          onClick={() => props.onConfigSave(props.password, props.configs)}/>
         </ConfigListContainer>
+        {props.selectedHelp &&
         <HelpCard>
             <DigitText.Title text={"Description"}/>
-            <DigitText.Text text={"For 'some_email_text'"}/>
-            <DigitMarkdown markdownSource={markdown}/>
+            <DigitText.Text text={"For '" + props.selectedHelp.key + "'"}/>
+            <DigitMarkdown markdownSource={props.selectedHelp.description}
+                           size={{maxWidth: "90%"}}
+                           padding={{left: "10px", right: "10px"}}/>
         </HelpCard>
+        }
     </GeneralConfigContainer>
 );
 

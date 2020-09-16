@@ -1,8 +1,13 @@
 import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
-import {CONFIG_CHANGED} from "./General.actions.view";
+import {
+    CONFIG_CHANGED,
+    CONFIG_HELP_BUTTON_CLICKED
+} from "./General.actions.view";
 
 const initialState = {
-    configs: []
+    configs: [],
+    selectedHelp: null,
+    selectedHelpIndex: -1
 };
 
 export const GeneralReducer = (state = initialState, action) => {
@@ -25,6 +30,21 @@ export const GeneralReducer = (state = initialState, action) => {
             })
             return Object.assign({}, state, {
                 configs: newConfigs
+            })
+        case CONFIG_HELP_BUTTON_CLICKED:
+            let configIndex = action.payload.configIndex;
+            let selectedConfig = null;
+
+            if (configIndex === state.selectedHelpIndex) {
+                configIndex = -1;
+                selectedConfig = null;
+            } else if (configIndex >= 0 && configIndex < state.configs.length) {
+                selectedConfig = state.configs[configIndex];
+            }
+
+            return Object.assign({}, state, {
+                selectedHelp: selectedConfig,
+                selectedHelpIndex: configIndex
             })
         default:
             return state;

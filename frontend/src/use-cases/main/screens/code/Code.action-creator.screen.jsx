@@ -1,6 +1,9 @@
-import { SUBMIT_CODE_FAILED, SUBMIT_CODE_SUCCESSFUL } from "./Code.actions.screen";
-import { postCode } from "../../../../api/post.Code.api";
-import { handleError } from "../../../../common/functions/handleError";
+import {
+    SUBMIT_CODE_FAILED,
+    SUBMIT_CODE_SUCCESSFUL
+} from "./Code.actions.screen";
+import {postCode} from "../../../../api/post.Code.api";
+import {handleError} from "../../../../common/functions/handleError";
 
 export function submitCode(code) {
     const formattedCode = code.replace(/\s/g, '');
@@ -16,7 +19,6 @@ export function submitCode(code) {
 }
 
 function onAccept(response) {
-    console.log("RESPONSE::", response);
     return {
         type: SUBMIT_CODE_SUCCESSFUL,
         payload: {
