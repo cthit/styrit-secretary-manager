@@ -6,9 +6,8 @@ import requests
 from pony import orm
 from pony.orm import db_session
 
-from db import GroupMeeting, GroupMeetingTask, Config
-
 from config.config_handler import update_story_group_meetings
+from db import GroupMeeting, GroupMeetingTask, Config
 from db import GroupYear, Meeting, Group
 
 

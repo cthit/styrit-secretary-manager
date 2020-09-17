@@ -2,9 +2,13 @@ from datetime import datetime
 from uuid import UUID
 
 import dateutil.parser
-from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, commit, InternalError, ProgrammingError
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
 
+from command.GroupMeetingCommands import create_group_meeting
 from config import db_config as config
+from errors.UserError import UserError
+from process.validation import validate_task
+from queries.GroupMeetingTaskQueries import get_db_tasks
 
 db = Database()
 
@@ -111,6 +115,7 @@ db.bind(
 
 @db_session
 def add_column():
+    # DB migration
     db_initiated = db.execute("""
     SELECT EXISTS (
         SELECT FROM information_schema.tables 
@@ -150,61 +155,6 @@ db.generate_mapping(create_tables=True)
 
 
 # Helper methods
-
-@db_session
-def validate_task(task):
-    """
-    Validates a task
-    """
-    try:
-        # If the task has a code then validate that the tasks group has that code
-        # If the task doesn't have a code, validate that the group exists.
-        group_name = task["name"]
-        if "code" in task:
-            code = task["code"]
-            if code is not None:
-                group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
-                return group_meeting.group.group.name == group_name
-
-        return Group.get(lambda group: group.name == group_name) is not None
-    except Exception as e:
-        print("Failed validating task " + str(e))
-        return False
-
-
-@db_session
-def get_db_tasks(meeting):
-    """
-    Returns a dictionary from each GroupMeetingTask of the given meeting to a boolean with value False
-    """
-    try:
-        group_tasks = {}
-        db_tasks = GroupMeetingTask.select(lambda g_t: g_t.group.meeting == meeting)
-        for task in db_tasks:
-            group_tasks[task] = False
-
-        return group_tasks
-    except Exception as e:
-        print("Failed retrieving database tasks " + str(e))
-        return {}
-
-
-class UserError(Exception):
-    """
-    An error caused by invalid input
-    """
-    pass
-
-
-@db_session
-def create_group_meeting(meeting_id, group_name, year):
-    meeting = Meeting.get(id=meeting_id)
-    group = Group.get(name=group_name)
-    group_year = GroupYear.get(group=group, year=year)
-    group_meeting = GroupMeeting.get(meeting=meeting_id, group=group_year)
-    if group_meeting is None:
-        group_meeting = GroupMeeting(meeting=meeting, group=group_year)
-    return group_meeting
 
 
 @db_session
@@ -254,7 +204,7 @@ def validate_meeting(meeting_json):
             meeting.year = date.year
 
         tasks = meeting_json["groups_tasks"]
-        db_tasks = get_db_tasks(meeting)
+        db_tasks = get_db_tasks(meeting.id)
 
         # We want to select all the tasks for this meeting from the database and match the json to it
         for type in tasks:
