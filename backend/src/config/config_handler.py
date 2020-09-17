@@ -3,14 +3,17 @@ from datetime import datetime
 from pony import orm
 from pony.orm import db_session
 
-from db import Meeting, Config, Group, Task, validate_meeting, GroupMeetingTask, GroupMeeting, create_group_meeting_task
+from command.GroupMeetingCommands import create_group_meeting
+from command.GroupMeetingTaskCommands import create_group_meeting_task
+from db import Meeting, Config, Group, Task, GroupMeetingTask, GroupMeeting
 
-from db import GroupYear, validate_stories, create_group_meeting
+from db import GroupYear
+from process.validation import validate_meeting, validate_stories
 from queries.ConfigQueries import get_config_list
 
 
 def get_config():
-    config = {}
+    config = dict()
     config["meetings"] = get_meetings()
     config["general"] = get_config_list()
     config["groups"] = get_groups()
@@ -164,7 +167,7 @@ def handle_incoming_stories_config(config):
     if not success:
         return 400, {"error": "Unable to validate stories\n " + msg}
 
-    dict = {}
-    dict["groupYears"] = get_group_years()
-    dict["years"] = get_years()
-    return 200, dict
+    group_years = dict()
+    group_years["groupYears"] = get_group_years()
+    group_years["years"] = get_years()
+    return 200, group_years

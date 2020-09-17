@@ -12,40 +12,11 @@ import end_date_handler
 import mail_handler
 from config import config_handler
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
+from process.CodeProcess import get_data_for_code, handle_code_request
 
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
-
-@db_session
-def get_data_for_code(code):
-    group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
-
-    if group_meeting is None:
-        return None
-
-    task_tuples = list(orm.select(
-        (group_task.task.name, group_task.task.display_name) for group_task in GroupMeetingTask if
-        str(group_task.group.code) == code))
-    tasks = []
-    for name, d_name in task_tuples:
-        tasks.append({
-            "codeName": name,
-            "displayName": d_name
-        })
-
-    return {
-        "group": {
-            "codeName": group_meeting.group.group.name,
-            "displayName": group_meeting.group.group.display_name,
-            "year": group_meeting.group.year
-        },
-        "study_period": group_meeting.meeting.lp,
-        "year": group_meeting.meeting.year,
-        "meeting_no": group_meeting.meeting.meeting_no,
-        "tasks": tasks
-    }
 
 
 def handle_file(code, task, file):
@@ -89,26 +60,8 @@ def handle_file(code, task, file):
 
 # Validate code, return data associated with a validated code.
 class CodeRes(Resource):
-    @db_session
     def post(self, code):
-        try:
-            group_meeting = GroupMeeting.get(lambda group: str(group.code) == code)
-        except ValueError as err:
-            return {"error": "Bad code format"}, 400
-
-        if group_meeting is None:
-            codes_list = list(orm.select(group.code for group in GroupMeeting))
-
-            return {"error": "Code not found"}, 404
-
-        current_date = datetime.datetime.utcnow()
-        if group_meeting.meeting.last_upload < current_date:
-            return {"error": "Code expired, please contact me at " + Config["secretary_email"].value}, 401
-
-        return {
-            "code": code,
-            "data": get_data_for_code(code)
-        }
+        return handle_code_request(code).get_response()
 
 
 # Uploads a or a number of files, requires a valid code.

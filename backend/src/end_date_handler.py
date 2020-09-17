@@ -8,30 +8,18 @@ from pony import orm
 from pony.orm import db_session
 
 from db import GroupMeetingFile, ArchiveCode, Meeting, Config
+from queries.ConfigQueries import get_config_value
+from queries.GroupMeetingFileQueries import get_file_paths
 
 
-@db_session
-def get_file_paths(meeting):
-    """
-    Returns a list of file_paths for all files uploaded for the given meeting
-    """
-    # Get a list of the filepaths for the meeting
-    file_paths = list(orm.select(
-        group_file.file_location for group_file in GroupMeetingFile
-        if group_file.group_task.group.meeting == meeting
-    ))
-    return file_paths
-
-
-@db_session
 def get_mail(meeting, code):
-    msg = Config["mail_to_board_message"].value
-    board_name = Config["board_display_name"].value
-    link = Config["archive_base_url"].value + str(code)
-    secretary_email = Config["secretary_email"].value
+    msg = get_config_value("mail_to_board_message")
+    board_name = get_config_value("board_display_name")
+    link = get_config_value("archive_base_url") + str(code)
+    secretary_email = get_config_value("secretary_email")
     msg = msg.format(board_name, meeting.meeting_no, meeting.lp, link, secretary_email)
-    to = Config["board_email"].value
-    raw_subject = Config["mail_to_board_subject"].value
+    to = get_config_value("board_email")
+    raw_subject = get_config_value("mail_to_board_subject")
     subject = raw_subject.format(meeting.meeting_no, meeting.lp)
 
     return to, subject, msg

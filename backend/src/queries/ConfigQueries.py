@@ -13,3 +13,8 @@ def get_config_list():
     for key, value, type, description in conf:
         config_list.append({"key": key, "value": value, "type": type, "description": description})
     return config_list
+
+
+@db_session
+def get_config_value(config_key: str) -> str:
+    return Config.get[config_key]
