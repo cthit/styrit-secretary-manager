@@ -37,17 +37,7 @@ class FileRes(Resource):
 
 
 # Validates an admin password.
-def validate_password(response_json):
-    if response_json is None or "pass" not in response_json:
-        return {"error": "Bad Request"}, 400
-    password = response_json["pass"]
-    frontend_admin_pass = os.environ.get("frontend_admin_pass", "asd123")
-    if password != frontend_admin_pass:
-        return {"error": "Invalid password"}, 401
-    return {}, 200
-
-
-def validate_password_2(response_json: Dict) -> HttpResponse:
+def validate_password(response_json: Dict) -> HttpResponse:
     if response_json is None or "pass" not in response_json:
         return get_with_error(400, "Bad Request")
     password = response_json["pass"]
@@ -61,7 +51,7 @@ def validate_password_2(response_json: Dict) -> HttpResponse:
 class AdminResource(Resource):
     def post(self):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
@@ -73,7 +63,7 @@ class AdminResource(Resource):
 class MeetingResource(Resource):
     def post(self):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
@@ -84,7 +74,7 @@ class MeetingResource(Resource):
 class StoriesRes(Resource):
     def post(self):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
@@ -97,7 +87,7 @@ class MailRes(Resource):
     @db_session
     def put(self):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
@@ -117,7 +107,7 @@ class MailRes(Resource):
 class MailStoriesRes(Resource):
     def put(self):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
@@ -134,7 +124,7 @@ class TimerResource(Resource):
     @db_session
     def post(self, id):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
@@ -152,7 +142,7 @@ class TimerResource(Resource):
 class PasswordResource(Resource):
     def put(self):
         data = request.get_json()
-        pass_validation = validate_password_2(data)
+        pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
