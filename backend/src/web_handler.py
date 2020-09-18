@@ -1,21 +1,19 @@
-import datetime
 import os
 import threading
-from typing import Dict
 
 from flask import Flask, request, send_file
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from pony import orm
 from pony.orm import db_session
 
 import end_date_handler
 import mail_handler
-from HttpResponse import HttpResponse, get_with_error, get_with_data
 from config import config_handler
-from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
-from process.CodeProcess import get_data_for_code, handle_code_request
+from db import Meeting, ArchiveCode, Config
+from process.CodeProcess import handle_code_request
+from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
+from process.password_validation import validate_password
 
 app = Flask(__name__)
 api = Api(app)
@@ -36,17 +34,6 @@ class FileRes(Resource):
         return handle_file_request(code, request.files).get_response()
 
 
-# Validates an admin password.
-def validate_password(response_json: Dict) -> HttpResponse:
-    if response_json is None or "pass" not in response_json:
-        return get_with_error(400, "Bad Request")
-    password = response_json["pass"]
-    correct_password = os.environ.get("frontend_admin_pass", "asd123")
-    if password != correct_password:
-        return get_with_error(401, "Invalid password")
-    return get_with_data({})
-
-
 # If the given password is valid, updates the servers configs.
 class AdminResource(Resource):
     def post(self):
@@ -55,8 +42,7 @@ class AdminResource(Resource):
         if pass_validation.is_error():
             return pass_validation.get_response()
 
-        msg, status = config_handler.handle_incoming_config(data["config"])
-        return msg, status
+        return handle_incoming_config(data).get_response()
 
 
 # If the given password is valid, updates / adds the given meeting configs.

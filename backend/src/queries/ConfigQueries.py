@@ -16,5 +16,10 @@ def get_config_list():
 
 
 @db_session
+def get_config(key: str) -> Config:
+    return Config.get(key=key)
+
+
+@db_session
 def get_config_value(config_key: str) -> str:
     return Config.get[config_key]
