@@ -1,9 +1,9 @@
 from pony.orm import db_session
 
 from db import GroupMeetingTask
-from queries.GroupMeeting import get_group_meeting
+from queries.GroupMeetingQueries import get_group_meeting
 from queries.GroupMeetingTaskQueries import get_group_meeting_task
-from queries.GroupYear import get_group_year
+from queries.GroupYearQueries import get_group_year
 from queries.TaskQueries import get_task_by_name
 
 

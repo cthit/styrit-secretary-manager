@@ -13,49 +13,11 @@ import mail_handler
 from config import config_handler
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 from process.CodeProcess import get_data_for_code, handle_code_request
+from process.FileProcess import handle_file_request
 
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
-
-def handle_file(code, task, file):
-    """
-    Saves the file to the disk and stores it's location in the database
-    """
-    task_obj = Task.get(name=task)
-    if task_obj is None:
-        return {"error": "Report type not found: " + str(task)}, 404
-
-    data = get_data_for_code(code)
-    if data is None:
-        return {"error": "Unable to find meeting for code"}, 404
-
-    committee = data["group"]["codeName"]
-    year = str(data["year"])
-    lp = str(data["study_period"])
-    meeting_no = str(data["meeting_no"])
-    name = task + "_" + committee + "_" + year + "_" + lp + ".pdf"
-    path = "src/uploads/" + year + "/lp" + lp + "/" + meeting_no + "/" + str(committee)
-
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    save_loc = path + "/" + name
-    print("Saving file " + str(file) + " in " + path)
-    file.save(save_loc)
-
-    group_task = GroupMeetingTask.get(
-        lambda group_task: str(group_task.group.code) == code and group_task.task == task_obj)
-    group_file = GroupMeetingFile.get(group_task=group_task)
-
-    if group_file is None:
-        GroupMeetingFile(group_task=group_task, file_location=save_loc)
-        return False, 200
-    else:
-        print("Overwriting file " + group_file.file_location + " from " + str(group_file.date) + " (GMT)")
-        group_file.date = datetime.datetime.utcnow()
-        return True, 200
 
 
 # Validate code, return data associated with a validated code.
@@ -64,24 +26,12 @@ class CodeRes(Resource):
         return handle_code_request(code).get_response()
 
 
-# Uploads a or a number of files, requires a valid code.
+# Uploads one or a number of files, requires a valid code.
 class FileRes(Resource):
-    @db_session
     def put(self):
         print(request.files)
         code = request.form["code"]
-        if GroupMeeting.select(lambda group: str(group.code) == code) is None:
-            return {"error": "Code not found! Please contact the developers of this system."}, 404
-
-        overwrite = False
-        for task in request.files:
-            r, status_code = handle_file(code, task, request.files[task])
-            if status_code != 200:
-                return r, status_code
-
-            overwrite = r
-
-        return {"overwrite": overwrite}
+        return handle_file_request(code, request.files).get_response()
 
 
 # Validates an admin password.

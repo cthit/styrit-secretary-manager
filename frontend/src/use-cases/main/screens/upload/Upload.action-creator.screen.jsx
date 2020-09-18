@@ -29,8 +29,8 @@ function onAccept(response) {
     console.log("RESPONSE::", response);
 
     let overwrite = false;
-    if (response.data) {
-        overwrite = response.data.overwrite;
+    if (response.data && response.data.data) {
+        overwrite = response.data.data.overwrite;
     }
 
     let msg =

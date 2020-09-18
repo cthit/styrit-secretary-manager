@@ -3,8 +3,8 @@ import uuid
 from pony.orm import db_session
 
 from db import GroupMeeting
-from queries.GroupMeeting import get_group_meeting
-from queries.GroupYear import get_group_year
+from queries.GroupMeetingQueries import get_group_meeting
+from queries.GroupYearQueries import get_group_year
 
 
 @db_session

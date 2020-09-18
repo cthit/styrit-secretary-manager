@@ -4,7 +4,7 @@ from typing import Dict, List
 from pony.orm import db_session, select
 
 from db import GroupMeetingTask, Task
-from queries.GroupMeeting import get_group_meeting
+from queries.GroupMeetingQueries import get_group_meeting, get_group_meeting_by_code
 from queries.TaskQueries import get_task_by_name
 
 
@@ -13,6 +13,12 @@ def get_group_meeting_task(meeting_id: uuid, group_name: str, year: str, task_na
     task = get_task_by_name(task_name)
     group = get_group_meeting(meeting_id, group_name, year)
     return GroupMeetingTask.get(group=group, task=task)
+
+
+@db_session
+def get_group_meeting_task_from_code(code: uuid, task: str) -> GroupMeetingTask:
+    group_meeting = get_group_meeting_by_code(code)
+    return GroupMeetingTask.get(group=group_meeting, task=task)
 
 
 @db_session
