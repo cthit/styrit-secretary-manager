@@ -25,6 +25,9 @@ class HttpResponse:
             }
         }, 200
 
+    def is_error(self):
+        return self.code != 200
+
 
 def get_with_error(code: int, error: str):
     return HttpResponse(code=code, error=error)

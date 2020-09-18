@@ -1,6 +1,7 @@
 import datetime
 import os
 import threading
+from typing import Dict
 
 from flask import Flask, request, send_file
 from flask_cors import CORS
@@ -10,6 +11,7 @@ from pony.orm import db_session
 
 import end_date_handler
 import mail_handler
+from HttpResponse import HttpResponse, get_with_error, get_with_data
 from config import config_handler
 from db import Task, GroupMeeting, GroupMeetingTask, GroupMeetingFile, Meeting, ArchiveCode, Config
 from process.CodeProcess import get_data_for_code, handle_code_request
@@ -45,38 +47,48 @@ def validate_password(response_json):
     return {}, 200
 
 
+def validate_password_2(response_json: Dict) -> HttpResponse:
+    if response_json is None or "pass" not in response_json:
+        return get_with_error(400, "Bad Request")
+    password = response_json["pass"]
+    correct_password = os.environ.get("frontend_admin_pass", "asd123")
+    if password != correct_password:
+        return get_with_error(401, "Invalid password")
+    return get_with_data({})
+
+
 # If the given password is valid, updates the servers configs.
 class AdminResource(Resource):
     def post(self):
-        config = request.get_json()
-        r, code = validate_password(config)
-        if code != 200:
-            return r, code
+        data = request.get_json()
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
-        msg, status = config_handler.handle_incoming_config(config["config"])
+        msg, status = config_handler.handle_incoming_config(data["config"])
         return msg, status
 
 
 # If the given password is valid, updates / adds the given meeting configs.
 class MeetingResource(Resource):
     def post(self):
-        config = request.get_json()
-        r, code = validate_password(config)
-        if code != 200:
-            return r, code
+        data = request.get_json()
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
-        status, message = config_handler.handle_incoming_meeting_config(config["meeting"])
+        status, message = config_handler.handle_incoming_meeting_config(data["meeting"])
         return message, status
 
 
 class StoriesRes(Resource):
     def post(self):
-        config = request.get_json()
-        r, code = validate_password(config)
-        if code != 200:
-            return r, code
+        data = request.get_json()
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
-        status, message = config_handler.handle_incoming_stories_config(config["storyGroups"])
+        status, message = config_handler.handle_incoming_stories_config(data["storyGroups"])
         return message, status
 
 
@@ -85,9 +97,9 @@ class MailRes(Resource):
     @db_session
     def put(self):
         data = request.get_json()
-        r, code = validate_password(data)
-        if code != 200:
-            return r, code
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
         # The password was accepted! Try to figure out which meeting it wants to send the email for.
         try:
@@ -105,9 +117,9 @@ class MailRes(Resource):
 class MailStoriesRes(Resource):
     def put(self):
         data = request.get_json()
-        r, code = validate_password(data)
-        if code != 200:
-            return r, code
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
         try:
             id = data["id"]
@@ -122,9 +134,9 @@ class TimerResource(Resource):
     @db_session
     def post(self, id):
         data = request.get_json()
-        r, code = validate_password(data)
-        if code != 200:
-            return r, code
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
         # The password was accepted, check the meeting id
         meeting = Meeting.get(id=id)
@@ -139,10 +151,10 @@ class TimerResource(Resource):
 # If the password is valid, returns the complete current configs.
 class PasswordResource(Resource):
     def put(self):
-        response_json = request.get_json()
-        r, code = validate_password(response_json)
-        if code != 200:
-            return r, code
+        data = request.get_json()
+        pass_validation = validate_password_2(data)
+        if pass_validation.is_error():
+            return pass_validation.get_response()
 
         configs = config_handler.get_config()
         return configs, 200
