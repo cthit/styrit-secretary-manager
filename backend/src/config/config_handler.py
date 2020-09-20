@@ -111,17 +111,6 @@ def get_group_years():
     return list
 
 
-
-def handle_incoming_meeting_config(config):
-    meeting, msg = validate_meeting(config)
-    if meeting is None:
-        return 400, {"error": "Invalid meeting format\n " + msg}
-
-    # Probably return the data for the new meeting?
-    update_story_group_meetings(meeting)
-    return 200, get_config_for_meeting(meeting)
-
-
 @db_session
 def get_story_groups():
     return orm.select(gy for gy in GroupYear if gy.year != "active" and gy.finished is False)[:]
@@ -138,8 +127,10 @@ def update_story_group_meetings(meeting: Meeting):
     group_meetings = []
     for story_group in story_groups:
         group_meeting = create_group_meeting(meeting.id, story_group.group.name, story_group.year)
-        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year, "vberattelse")
-        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year, "eberattelse")
+        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year,
+                                  "vberattelse")
+        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year,
+                                  "eberattelse")
         group_meetings.append(group_meeting)
     return group_meetings
 

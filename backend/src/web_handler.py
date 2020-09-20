@@ -13,6 +13,7 @@ from db import Meeting, ArchiveCode, Config
 from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
+from process.MeetingProcess import handle_meeting_config
 from process.password_validation import validate_password
 
 app = Flask(__name__)
@@ -53,8 +54,7 @@ class MeetingResource(Resource):
         if pass_validation.is_error():
             return pass_validation.get_response()
 
-        status, message = config_handler.handle_incoming_meeting_config(data["meeting"])
-        return message, status
+        return handle_meeting_config(data).get_response()
 
 
 class StoriesRes(Resource):

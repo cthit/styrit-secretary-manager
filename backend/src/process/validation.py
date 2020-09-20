@@ -1,7 +1,10 @@
 import json
 import uuid
+from datetime import datetime
+from typing import Dict, List
 
 import dateutil
+from dateutil.parser import parse
 from pony.orm import db_session
 
 from ResultWithData import ResultWithData, get_result_with_data, get_result_with_error
@@ -150,3 +153,51 @@ def validate_code(code: str) -> ResultWithData[uuid.UUID]:
         return get_result_with_data(uuid.UUID(code))
     except ValueError:
         return get_result_with_error("Invalid code format")
+
+
+def validate_date(json: Dict, key: str) -> ResultWithData[datetime]:
+    if key not in json:
+        return get_result_with_error("Missing {0}".format(key))
+    date_str = json[key]
+
+    try:
+        date = parse(date_str)
+        return get_result_with_data(date)
+    except ValueError:
+        return get_result_with_error("{0} is not a valid date".format(date_str))
+    except OverflowError:
+        return get_result_with_error("{0} is too large ".format(date_str))
+
+
+def validate_int(json: Dict, key: str) -> ResultWithData[int]:
+    if key not in json:
+        return get_result_with_error("Missing {0}".format(key))
+
+    int_str = json[key]
+    try:
+        val = int(int_str)
+        return get_result_with_data(val)
+    except ValueError:
+        return get_result_with_error("{0} is not a valid integer".format(int_str))
+
+
+def validate_list(json: Dict, key: str) -> ResultWithData[List]:
+    if key not in json:
+        return get_result_with_error("Missing {0}".format(key))
+
+    value = json[key]
+    if type(value) is not list:
+        return get_result_with_error("{0} must be a list".format(key)) 
+
+    return get_result_with_data(value)
+
+
+def validate_dict(json: Dict, key: str) -> ResultWithData[Dict]:
+    if key not in json:
+        return get_result_with_error("Missing {0}".format(key))
+
+    value = json[key]
+    if type(value) is not dict:
+        return get_result_with_error("{0} must be an object".format(key))
+
+    return get_result_with_data(value)
