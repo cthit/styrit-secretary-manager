@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session
+from pony.orm import Database, PrimaryKey, Required, Set, Optional, db_session, composite_key
 
 from config import db_config as config
 
@@ -45,6 +45,7 @@ class Meeting(db.Entity):
     meeting_no = Required(int)
     check_for_deadline = Required(bool)
 
+    composite_key(year, lp, meeting_no)
     group_meetings = Set("GroupMeeting")
     archive = Optional("ArchiveCode")
 

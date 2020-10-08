@@ -8,7 +8,7 @@ from command.GroupMeetingTaskCommands import create_group_meeting_task
 from db import Meeting, Config, Group, Task, GroupMeetingTask, GroupMeeting
 
 from db import GroupYear
-from process.validation import validate_meeting, validate_stories
+from process.Validation import validate_meeting, validate_stories
 from queries.ConfigQueries import get_config_list
 
 

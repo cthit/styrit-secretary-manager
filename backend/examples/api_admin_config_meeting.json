@@ -1,0 +1,94 @@
+{
+  "pass": "asd123",
+  "meeting": {
+    "id": "new",
+    "groups_tasks": {
+      "vplan": [
+        {
+          "name": "armit",
+          "code": null
+        },
+        {
+          "name": "digit",
+          "code": null
+        },
+        {
+          "name": "mrcit",
+          "code": null
+        },
+        {
+          "name": "nollkit",
+          "code": null
+        }
+      ],
+      "budget": [
+        {
+          "name": "armit",
+          "code": null
+        },
+        {
+          "name": "digit",
+          "code": null
+        },
+        {
+          "name": "fanbarerit",
+          "code": null
+        },
+        {
+          "name": "fritid",
+          "code": null
+        }
+      ],
+      "vrapport": [
+        {
+          "name": "armit",
+          "code": null
+        },
+        {
+          "name": "digit",
+          "code": null
+        },
+        {
+          "name": "fanbarerit",
+          "code": null
+        },
+        {
+          "name": "fritid",
+          "code": null
+        },
+        {
+          "name": "mrcit",
+          "code": null
+        },
+        {
+          "name": "nollkit",
+          "code": null
+        },
+        {
+          "name": "prit",
+          "code": null
+        },
+        {
+          "name": "sexit",
+          "code": null
+        },
+        {
+          "name": "snit",
+          "code": null
+        },
+        {
+          "name": "styrit",
+          "code": null
+        },
+        {
+          "name": "equalit",
+          "code": null
+        }
+      ]
+    },
+    "date": "2020-10-18T17:58:00.000Z",
+    "last_upload_date": "2020-10-23T03:19:00.000Z",
+    "lp": 2,
+    "meeting_no": 3
+  }
+}

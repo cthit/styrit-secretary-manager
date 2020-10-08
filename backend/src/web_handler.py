@@ -14,7 +14,7 @@ from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
 from process.MeetingProcess import handle_meeting_config
-from process.password_validation import validate_password
+from process.PasswordValidation import validate_password
 
 app = Flask(__name__)
 api = Api(app)

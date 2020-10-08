@@ -1,14 +1,14 @@
-import uuid
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
+from uuid import UUID
 
 from data_objects.GroupTaskData import GroupTaskData
 
 
 @dataclass
 class MeetingJsonData:
-    id: Optional[uuid]
+    id: Optional[UUID]
     date: datetime
     last_upload: datetime
     lp: int
