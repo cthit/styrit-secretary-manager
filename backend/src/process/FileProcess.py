@@ -61,11 +61,15 @@ def handle_file(code: uuid, task: str, file) -> ResultWithData[bool]:
 
 def save_file(code: uuid, task: str, file) -> str:
     meeting_data = get_meeting_data_from_code(code)
-    committee = get_group_year_data_from_code(code).name
+    group_year = get_group_year_data_from_code(code)
+    committee = group_year.name
+    committee_year = ""
+    if group_year.year != "active":
+        committee_year = group_year.year
 
     save_path = "src/uploads/{0}/lp{1}/{2}/{3}".format(meeting_data.year, meeting_data.lp, meeting_data.meeting_no,
                                                        committee)
-    name = "{0}_{1}_{2}_{3}.pdf".format(task, committee, meeting_data.year, meeting_data.lp)
+    name = "{0}_{1}{2}_{3}_{4}.pdf".format(task, committee, committee_year, meeting_data.year, meeting_data.lp)
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
