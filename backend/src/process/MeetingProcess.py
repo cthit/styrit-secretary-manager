@@ -1,8 +1,10 @@
-from typing import Dict
+import uuid
+from typing import Dict, List
 
 from HttpResponse import HttpResponse, get_with_error
 from ResultWithData import ResultWithData, get_result_with_error
-from command.MeetingCommands import create_new_meeting
+from command.MeetingCommands import create_new_meeting, update_meeting
+from data_objects.GroupTaskData import GroupTaskData
 from data_objects.MeetingJsonData import MeetingJsonData
 from process.Validation import validate_meeting
 
@@ -31,5 +33,16 @@ def update_meeting_data(meeting_data: MeetingJsonData) -> ResultWithData[Dict]:
             return get_result_with_error(create_meeting_res.message)
 
         meeting_data.id = create_meeting_res.data
+    else:
+        update_res = update_meeting(meeting_data)
+        if update_res.is_error:
+            return get_result_with_error(update_res.message)
+
+    update_groups_tasks(meeting_data.groups_tasks)
 
     raise NotImplementedError(NotImplemented)
+
+
+def update_groups_tasks(id: uuid, groups_tasks: List[GroupTaskData]) -> ResultWithData[Dict]:
+    for group_task in groups_tasks:
+        raise NotImplementedError(NotImplemented)
