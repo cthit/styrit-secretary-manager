@@ -17,8 +17,8 @@ export function saveMeeting(meeting, groupTasks, allTasks, password) {
 
     return dispatch => {
         dispatch({
-            type: WAITING_FOR_RESULT
-        })
+                     type: WAITING_FOR_RESULT
+                 })
         postMeeting(meeting, password)
             .then(response => {
                 dispatch(onMeetingSavedAccepted(response));
@@ -62,9 +62,9 @@ function getGroupTasksToSend(allTasks, groupTasks) {
     Object.keys(groupTasks).forEach(group => {
         groupTasks[group].tasks.forEach(task => {
             meetingGTs[task].push({
-                name: group,
-                code: groupTasks[group].code
-            })
+                                      name: group,
+                                      code: groupTasks[group].code
+                                  })
         })
     })
 
@@ -74,8 +74,8 @@ function getGroupTasksToSend(allTasks, groupTasks) {
 export function sendStoryEmails(password, meeting) {
     return dispatch => {
         dispatch({
-            type: WAITING_FOR_RESULT
-        })
+                     type: WAITING_FOR_RESULT
+                 })
         putStoryEmails(meeting, password)
             .then(response => {
                 dispatch(onSendStoryEmailsSuccessful(response))
@@ -88,7 +88,7 @@ export function sendStoryEmails(password, meeting) {
 function onMeetingSavedAccepted(response) {
 
     // Modify the data here.
-    let meeting = response.data;
+    let meeting = response.data.data;
 
     return {
         type: MEETING_SAVE_SUCCESSFUL,

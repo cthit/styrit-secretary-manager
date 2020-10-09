@@ -7,7 +7,7 @@ from process.Validation import validate_date, validate_int, validate_list, valid
     validate_code
 from queries.GroupMeetingQueries import get_meeting_for_code
 from queries.GroupQueries import get_group_by_name
-from queries.MeetingQueries import get_meeting_for_period
+from queries.MeetingQueries import get_meeting_for_period, get_meeting_by_id
 from queries.TaskQueries import get_task_by_name
 
 
@@ -20,21 +20,29 @@ def validate_meeting(data: Dict) -> ResultWithData[MeetingJsonData]:
         return get_result_with_error("Missing id")
     id_str = meeting["id"]
 
-    if id_str != "new":
+    general_res = validate_meeting_general(meeting)
+    if general_res.is_error:
+        return get_result_with_error(general_res.message)
+    meeting_data = general_res.data
+
+    if id_str == "new":
+        same_period_meeting = get_meeting_for_period(meeting_data.date.year, meeting_data.lp, meeting_data.meeting_no)
+        if same_period_meeting is not None:
+            return get_result_with_error(
+                "A meeting already exists for {0}-lp{1}-{2}".format(meeting_data.date.year, meeting_data.lp,
+                                                                    meeting_data.meeting_no))
+    else:
         code_res = validate_code(id_str)
         if code_res.is_error:
             return get_result_with_error("Invalid meeting id {0}".format(id_str))
         code = code_res.data
 
         # Validate that the meeting exists
-        meeting = get_meeting_for_code(code)
-        if meeting is None:
+        meeting_res = get_meeting_by_id(code)
+        if meeting_res is None:
             return get_result_with_error("No meeting with id {0}".format(code))
 
-    general_res = validate_meeting_general(meeting)
-    if general_res.is_error:
-        return get_result_with_error(general_res.message)
-    meeting_data = general_res.data
+        meeting_data.id = meeting_res.id
 
     groups_tasks_res = validate_groups_tasks(meeting)
     if groups_tasks_res.is_error:
@@ -50,7 +58,7 @@ def validate_meeting_general(meeting: Dict) -> ResultWithData[MeetingJsonData]:
         return get_result_with_error(date_res.message)
     date = date_res.data
 
-    last_upload_res = validate_date(meeting, "last_upload")
+    last_upload_res = validate_date(meeting, "last_upload_date")
     if last_upload_res.is_error:
         return get_result_with_error(last_upload_res.message)
     last_upload = last_upload_res.data
@@ -70,10 +78,6 @@ def validate_meeting_general(meeting: Dict) -> ResultWithData[MeetingJsonData]:
 
     if not 0 <= meeting_no:
         return get_result_with_error("Invalid meeting number {0}".format(meeting_no))
-
-    same_period_meeting = get_meeting_for_period(date.year, lp, meeting_no)
-    if same_period_meeting is not None:
-        return get_result_with_error("A meeting already exists for {0}-lp{1}-{2}".format(date.year, lp, meeting_no))
 
     return get_result_with_data(MeetingJsonData(id=None,
                                                 date=date,
@@ -109,6 +113,6 @@ def validate_groups_tasks(meeting: Dict) -> ResultWithData[List[GroupTaskData]]:
             if group is None:
                 return get_result_with_error("No such group {0}".format(name))
 
-            group_task_datas.append(GroupTaskData(group_name=group.name, task_type=task.name))
+            group_task_datas.append(GroupTaskData(code=None, group_name=group.name, task_type=task.name))
 
     return get_result_with_data(group_task_datas)

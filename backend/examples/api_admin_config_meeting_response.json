@@ -1,0 +1,79 @@
+{
+  "id": "00c538b8-470c-4e14-ab31-efd323086102",
+  "lp": 4,
+  "meeting_no": 0,
+  "date": "2020-05-11T15:30Z",
+  "last_upload_date": "2020-05-04T21:55Z",
+  "groups_tasks": {
+    "vrapport": [
+      {
+        "name": "armit",
+        "code": "59f8fb74-8296-4846-b4fb-7f0cf32d34a6"
+      },
+      {
+        "name": "digit",
+        "code": "5e7b2e34-66a7-4c08-969f-74e03b236804"
+      },
+      {
+        "name": "fanbarerit",
+        "code": "5646d8bc-65d5-4035-96e1-22f94bdbacb7"
+      },
+      {
+        "name": "fritid",
+        "code": "c3b5dc5b-569f-4f85-aa4e-33415a932747"
+      },
+      {
+        "name": "mrcit",
+        "code": "cd6a3398-855c-43e5-babd-7ce9fe993d4c"
+      },
+      {
+        "name": "nollkit",
+        "code": "7fc8d2d5-374d-4685-bbae-5e6aa74b5d36"
+      },
+      {
+        "name": "prit",
+        "code": "629613d8-6d60-48ce-9e08-97bd09745ff7"
+      },
+      {
+        "name": "sexit",
+        "code": "984b15ad-53bb-46f9-ae34-0064bcef02c0"
+      },
+      {
+        "name": "snit",
+        "code": "1a10b20b-fcf9-48c5-b4bd-b5becfa45d9d"
+      },
+      {
+        "name": "styrit",
+        "code": "7e21cf56-dd22-45e8-a5a1-952d26ef7832"
+      }
+    ],
+    "vplan": [
+      {
+        "name": "armit",
+        "code": "59f8fb74-8296-4846-b4fb-7f0cf32d34a6"
+      },
+      {
+        "name": "digit",
+        "code": "5e7b2e34-66a7-4c08-969f-74e03b236804"
+      },
+      {
+        "name": "mrcit",
+        "code": "cd6a3398-855c-43e5-babd-7ce9fe993d4c"
+      }
+    ],
+    "budget": [
+      {
+        "name": "armit",
+        "code": "59f8fb74-8296-4846-b4fb-7f0cf32d34a6"
+      },
+      {
+        "name": "digit",
+        "code": "5e7b2e34-66a7-4c08-969f-74e03b236804"
+      },
+      {
+        "name": "mrcit",
+        "code": "cd6a3398-855c-43e5-babd-7ce9fe993d4c"
+      }
+    ]
+  }
+}

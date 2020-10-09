@@ -1,6 +1,7 @@
 import uuid
+from typing import Optional
 
-from pony.orm import db_session, Optional
+from pony.orm import db_session
 
 from db import Meeting
 

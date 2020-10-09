@@ -11,7 +11,7 @@ from ResultWithData import ResultWithData, get_result_with_data, get_result_with
 from command.GroupMeetingCommands import create_group_meeting
 from db import GroupMeeting, Group, Meeting, Task, GroupMeetingTask, GroupYear
 from errors.UserError import UserError
-from queries.GroupMeetingTaskQueries import get_tasks_for_meeting
+from queries.GroupMeetingTaskQueries import get_tasks_for_meeting_bool_dict
 
 # TODO: Apply functional decomposition to this file.
 
@@ -72,7 +72,7 @@ def validate_meeting(meeting_json):
             meeting.year = date.year
 
         tasks = meeting_json["groups_tasks"]
-        db_tasks = get_tasks_for_meeting(meeting.id)
+        db_tasks = get_tasks_for_meeting_bool_dict(meeting.id)
 
         # We want to select all the tasks for this meeting from the database and match the json to it
         for type in tasks:
