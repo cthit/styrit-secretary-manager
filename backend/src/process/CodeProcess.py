@@ -20,8 +20,8 @@ def handle_code_request(code_str: str) -> HttpResponse:
 
     current_date = datetime.utcnow()
     if code_last_upload < current_date:
-        get_config_value("secretary_email")
-        return get_with_error(401, "Code expired, please contact the secretary at {0}")
+        secretary_email = get_config_value("secretary_email")
+        return get_with_error(401, "Code expired, please contact the secretary at {0}".format(secretary_email))
 
     data_res = get_data_for_code(code_res.data)
     if data_res.is_error:

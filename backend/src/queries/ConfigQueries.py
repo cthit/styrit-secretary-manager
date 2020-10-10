@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pony import orm
 from pony.orm import db_session
 
@@ -16,10 +18,13 @@ def get_config_list():
 
 
 @db_session
-def get_config(key: str) -> Config:
+def get_config(key: str) -> Optional[Config]:
     return Config.get(key=key)
 
 
 @db_session
 def get_config_value(config_key: str) -> str:
-    return Config.get[config_key]
+    config = Config.get(key=config_key)
+    if config is None:
+        raise Exception("No config found with key {0}".format(config_key))
+    return config.value
