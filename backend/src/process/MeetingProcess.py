@@ -9,8 +9,7 @@ from command.MeetingCommands import create_new_meeting, update_meeting
 from data_objects.GroupTaskData import GroupTaskData
 from data_objects.MeetingJsonData import MeetingJsonData
 from process.MeetingValidation import validate_meeting
-from queries.GroupMeetingQueries import get_group_meeting
-from queries.GroupMeetingTaskQueries import get_group_meeting_task, get_tasks_for_meeting, get_meeting_json_data
+from queries.GroupMeetingTaskQueries import get_tasks_for_meeting, get_meeting_json_data
 
 
 def handle_meeting_config(data: Dict) -> HttpResponse:

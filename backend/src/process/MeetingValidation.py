@@ -4,7 +4,7 @@ from ResultWithData import ResultWithData, get_result_with_error, get_result_wit
 from data_objects.GroupTaskData import GroupTaskData
 from data_objects.MeetingJsonData import MeetingJsonData
 from process.Validation import validate_date, validate_int, validate_list, validate_dict, \
-    validate_code
+    validate_code, validate_str
 from queries.GroupMeetingQueries import get_meeting_for_code
 from queries.GroupQueries import get_group_by_name
 from queries.MeetingQueries import get_meeting_for_period, get_meeting_by_id
@@ -12,10 +12,11 @@ from queries.TaskQueries import get_task_by_name
 
 
 def validate_meeting(data: Dict) -> ResultWithData[MeetingJsonData]:
-    if "meeting" not in data:
-        return get_result_with_error("Missing meeting")
+    meeting_res = validate_dict(data, "meeting")
+    if meeting_res.is_error:
+        return get_result_with_error(meeting_res.message)
+    meeting = meeting_res.data
 
-    meeting = data["meeting"]
     if "id" not in meeting:
         return get_result_with_error("Missing id")
     id_str = meeting["id"]
@@ -107,7 +108,10 @@ def validate_groups_tasks(meeting: Dict) -> ResultWithData[List[GroupTaskData]]:
         task_groups = task_groups_res.data
 
         for group_task in task_groups:
-            name = group_task["name"]
+            name_res = validate_str(group_task, "name")
+            if name_res.is_error:
+                return get_result_with_error(name_res.message)
+            name = name_res.data
 
             group = get_group_by_name(name)
             if group is None:

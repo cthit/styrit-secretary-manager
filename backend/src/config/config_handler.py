@@ -1,15 +1,14 @@
-from datetime import datetime
-
 from pony import orm
 from pony.orm import db_session
 
 from command.GroupMeetingCommands import create_group_meeting
 from command.GroupMeetingTaskCommands import create_group_meeting_task
-from db import Meeting, Config, Group, Task, GroupMeetingTask, GroupMeeting
-
 from db import GroupYear
+from db import Meeting, Group, Task, GroupMeetingTask, GroupMeeting
+from process.StoryProcess import get_years
 from process.Validation import validate_stories
 from queries.ConfigQueries import get_config_list
+from queries.GroupYearQueries import get_group_years
 
 
 def get_config():
@@ -86,29 +85,6 @@ def get_tasks():
             "display_name": d_name
         })
     return tasks
-
-
-@db_session
-def get_years():
-    years = []
-    curr_year = datetime.utcnow().year
-    years_back = int(Config["possible_years_back_for_stories"].value)
-    for i in range(years_back):
-        years.append(curr_year - i)
-    return years
-
-
-@db_session
-def get_group_years():
-    list = []
-    group_years = GroupYear.select(lambda gy: gy.finished is False and gy.year != "active")
-    for group_year in group_years:
-        list.append({
-            "group": group_year.group.name,
-            "year": int(group_year.year),
-            "finished": group_year.finished
-        })
-    return list
 
 
 @db_session

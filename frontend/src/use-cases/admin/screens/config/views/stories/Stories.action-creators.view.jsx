@@ -55,8 +55,8 @@ export function deleteStoryGroupYear(groupYear) {
 export function saveStories(storyGroups, password) {
     return dispatch => {
         dispatch({
-            type: WAITING_FOR_RESULT
-        })
+                     type: WAITING_FOR_RESULT
+                 })
         postStories(storyGroups, password)
             .then(response => {
                 dispatch(onStoriesSavedSuccessful(response));
@@ -73,8 +73,8 @@ function onStoriesSavedSuccessful(response) {
     return {
         type: ON_SAVE_STORIES_SUCCESSFUL,
         payload: {
-            groupYears: response.data.groupYears,
-            years: response.data.years
+            groupYears: response.data.data.groupYears,
+            years: response.data.data.years
         },
         error: false
     };

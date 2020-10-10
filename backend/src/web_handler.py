@@ -15,6 +15,7 @@ from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
 from process.MeetingProcess import handle_meeting_config
 from process.PasswordValidation import validate_password
+from process.StoryProcess import handle_stories
 
 app = Flask(__name__)
 api = Api(app)
@@ -57,6 +58,7 @@ class MeetingResource(Resource):
         return handle_meeting_config(data).get_response()
 
 
+# If the password is valid, updates / adds the given story configs.
 class StoriesRes(Resource):
     def post(self):
         data = request.get_json()
@@ -64,8 +66,7 @@ class StoriesRes(Resource):
         if pass_validation.is_error():
             return pass_validation.get_response()
 
-        status, message = config_handler.handle_incoming_stories_config(data["storyGroups"])
-        return message, status
+        return handle_stories(data).get_response()
 
 
 # If the given password is valid, sends out the emails for the given meeting.

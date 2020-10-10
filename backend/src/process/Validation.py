@@ -51,6 +51,12 @@ def validate_stories(story_groups):
     return True, ""
 
 
+def validate_str(json: Dict, key: str) -> ResultWithData[str]:
+    if key not in json:
+        return get_result_with_error("Missing {0}".format(key))
+    return get_result_with_data(json[key])
+
+
 def validate_code(code: str) -> ResultWithData[uuid.UUID]:
     try:
         return get_result_with_data(uuid.UUID(code))
@@ -82,6 +88,18 @@ def validate_int(json: Dict, key: str) -> ResultWithData[int]:
         return get_result_with_data(val)
     except ValueError:
         return get_result_with_error("{0} is not a valid integer".format(int_str))
+
+
+def validate_bool(json: Dict, key: str) -> ResultWithData[bool]:
+    if key not in json:
+        return get_result_with_error("Missing {0}".format(key))
+
+    bool_str = json[key]
+    try:
+        val = bool(bool_str)
+        return get_result_with_data(val)
+    except ValueError:
+        get_result_with_error("{0} is not a valid boolean".format(bool_str))
 
 
 def validate_list(json: Dict, key: str) -> ResultWithData[List]:

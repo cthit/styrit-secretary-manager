@@ -11,7 +11,8 @@ def get_config_list():
     config_list = []
 
     # Add general config
-    conf = list(orm.select((config.key, config.value, config.config_type.type, config.description) for config in Config))
+    conf = list(
+        orm.select((config.key, config.value, config.config_type.type, config.description) for config in Config))
     for key, value, type, description in conf:
         config_list.append({"key": key, "value": value, "type": type, "description": description})
     return config_list
