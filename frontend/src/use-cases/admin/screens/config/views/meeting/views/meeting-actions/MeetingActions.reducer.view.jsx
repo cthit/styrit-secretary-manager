@@ -17,14 +17,16 @@ export const MeetingActionsReducer = (state = initialState, action) => {
             })
         case MEETING_SAVE_SUCCESSFUL:
             alert("Meeting saved successfully!")
-            return state
+            return Object.assign({}, state, {
+                errorMsg: ""
+            })
         case NEW_MEETING:
             return Object.assign({}, state, {
-                errorMsg: initialState.errorMsg
+                errorMsg: ""
             })
         case MEETING_SELECTED:
             return Object.assign({}, state, {
-                errorMsg: initialState.errorMsg
+                errorMsg: ""
             })
         case SEND_STORY_EMAILS_FAILED:
             return Object.assign({}, state, {
