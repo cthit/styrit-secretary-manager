@@ -13,6 +13,7 @@ from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
+from process.TimerProcess import handle_start_timer
 from validation.PasswordValidation import validate_password
 from process.StoryEmailRes import handle_story_email
 from process.StoryProcess import handle_stories
@@ -101,13 +102,7 @@ class TimerResource(Resource):
             return pass_validation.get_response()
 
         # The password was accepted, check the meeting id
-        meeting = Meeting.get(id=id)
-        if meeting is None:
-            return {"error": "Meeting with id " + str(id) + " not found"}, 404
-
-        # Meeting is valid, set the flag in the database for checking the deadline for the meeting
-        print("Starting to check for deadline for meeting with id: " + str(id))
-        meeting.check_for_deadline = True
+        handle_start_timer(id).get_response()
 
 
 # If the password is valid, returns the complete current configs.

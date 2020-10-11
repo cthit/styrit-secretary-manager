@@ -126,10 +126,10 @@ def validate_meeting_id(data: Dict, key: str) -> ResultWithData[UUID]:
     if key_res.is_error:
         return get_result_with_error(key_res.message)
 
-    return validate_meeting_id(key_res.data)
+    return validate_meeting_id_from_str(key_res.data)
 
 
-def validate_meeting_id(id: str) -> ResultWithData[UUID]:
+def validate_meeting_id_from_str(id: str) -> ResultWithData[UUID]:
     code_res = validate_code(id)
     if code_res.is_error:
         return get_result_with_error(code_res.message)
@@ -139,4 +139,4 @@ def validate_meeting_id(id: str) -> ResultWithData[UUID]:
     if meeting is None:
         return get_result_with_error("No meeting exists with id {0}")
 
-    return get_result_with_data(code)
+    return get_result_with_data(meeting.id)
