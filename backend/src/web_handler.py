@@ -13,6 +13,7 @@ from db import Meeting, ArchiveCode, Config
 from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
+from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
 from process.PasswordValidation import validate_password
 from process.StoryProcess import handle_stories
@@ -71,24 +72,13 @@ class StoriesRes(Resource):
 
 # If the given password is valid, sends out the emails for the given meeting.
 class MailRes(Resource):
-    @db_session
     def put(self):
         data = request.get_json()
         pass_validation = validate_password(data)
         if pass_validation.is_error():
             return pass_validation.get_response()
 
-        # The password was accepted! Try to figure out which meeting it wants to send the email for.
-        try:
-            id = data["id"]
-            meeting = Meeting.get(id=id)
-            if meeting is None:
-                raise Exception("unable to find meeting with id " + id)
-        except Exception as e:
-            print("Unable to validate meeting " + str(e))
-            return {"error": "Unable to validate meeting"}, 400
-
-        threading.Thread(target=mail_handler.send_mails, args=(meeting,)).start()
+        return handle_email(data).get_response()
 
 
 class MailStoriesRes(Resource):

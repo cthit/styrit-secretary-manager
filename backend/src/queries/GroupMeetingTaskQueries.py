@@ -4,9 +4,11 @@ from typing import Dict, List, Optional
 from pony.orm import db_session, select
 
 from ResultWithData import ResultWithData, get_result_with_error, get_result_with_data
+from data_objects.GroupMeetingEmailData import GroupMeetingEmailData
 from data_objects.GroupTaskData import GroupTaskData
+from data_objects.MeetingData import MeetingData
 from data_objects.MeetingJsonData import MeetingJsonData
-from db import GroupMeetingTask, Task
+from db import GroupMeetingTask, Task, GroupMeeting
 from queries.GroupMeetingQueries import get_group_meeting, get_group_meeting_by_code
 from queries.MeetingQueries import get_meeting_by_id
 from queries.TaskQueries import get_task_by_name
@@ -30,9 +32,16 @@ def get_tasks_for_meeting(meeting_id: uuid.UUID) -> List[GroupTaskData]:
     group_tasks = GroupMeetingTask.select(lambda g_t: g_t.group.meeting.id == meeting_id)[:]
     group_task_datas = []
     for group_task in group_tasks:
-        group_task_datas.append(GroupTaskData(group_task.group.group.group.name, group_task.group.code, group_task.task.name))
+        group_task_datas.append(
+            GroupTaskData(group_task.group.group.group.name, group_task.group.code, group_task.task.name))
 
     return group_task_datas
+
+
+@db_session
+def get_tasks_for_group_meeting(group_meeting: GroupMeeting) -> List[str]:
+    return list(select(gmt.task.name for gmt in GroupMeetingTask if
+                       gmt.group == group_meeting))
 
 
 @db_session
@@ -60,4 +69,35 @@ def get_meeting_json_data(code: uuid) -> ResultWithData[MeetingJsonData]:
         return get_result_with_error("No meeting with code {0}".format(code))
 
     groups_tasks = get_tasks_for_meeting(code)
-    return get_result_with_data(MeetingJsonData(meeting.id, meeting.date, meeting.last_upload, meeting.lp, meeting.meeting_no, groups_tasks))
+    return get_result_with_data(
+        MeetingJsonData(meeting.id, meeting.date, meeting.last_upload, meeting.lp, meeting.meeting_no, groups_tasks))
+
+
+@db_session
+def get_active_groups_for_meeting(meeting_id: uuid) -> List[GroupMeetingEmailData]:
+    group_meetings = list(GroupMeeting.select(
+        lambda group_meeting: group_meeting.meeting.id == meeting_id and
+                              group_meeting.group.year == "active"))
+
+    gm_email_datas = []
+    for group_meeting in group_meetings:
+        m = group_meeting.meeting
+        group = group_meeting.group.group
+        task_names = get_tasks_for_group_meeting(group_meeting)
+
+        gm_email_datas.append(GroupMeetingEmailData(
+            meeting=MeetingData(
+                id=m.id,
+                year=m.year,
+                date=m.date,
+                last_upload=m.last_upload,
+                lp=m.lp,
+                meeting_no=m.meeting_no
+            ),
+            group_name=group.name,
+            group_display_name=group.display_name,
+            group_code=group_meeting.code,
+            task_names=task_names
+        ))
+
+    return gm_email_datas

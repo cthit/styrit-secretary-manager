@@ -6,7 +6,7 @@ from pony.orm import db_session
 
 from data_objects.GroupYearData import GroupYearData
 from data_objects.MeetingData import MeetingData
-from db import GroupMeeting, Group, Meeting
+from db import GroupMeeting, Meeting
 from queries.GroupYearQueries import get_group_year
 
 

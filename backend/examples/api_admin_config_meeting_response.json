@@ -1,79 +1,113 @@
 {
-  "id": "00c538b8-470c-4e14-ab31-efd323086102",
-  "lp": 4,
-  "meeting_no": 0,
-  "date": "2020-05-11T15:30Z",
-  "last_upload_date": "2020-05-04T21:55Z",
-  "groups_tasks": {
-    "vrapport": [
-      {
-        "name": "armit",
-        "code": "59f8fb74-8296-4846-b4fb-7f0cf32d34a6"
-      },
-      {
-        "name": "digit",
-        "code": "5e7b2e34-66a7-4c08-969f-74e03b236804"
-      },
-      {
-        "name": "fanbarerit",
-        "code": "5646d8bc-65d5-4035-96e1-22f94bdbacb7"
-      },
-      {
-        "name": "fritid",
-        "code": "c3b5dc5b-569f-4f85-aa4e-33415a932747"
-      },
-      {
-        "name": "mrcit",
-        "code": "cd6a3398-855c-43e5-babd-7ce9fe993d4c"
-      },
-      {
-        "name": "nollkit",
-        "code": "7fc8d2d5-374d-4685-bbae-5e6aa74b5d36"
-      },
-      {
-        "name": "prit",
-        "code": "629613d8-6d60-48ce-9e08-97bd09745ff7"
-      },
-      {
-        "name": "sexit",
-        "code": "984b15ad-53bb-46f9-ae34-0064bcef02c0"
-      },
-      {
-        "name": "snit",
-        "code": "1a10b20b-fcf9-48c5-b4bd-b5becfa45d9d"
-      },
-      {
-        "name": "styrit",
-        "code": "7e21cf56-dd22-45e8-a5a1-952d26ef7832"
-      }
-    ],
-    "vplan": [
-      {
-        "name": "armit",
-        "code": "59f8fb74-8296-4846-b4fb-7f0cf32d34a6"
-      },
-      {
-        "name": "digit",
-        "code": "5e7b2e34-66a7-4c08-969f-74e03b236804"
-      },
-      {
-        "name": "mrcit",
-        "code": "cd6a3398-855c-43e5-babd-7ce9fe993d4c"
-      }
-    ],
-    "budget": [
-      {
-        "name": "armit",
-        "code": "59f8fb74-8296-4846-b4fb-7f0cf32d34a6"
-      },
-      {
-        "name": "digit",
-        "code": "5e7b2e34-66a7-4c08-969f-74e03b236804"
-      },
-      {
-        "name": "mrcit",
-        "code": "cd6a3398-855c-43e5-babd-7ce9fe993d4c"
-      }
-    ]
+  "data": {
+    "id": "e41dad80-7980-483f-ac4e-c332904c89d6",
+    "lp": 3,
+    "meeting_no": 2,
+    "date": "2020-10-14T02:15Z",
+    "last_upload_date": "2020-10-27T03:08Z",
+    "groups_tasks": {
+      "vberattelse": [
+        {
+          "name": "fanbarerit",
+          "code": "55ce00a3-21a2-4b17-93ac-a64f9679e6d1"
+        }
+      ],
+      "eberattelse": [
+        {
+          "name": "fanbarerit",
+          "code": "55ce00a3-21a2-4b17-93ac-a64f9679e6d1"
+        }
+      ],
+      "vplan": [
+        {
+          "name": "fritid",
+          "code": "ad36d573-ed1f-4523-9f4d-59044676b8a5"
+        },
+        {
+          "name": "mrcit",
+          "code": "00b81945-124a-4b80-9c4e-413821e25f8e"
+        }
+      ],
+      "budget": [
+        {
+          "name": "armit",
+          "code": "952b3dc7-a2a3-45fa-8839-fb65cc2379d4"
+        },
+        {
+          "name": "digit",
+          "code": "7721c089-a9d0-4713-9281-72d97ad360ca"
+        },
+        {
+          "name": "fanbarerit",
+          "code": "459c2fa4-acbb-4c5f-8c72-5a7d4648da30"
+        },
+        {
+          "name": "fritid",
+          "code": "ad36d573-ed1f-4523-9f4d-59044676b8a5"
+        },
+        {
+          "name": "prit",
+          "code": "120c92e6-6aa6-49b9-afc0-26499a541ce7"
+        },
+        {
+          "name": "sexit",
+          "code": "8287674d-8c91-4a93-84d6-18fab608866d"
+        },
+        {
+          "name": "snit",
+          "code": "a742de8d-3c9f-4baf-96c5-770fcff2f590"
+        },
+        {
+          "name": "styrit",
+          "code": "a11f08a5-9c65-4c29-b256-35961baaa61a"
+        },
+        {
+          "name": "equalit",
+          "code": "3d33a967-5c11-4ba6-99e5-d73266c332a8"
+        }
+      ],
+      "vrapport": [
+        {
+          "name": "armit",
+          "code": "952b3dc7-a2a3-45fa-8839-fb65cc2379d4"
+        },
+        {
+          "name": "digit",
+          "code": "7721c089-a9d0-4713-9281-72d97ad360ca"
+        },
+        {
+          "name": "fanbarerit",
+          "code": "459c2fa4-acbb-4c5f-8c72-5a7d4648da30"
+        },
+        {
+          "name": "fritid",
+          "code": "ad36d573-ed1f-4523-9f4d-59044676b8a5"
+        },
+        {
+          "name": "mrcit",
+          "code": "00b81945-124a-4b80-9c4e-413821e25f8e"
+        },
+        {
+          "name": "nollkit",
+          "code": "6aaae6cf-3cd3-4809-9c6e-f6a3e7a943c5"
+        },
+        {
+          "name": "prit",
+          "code": "120c92e6-6aa6-49b9-afc0-26499a541ce7"
+        },
+        {
+          "name": "styrit",
+          "code": "a11f08a5-9c65-4c29-b256-35961baaa61a"
+        },
+        {
+          "name": "equalit",
+          "code": "3d33a967-5c11-4ba6-99e5-d73266c332a8"
+        }
+      ]
+    }
+  },
+  "error": {
+    "isError": false,
+    "message": ""
   }
 }
