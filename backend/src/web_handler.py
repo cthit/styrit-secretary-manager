@@ -16,6 +16,7 @@ from process.FileProcess import handle_file_request
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
 from process.PasswordValidation import validate_password
+from process.StoryEmailRes import handle_story_email
 from process.StoryProcess import handle_stories
 
 app = Flask(__name__)
@@ -70,7 +71,7 @@ class StoriesRes(Resource):
         return handle_stories(data).get_response()
 
 
-# If the given password is valid, sends out the emails for the given meeting.
+# If the given password is valid, sends out the emails to active groups for the given meeting.
 class MailRes(Resource):
     def put(self):
         data = request.get_json()
@@ -81,6 +82,7 @@ class MailRes(Resource):
         return handle_email(data).get_response()
 
 
+# If the given password is valid, sends out emails for the stories for the given meeting.
 class MailStoriesRes(Resource):
     def put(self):
         data = request.get_json()
@@ -88,12 +90,7 @@ class MailStoriesRes(Resource):
         if pass_validation.is_error():
             return pass_validation.get_response()
 
-        try:
-            id = data["id"]
-        except Exception as e:
-            return {"error": "Missing meeting id"}, 400
-
-        threading.Thread(target=mail_handler.send_story_emails, args=(id,)).start()
+        return handle_story_email(data).get_response()
 
 
 # If the password is valid, starts a timer for the meeting.

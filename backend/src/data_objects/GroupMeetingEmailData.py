@@ -9,6 +9,7 @@ from data_objects.MeetingData import MeetingData
 class GroupMeetingEmailData:
     meeting: MeetingData
     group_name: str
+    group_year: str
     group_display_name: str
     group_code: UUID
     task_names: List[str]

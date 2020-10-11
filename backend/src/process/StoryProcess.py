@@ -1,13 +1,16 @@
 from datetime import datetime
 from typing import Dict, List
+from uuid import UUID
 
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from ResultWithData import ResultWithData, get_result_with_error, get_result_with_data
+from command.GroupMeetingCommands import create_group_meeting
+from command.GroupMeetingTaskCommands import create_group_meeting_task
 from command.GroupYearCommands import update_group_year, create_group_year
 from data_objects.StoryData import StoryData
 from process.Validation import validate_list, validate_str, validate_int, validate_bool
 from queries.ConfigQueries import get_config
-from queries.GroupYearQueries import get_group_year, get_group_years
+from queries.GroupYearQueries import get_group_year, get_group_years, get_story_group_years
 
 
 def handle_stories(config: Dict[str, object]) -> HttpResponse:
@@ -75,3 +78,14 @@ def get_years():
     for i in range(years_back):
         years.append(curr_year - i)
     return years
+
+
+def update_story_group_meetings(meeting_id: UUID) -> List[StoryData]:
+    story_groups = get_story_group_years()
+    for story_group in story_groups:
+        create_group_meeting(meeting_id, story_group.group, story_group.year)
+        create_group_meeting_task(meeting_id, story_group.group, story_group.year,
+                                  "vberattelse")
+        create_group_meeting_task(meeting_id, story_group.group, story_group.year,
+                                  "eberattelse")
+    return story_groups

@@ -12,6 +12,8 @@ from command.GroupMeetingCommands import create_group_meeting
 from db import GroupMeeting, Group, Meeting, Task, GroupMeetingTask, GroupYear
 from errors.UserError import UserError
 from queries.GroupMeetingTaskQueries import get_tasks_for_meeting_bool_dict
+from queries.MeetingQueries import get_meeting_by_id
+
 
 @db_session
 def validate_stories(story_groups):
@@ -122,3 +124,20 @@ def validate_dict(json: Dict, key: str) -> ResultWithData[Dict]:
         return get_result_with_error("{0} must be an object".format(key))
 
     return get_result_with_data(value)
+
+
+def validate_meeting_id(data: Dict, key: str) -> ResultWithData[uuid.UUID]:
+    key_res = validate_str(data, key)
+    if key_res.is_error:
+        return get_result_with_error(key_res.message)
+
+    code_res = validate_code(key_res.data)
+    if code_res.is_error:
+        return get_result_with_error(code_res.message)
+
+    code = code_res.data
+    meeting = get_meeting_by_id(code)
+    if meeting is None:
+        return get_result_with_error("No meeting exists with id {0}")
+
+    return get_result_with_data(code)

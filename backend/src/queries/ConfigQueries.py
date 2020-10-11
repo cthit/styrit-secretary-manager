@@ -3,6 +3,7 @@ from typing import Optional
 from pony import orm
 from pony.orm import db_session
 
+from data_objects.EmailConfigData import EmailConfigData
 from db import Config
 
 
@@ -29,3 +30,19 @@ def get_config_value(config_key: str) -> str:
     if config is None:
         raise Exception("No config found with key {0}".format(config_key))
     return config.value
+
+
+@db_session
+def get_email_config_data() -> EmailConfigData:
+    return EmailConfigData(
+        active_msg=get_config_value("mail_to_groups_message"),
+        stories_msg=get_config_value("mail_for_stories"),
+        active_subject=get_config_value("mail_to_groups_subject"),
+        stories_subject=get_config_value("mail_for_stories_subject"),
+        frontend_url=get_config_value("frontend_url"),
+        document_template_url=get_config_value("document_template_url"),
+        secretary_email=get_config_value("secretary_email"),
+        board_display_name=get_config_value("board_display_name"),
+        board_email=get_config_value("board_email"),
+        email_domain=get_config_value("group_email_domain")
+    )
