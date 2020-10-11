@@ -6,7 +6,7 @@ from typing import Dict
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from ResultWithData import ResultWithData, get_result_with_error, get_result_with_data
 from command.GroupMeetingFileCommands import create_group_meeting_file, update_upload_date_for_file
-from process.Validation import validate_code
+from validation.Validation import validate_code
 from queries.ConfigQueries import get_config_value
 from queries.GroupMeetingFileQueries import get_group_meeting_file_from_code
 from queries.GroupMeetingQueries import get_group_meeting_by_code, get_meeting_data_from_code, \

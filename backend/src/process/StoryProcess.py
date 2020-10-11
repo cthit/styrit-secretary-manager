@@ -8,7 +8,7 @@ from command.GroupMeetingCommands import create_group_meeting
 from command.GroupMeetingTaskCommands import create_group_meeting_task
 from command.GroupYearCommands import update_group_year, create_group_year
 from data_objects.StoryData import StoryData
-from process.Validation import validate_list, validate_str, validate_int, validate_bool
+from validation.Validation import validate_list, validate_str, validate_int, validate_bool
 from queries.ConfigQueries import get_config
 from queries.GroupYearQueries import get_group_year, get_group_years, get_story_group_years
 

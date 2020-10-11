@@ -3,9 +3,8 @@ from typing import Dict, List
 from ResultWithData import ResultWithData, get_result_with_error, get_result_with_data
 from data_objects.GroupTaskData import GroupTaskData
 from data_objects.MeetingJsonData import MeetingJsonData
-from process.Validation import validate_date, validate_int, validate_list, validate_dict, \
+from validation.Validation import validate_date, validate_int, validate_list, validate_dict, \
     validate_code, validate_str
-from queries.GroupMeetingQueries import get_meeting_for_code
 from queries.GroupQueries import get_group_by_name
 from queries.MeetingQueries import get_meeting_for_period, get_meeting_by_id
 from queries.TaskQueries import get_task_by_name

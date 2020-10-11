@@ -9,8 +9,8 @@ from data_objects.GroupMeetingEmailData import GroupMeetingEmailData
 from data_objects.MailData import MailData
 from mail_handler import get_story_group_name, send_email
 from process.StoryProcess import update_story_group_meetings
-from process.Validation import validate_meeting_id
-from queries.ConfigQueries import get_config_value, get_email_config_data
+from validation.Validation import validate_meeting_id
+from queries.ConfigQueries import get_email_config_data
 from queries.GroupMeetingTaskQueries import get_story_group_email_datas_for_meeting
 
 

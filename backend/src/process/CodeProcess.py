@@ -1,12 +1,12 @@
 import uuid
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict
 
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from ResultWithData import ResultWithData, get_result_with_error, get_result_with_data
-from process.Validation import validate_code
+from validation.Validation import validate_code
 from queries.ConfigQueries import get_config_value
-from queries.GroupMeetingQueries import get_group_meeting_by_code, get_last_upload_for_code, get_meeting_for_code, \
+from queries.GroupMeetingQueries import get_group_meeting_by_code, get_last_upload_for_code, \
     get_group_year_data_from_code, get_meeting_data_from_code
 from queries.GroupMeetingTaskQueries import get_tasks_for_code
 

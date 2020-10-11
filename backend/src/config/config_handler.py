@@ -6,7 +6,7 @@ from command.GroupMeetingTaskCommands import create_group_meeting_task
 from db import GroupYear
 from db import Meeting, Group, Task, GroupMeetingTask, GroupMeeting
 from process.StoryProcess import get_years
-from process.Validation import validate_stories
+from validation.Validation import validate_stories
 from queries.ConfigQueries import get_config_list
 from queries.GroupYearQueries import get_group_years
 

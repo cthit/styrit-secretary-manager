@@ -8,7 +8,7 @@ from command.GroupMeetingTaskCommands import create_group_meeting_task, remove_g
 from command.MeetingCommands import create_new_meeting, update_meeting
 from data_objects.GroupTaskData import GroupTaskData
 from data_objects.MeetingJsonData import MeetingJsonData
-from process.MeetingValidation import validate_meeting
+from validation.MeetingValidation import validate_meeting
 from queries.GroupMeetingTaskQueries import get_tasks_for_meeting, get_meeting_json_data
 
 

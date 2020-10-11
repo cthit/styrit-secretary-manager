@@ -1,5 +1,4 @@
 import os
-import threading
 
 from flask import Flask, request, send_file
 from flask_cors import CORS
@@ -7,7 +6,6 @@ from flask_restful import Api, Resource
 from pony.orm import db_session
 
 import end_date_handler
-import mail_handler
 from config import config_handler
 from db import Meeting, ArchiveCode, Config
 from process.CodeProcess import handle_code_request
@@ -15,7 +13,7 @@ from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
-from process.PasswordValidation import validate_password
+from validation.PasswordValidation import validate_password
 from process.StoryEmailRes import handle_story_email
 from process.StoryProcess import handle_stories
 

@@ -8,10 +8,9 @@ import mail_handler
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from data_objects.GroupMeetingEmailData import GroupMeetingEmailData
 from data_objects.MailData import MailData
-from process.Validation import validate_code, validate_str, validate_meeting_id
-from queries.ConfigQueries import get_config_value, get_email_config_data
+from validation.Validation import validate_meeting_id
+from queries.ConfigQueries import get_email_config_data
 from queries.GroupMeetingTaskQueries import get_active_group_email_datas_for_meeting
-from queries.MeetingQueries import get_meeting_by_id
 
 
 def handle_email(data: Dict) -> HttpResponse:

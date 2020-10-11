@@ -1,17 +1,12 @@
-import json
-import uuid
 from datetime import datetime
 from typing import Dict, List
+from uuid import UUID
 
-import dateutil
 from dateutil.parser import parse
 from pony.orm import db_session
 
 from ResultWithData import ResultWithData, get_result_with_data, get_result_with_error
-from command.GroupMeetingCommands import create_group_meeting
-from db import GroupMeeting, Group, Meeting, Task, GroupMeetingTask, GroupYear
-from errors.UserError import UserError
-from queries.GroupMeetingTaskQueries import get_tasks_for_meeting_bool_dict
+from db import Group, GroupYear
 from queries.MeetingQueries import get_meeting_by_id
 
 
@@ -59,9 +54,9 @@ def validate_str(json: Dict, key: str) -> ResultWithData[str]:
     return get_result_with_data(json[key])
 
 
-def validate_code(code: str) -> ResultWithData[uuid.UUID]:
+def validate_code(code: str) -> ResultWithData[UUID]:
     try:
-        return get_result_with_data(uuid.UUID(code))
+        return get_result_with_data(UUID(code))
     except ValueError:
         return get_result_with_error("Invalid code format")
 
@@ -110,7 +105,7 @@ def validate_list(json: Dict, key: str) -> ResultWithData[List]:
 
     value = json[key]
     if type(value) is not list:
-        return get_result_with_error("{0} must be a list".format(key)) 
+        return get_result_with_error("{0} must be a list".format(key))
 
     return get_result_with_data(value)
 
@@ -126,12 +121,16 @@ def validate_dict(json: Dict, key: str) -> ResultWithData[Dict]:
     return get_result_with_data(value)
 
 
-def validate_meeting_id(data: Dict, key: str) -> ResultWithData[uuid.UUID]:
+def validate_meeting_id(data: Dict, key: str) -> ResultWithData[UUID]:
     key_res = validate_str(data, key)
     if key_res.is_error:
         return get_result_with_error(key_res.message)
 
-    code_res = validate_code(key_res.data)
+    return validate_meeting_id(key_res.data)
+
+
+def validate_meeting_id(id: str) -> ResultWithData[UUID]:
+    code_res = validate_code(id)
     if code_res.is_error:
         return get_result_with_error(code_res.message)
 
