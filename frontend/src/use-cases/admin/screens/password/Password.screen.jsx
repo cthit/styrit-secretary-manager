@@ -1,13 +1,25 @@
 import React from "react";
-import { DigitButton, DigitForm, DigitText, DigitTextField, useDigitFormField } from "@cthit/react-digit-components";
+import {
+    DigitButton,
+    DigitForm,
+    DigitText,
+    DigitTextField,
+    useDigitFormField
+} from "@cthit/react-digit-components";
 import * as yup from "yup";
-import { FormContainer } from "../../../../common/ui/formcontainer/FormContainer.styles";
-import { InfoCard, Space } from "./Password.styles.screen";
+import {FormContainer} from "../../../../common/ui/formcontainer/FormContainer.styles";
+import {
+    CenterRow,
+    FingerParagraph,
+    InfoCard,
+    Space
+} from "./Password.styles.screen";
 
 const PasswordField = () => {
     const fieldValues = useDigitFormField("password");
-    return <DigitTextField {...fieldValues} upperLabel="Lösenord" outlined medium password size={{width: "325px"}}
-                           autocomplete={"password"} />;
+    return <DigitTextField {...fieldValues} upperLabel="Lösenord" outlined
+                           medium password size={{width: "325px"}}
+                           autocomplete={"password"}/>;
 };
 
 export const Password = props => (
@@ -20,14 +32,20 @@ export const Password = props => (
         render={({errors}) => (
             <FormContainer>
                 <InfoCard>
-                    <DigitText.Text text="Inloggning, endast för sekreterare!" />
+                    <DigitText.Text
+                        text="Inloggning, endast för sekreterare!"/>
                 </InfoCard>
                 {props.error && (
-                    <DigitText.Text text={props.error} color="error" bold />
+                    <DigitText.Text text={props.error} color="error" bold/>
                 )}
-                <PasswordField />
-                <Space />
-                <DigitButton primary raised submit size={{width: "325px"}} text="Logga in" />
+                <CenterRow>
+                    <FingerParagraph>&#128073;</FingerParagraph>
+                    <PasswordField/>
+                    <FingerParagraph>&#128072;</FingerParagraph>
+                </CenterRow>
+                <Space/>
+                <DigitButton primary raised submit size={{width: "325px"}}
+                             text="Logga in"/>
             </FormContainer>
         )}
     />

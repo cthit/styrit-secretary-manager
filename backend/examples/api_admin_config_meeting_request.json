@@ -1,0 +1,98 @@
+{
+  "pass": "asd123",
+  "meeting": {
+    "id": "e41dad80-7980-483f-ac4e-c332904c89d6",
+    "lp": 3,
+    "meeting_no": 2,
+    "date": "2020-10-14T02:15Z",
+    "last_upload_date": "2020-10-27T03:08Z",
+    "groups_tasks": {
+      "vplan": [
+        {
+          "name": "fritid",
+          "code": "ad36d573-ed1f-4523-9f4d-59044676b8a5"
+        },
+        {
+          "name": "mrcit",
+          "code": "00b81945-124a-4b80-9c4e-413821e25f8e"
+        }
+      ],
+      "budget": [
+        {
+          "name": "armit",
+          "code": "952b3dc7-a2a3-45fa-8839-fb65cc2379d4"
+        },
+        {
+          "name": "digit",
+          "code": "7721c089-a9d0-4713-9281-72d97ad360ca"
+        },
+        {
+          "name": "fanbarerit",
+          "code": "459c2fa4-acbb-4c5f-8c72-5a7d4648da30"
+        },
+        {
+          "name": "fritid",
+          "code": "ad36d573-ed1f-4523-9f4d-59044676b8a5"
+        },
+        {
+          "name": "prit",
+          "code": "120c92e6-6aa6-49b9-afc0-26499a541ce7"
+        },
+        {
+          "name": "sexit",
+          "code": "8287674d-8c91-4a93-84d6-18fab608866d"
+        },
+        {
+          "name": "snit",
+          "code": "a742de8d-3c9f-4baf-96c5-770fcff2f590"
+        },
+        {
+          "name": "styrit",
+          "code": "a11f08a5-9c65-4c29-b256-35961baaa61a"
+        },
+        {
+          "name": "equalit",
+          "code": "3d33a967-5c11-4ba6-99e5-d73266c332a8"
+        }
+      ],
+      "vrapport": [
+        {
+          "name": "armit",
+          "code": "952b3dc7-a2a3-45fa-8839-fb65cc2379d4"
+        },
+        {
+          "name": "digit",
+          "code": "7721c089-a9d0-4713-9281-72d97ad360ca"
+        },
+        {
+          "name": "fanbarerit",
+          "code": "459c2fa4-acbb-4c5f-8c72-5a7d4648da30"
+        },
+        {
+          "name": "fritid",
+          "code": "ad36d573-ed1f-4523-9f4d-59044676b8a5"
+        },
+        {
+          "name": "mrcit",
+          "code": "00b81945-124a-4b80-9c4e-413821e25f8e"
+        },
+        {
+          "name": "nollkit",
+          "code": "6aaae6cf-3cd3-4809-9c6e-f6a3e7a943c5"
+        },
+        {
+          "name": "prit",
+          "code": "120c92e6-6aa6-49b9-afc0-26499a541ce7"
+        },
+        {
+          "name": "styrit",
+          "code": "a11f08a5-9c65-4c29-b256-35961baaa61a"
+        },
+        {
+          "name": "equalit",
+          "code": "3d33a967-5c11-4ba6-99e5-d73266c332a8"
+        }
+      ]
+    }
+  }
+}

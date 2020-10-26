@@ -9,7 +9,7 @@ import {
 import {handleError} from "../../../../../../../../common/functions/handleError";
 import {putEmails} from "../../../../../../../../api/put.Emails.api";
 import {postDeadline} from "../../../../../../../../api/post.Deadline.api";
-import {postArchive} from "../../../../../../../../api/post.Archive.api";
+import {getArchiveUrl} from "../../../../../../../../api/get.ArchiveUrl.api";
 import {putStoryEmails} from "../../../../../../../../api/put.StoryEmails.api";
 
 export function saveMeeting(meeting, groupTasks, allTasks, password) {
@@ -17,8 +17,8 @@ export function saveMeeting(meeting, groupTasks, allTasks, password) {
 
     return dispatch => {
         dispatch({
-            type: WAITING_FOR_RESULT
-        })
+                     type: WAITING_FOR_RESULT
+                 })
         postMeeting(meeting, password)
             .then(response => {
                 dispatch(onMeetingSavedAccepted(response));
@@ -46,7 +46,7 @@ export function startDeadlineCheck(meetingID, password) {
 }
 
 export function downloadArchive(meetingID) {
-    postArchive(meetingID).then(response => {
+    getArchiveUrl(meetingID).then(response => {
         onArchiveSuccessful(response);
     }).catch(error => {
         onArchiveError(error);
@@ -62,9 +62,9 @@ function getGroupTasksToSend(allTasks, groupTasks) {
     Object.keys(groupTasks).forEach(group => {
         groupTasks[group].tasks.forEach(task => {
             meetingGTs[task].push({
-                name: group,
-                code: groupTasks[group].code
-            })
+                                      name: group,
+                                      code: groupTasks[group].code
+                                  })
         })
     })
 
@@ -74,8 +74,8 @@ function getGroupTasksToSend(allTasks, groupTasks) {
 export function sendStoryEmails(password, meeting) {
     return dispatch => {
         dispatch({
-            type: WAITING_FOR_RESULT
-        })
+                     type: WAITING_FOR_RESULT
+                 })
         putStoryEmails(meeting, password)
             .then(response => {
                 dispatch(onSendStoryEmailsSuccessful(response))
@@ -88,7 +88,7 @@ export function sendStoryEmails(password, meeting) {
 function onMeetingSavedAccepted(response) {
 
     // Modify the data here.
-    let meeting = response.data;
+    let meeting = response.data.data;
 
     return {
         type: MEETING_SAVE_SUCCESSFUL,
@@ -120,7 +120,8 @@ function onDeadlineError(error) {
 }
 
 function onArchiveSuccessful(response) {
-    window.open("http://" + response.data);
+    console.log("Response???? ", response.data.data);
+    window.open("http://" + response.data.data.redirect_url);
 }
 
 function onArchiveError(error) {

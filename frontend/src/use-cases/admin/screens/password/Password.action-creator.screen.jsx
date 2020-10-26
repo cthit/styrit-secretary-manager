@@ -1,9 +1,9 @@
-import { handleError } from "../../../../common/functions/handleError";
+import {handleError} from "../../../../common/functions/handleError";
 import {
     SUBMIT_PASSWORD_FAILED,
     SUBMIT_PASSWORD_SUCCESSFUL
 } from "./Password.actions.screen";
-import { putPassword } from "../../../../api/put.Password.api";
+import {putPassword} from "../../../../api/put.Password.api";
 
 export function submitPassword(password) {
     return dispatch => {
@@ -21,7 +21,7 @@ function onAccept(response, password) {
     console.log("RESPONSE::", response);
 
     // Modify the data here.
-    let data = response.data;
+    let data = response.data.data;
     let meetings = {};
     data.meetings.forEach(meeting => (meetings[meeting.id] = meeting));
     data.meetings = meetings;

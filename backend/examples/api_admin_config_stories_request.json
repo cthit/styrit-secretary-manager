@@ -1,0 +1,15 @@
+{
+  "pass": "asd123",
+  "storyGroups": [
+    {
+      "group": "fanbarerit",
+      "year": 2017,
+      "finished": false
+    },
+    {
+      "group": "prit",
+      "year": 2017,
+      "finished": false
+    }
+  ]
+}

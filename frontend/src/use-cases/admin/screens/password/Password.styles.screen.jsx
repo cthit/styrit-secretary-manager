@@ -17,3 +17,14 @@ export const InfoCard = styled.div`
 export const Space = styled.div`
   min-height: 10px;
 `;
+
+export const CenterRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const FingerParagraph = styled.p`
+  font-size: 32px;
+  margin: 15px;
+`

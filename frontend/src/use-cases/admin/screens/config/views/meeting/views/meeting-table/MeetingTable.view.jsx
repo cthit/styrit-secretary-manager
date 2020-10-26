@@ -6,10 +6,10 @@ import {
     StyledTableHead,
     StyledTableRow
 } from "./MeetingTable.styles.view";
-import {MeetingTableContainer} from "../../Meeting.styles.view";
-import {TASK_MODE_ALL, TASK_MODE_SOME} from "../../TaskModes";
+import { MeetingTableContainer } from "../../Meeting.styles.view";
+import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
 import MeetingActions from "../meeting-actions/MeetingActions.container.view";
-import {DigitCheckbox} from "@cthit/react-digit-components";
+import { DigitCheckbox } from "@cthit/react-digit-components";
 
 export const MeetingTable = props => {
     const {groups, tasks, tasksMode, groupTasks} = props;
@@ -31,6 +31,7 @@ export const MeetingTable = props => {
                                     onChange={() => {
                                         props.onAllTaskClicked(task)
                                     }}
+                                    primary
                                 />
                             </StyledTableCell>
                         ))}
@@ -56,7 +57,9 @@ export const MeetingTable = props => {
                                                 task,
                                                 group
                                             );
-                                        }}/>
+                                        }}
+                                        primary
+                                    />
                                 </StyledTableCell>
                             ))}
                             <StyledTableCell align="right">
@@ -66,7 +69,7 @@ export const MeetingTable = props => {
                     ))}
                 </StyledTableBody>
             </StyledTable>
-            <MeetingActions/>
+            <MeetingActions />
         </MeetingTableContainer>
     );
 };
