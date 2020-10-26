@@ -1,21 +1,27 @@
-from typing import Optional
+from typing import Optional, List
 
 from pony import orm
 from pony.orm import db_session
 
+from ResultWithData import ResultWithData, get_result_with_data, get_result_with_error
 from data_objects.EmailConfigData import EmailConfigData
 from db import Config
 
 
 @db_session
-def get_config_list():
+def get_config_list() -> List[dict]:
     config_list = []
 
     # Add general config
     conf = list(
         orm.select((config.key, config.value, config.config_type.type, config.description) for config in Config))
     for key, value, type, description in conf:
-        config_list.append({"key": key, "value": value, "type": type, "description": description})
+        config_list.append({
+            "key": key,
+            "value": value,
+            "type": type,
+            "description": description
+        })
     return config_list
 
 
@@ -30,6 +36,14 @@ def get_config_value(config_key: str) -> str:
     if config is None:
         raise Exception("No config found with key {0}".format(config_key))
     return config.value
+
+
+def get_config_value_int(config_key: str) -> ResultWithData[int]:
+    value = get_config_value(config_key)
+    try:
+        return get_result_with_data(int(value))
+    except ValueError:
+        return get_result_with_error(f"Config value {value} for key {config_key} is not a valid integer")
 
 
 @db_session

@@ -7,8 +7,9 @@ import pytz
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from data_objects.GroupMeetingEmailData import GroupMeetingEmailData
 from data_objects.MailData import MailData
-from mail_handler import get_story_group_name, send_email
+from mail_handler import send_email
 from process.StoryProcess import update_story_group_meetings
+from queries.GroupYearQueries import get_story_group_name
 from validation.Validation import validate_meeting_id
 from queries.ConfigQueries import get_email_config_data
 from queries.GroupMeetingTaskQueries import get_story_group_email_datas_for_meeting

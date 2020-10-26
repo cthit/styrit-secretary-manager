@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
-from pony.orm import db_session
+from pony.orm import db_session, select
 
 from data_objects.MeetingData import MeetingData
 from db import Meeting
@@ -31,3 +31,8 @@ def get_meeting_data_by_id(id: UUID) -> Optional[MeetingData]:
         meeting.lp,
         meeting.meeting_no
     )
+
+
+@db_session
+def get_meeting_ids() -> List[UUID]:
+    return list(select(meeting.id for meeting in Meeting))

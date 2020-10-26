@@ -1,0 +1,132 @@
+{
+  "meetings": [
+    {
+      "id": "2ae684a6-6d30-4395-b643-f29b560c0739",
+      "lp": 1,
+      "meeting_no": 0,
+      "date": "2020-10-08T15:15Z",
+      "last_upload_date": "2020-10-01T21:55Z",
+      "groups_tasks": {
+        "vplan": [
+          {
+            "name": "fanbarerit",
+            "code": "2ae684a6-6d30-4395-b643-f29b560c0739"
+          }
+        ],
+        "budget": [
+          {
+            "name": "fanbarerit",
+            "code": "2ae684a6-6d30-4395-b643-f29b560c0739"
+          }
+        ],
+        "vrapport": [
+          {
+            "name": "prit",
+            "code": "2ae684a6-6d30-4395-b643-f29b560c0739"
+          },
+          {
+            "name": "sexit",
+            "code": "2ae684a6-6d30-4395-b643-f29b560c0739"
+          },
+          {
+            "name": "equalit",
+            "code": "2ae684a6-6d30-4395-b643-f29b560c0739"
+          }
+        ]
+      }
+    }
+  ],
+  "general": [
+    {
+      "key": "mail_to_board_subject",
+      "value": "Dokument f\u00f6r sektionsm\u00f6te {0} lp {1}",
+      "type": "string",
+      "description": "The subject of the email that is sent to the board upon reaching the deadline.  \n\nDescription of the formatting values: \n\n - {0} = The number of the meeting that LP (0 if there is just one meeting that LP) \n\n - {1} = The study period of the meeting"
+    },
+    {
+      "key": "mail_to_board_message",
+      "value": "Hej {0}!\n\nDeadlinen f\u00f6r dokumentinsamling till sektionsm\u00f6te {1} i lp {2} \u00e4r nu n\u00e5dd.\nF\u00f6r nedladdning av dessa dokument klicka p\u00e5 denna l\u00e4nk: {3}\n\nVid fr\u00e5gor, kontakta sekreteraren p\u00e5 {4}",
+      "type": "long_string",
+      "description": "The contents of the email that is sent out to the board upon reaching the deadline. \n\nDescription of the formatting values: \n\n - {0} = The display name of the board \n\n - {1} = The number of the meeting (usually 0) \n\n - {2} = The study period of the meeting \n\n - {3} = A link to the archive download \n\n - {4} = The email to the secretary"
+    }
+  ],
+  "groups": [
+    {
+      "name": "armit",
+      "display_name": "ArmIT"
+    },
+    {
+      "name": "digit",
+      "display_name": "digIT"
+    },
+    {
+      "name": "fanbarerit",
+      "display_name": "Fanb\u00e4rerIT"
+    },
+    {
+      "name": "fritid",
+      "display_name": "frITid"
+    },
+    {
+      "name": "mrcit",
+      "display_name": "MRCIT"
+    },
+    {
+      "name": "nollkit",
+      "display_name": "NollKIT"
+    },
+    {
+      "name": "prit",
+      "display_name": "P.R.I.T."
+    },
+    {
+      "name": "sexit",
+      "display_name": "sexIT"
+    },
+    {
+      "name": "snit",
+      "display_name": "snIT"
+    },
+    {
+      "name": "styrit",
+      "display_name": "styrIT"
+    },
+    {
+      "name": "equalit",
+      "display_name": "EqualIT"
+    }
+  ],
+  "tasks": [
+    {
+      "name": "vplan",
+      "display_name": "Verksamhetsplan"
+    },
+    {
+      "name": "budget",
+      "display_name": "Budget"
+    },
+    {
+      "name": "vrapport",
+      "display_name": "Verksamhetsrapport"
+    }
+  ],
+  "years": [
+    2020,
+    2019,
+    2018,
+    2017,
+    2016
+  ],
+  "groupYears": [
+    {
+      "group": "fanbarerit",
+      "year": 2019,
+      "finished": false
+    },
+    {
+      "group": "snit",
+      "year": 2019,
+      "finished": false
+    }
+  ]
+}

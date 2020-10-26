@@ -3,10 +3,9 @@ from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony.orm import db_session
 
-from config import config_handler
 from process.ArchiveProcess import download_archive, get_archive_url
 from process.CodeProcess import handle_code_request
-from process.ConfigProcess import handle_incoming_config
+from process.ConfigProcess import handle_incoming_config, get_configs
 from process.FileProcess import handle_file_request
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
@@ -110,8 +109,7 @@ class PasswordResource(Resource):
         if pass_validation.is_error():
             return pass_validation.get_response()
 
-        configs = config_handler.get_config()
-        return configs, 200
+        return get_configs().get_response()
 
 
 # Handles downloading of archives for meetings.
