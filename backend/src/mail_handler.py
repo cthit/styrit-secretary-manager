@@ -6,7 +6,6 @@ import requests
 from pony import orm
 from pony.orm import db_session
 
-from config.config_handler import update_story_group_meetings
 from data_objects.MailData import MailData
 from db import GroupMeeting, GroupMeetingTask, Config
 from db import GroupYear, Meeting, Group
@@ -133,17 +132,6 @@ def get_story_group_email(group: GroupMeeting):
     raw_subject = Config["mail_for_stories_subject"].value
     subject = raw_subject.format(meeting.meeting_no, meeting.lp)
     return mail_to, msg, subject
-
-
-def send_story_emails(meeting_id):
-    meeting, code = get_meeting_from_id(meeting_id)
-    if code != 200 or meeting is None:
-        return {"error": "Meeting with id {0} not found".format(id)}, code
-
-    group_meetings = update_story_group_meetings(meeting)
-    for group in group_meetings:
-        mail_to, msg, subject = get_story_group_email(group)
-        send_email(mail_to, subject, msg)
 
 
 def send_email(mail_to, subject, msg):

@@ -1,12 +1,8 @@
 from pony import orm
 from pony.orm import db_session
 
-from command.GroupMeetingCommands import create_group_meeting
-from command.GroupMeetingTaskCommands import create_group_meeting_task
-from db import GroupYear
 from db import Meeting, Group, Task, GroupMeetingTask, GroupMeeting
 from process.StoryProcess import get_years
-from validation.Validation import validate_stories
 from queries.ConfigQueries import get_config_list
 from queries.GroupYearQueries import get_group_years
 
@@ -85,38 +81,3 @@ def get_tasks():
             "display_name": d_name
         })
     return tasks
-
-
-@db_session
-def get_story_groups():
-    return orm.select(gy for gy in GroupYear if gy.year != "active" and gy.finished is False)[:]
-
-
-@db_session
-def update_story_group_meetings(meeting: Meeting):
-    """
-    Makes sure that all the story groups have meeting ids for the given meeting.
-    :param meeting: the meeting to update for.
-    :return group_meetings, a list of the GroupMeetings for the given story_groups
-    """
-    story_groups = get_story_groups()
-    group_meetings = []
-    for story_group in story_groups:
-        group_meeting = create_group_meeting(meeting.id, story_group.group.name, story_group.year)
-        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year,
-                                  "vberattelse")
-        create_group_meeting_task(group_meeting.meeting.id, group_meeting.group.group.name, group_meeting.group.year,
-                                  "eberattelse")
-        group_meetings.append(group_meeting)
-    return group_meetings
-
-
-def handle_incoming_stories_config(config):
-    success, msg = validate_stories(config)
-    if not success:
-        return 400, {"error": "Unable to validate stories\n " + msg}
-
-    group_years = dict()
-    group_years["groupYears"] = get_group_years()
-    group_years["years"] = get_years()
-    return 200, group_years

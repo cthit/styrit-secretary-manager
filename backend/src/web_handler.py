@@ -1,22 +1,19 @@
-import os
-
-from flask import Flask, request, send_file
+from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from pony.orm import db_session
 
-import end_date_handler
 from config import config_handler
-from db import Meeting, ArchiveCode, Config
+from process.ArchiveProcess import download_archive, get_archive_url
 from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config
 from process.FileProcess import handle_file_request
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
-from process.TimerProcess import handle_start_timer
-from validation.PasswordValidation import validate_password
 from process.StoryEmailRes import handle_story_email
 from process.StoryProcess import handle_stories
+from process.TimerProcess import handle_start_timer
+from validation.PasswordValidation import validate_password
 
 app = Flask(__name__)
 api = Api(app)
@@ -102,7 +99,7 @@ class TimerResource(Resource):
             return pass_validation.get_response()
 
         # The password was accepted, check the meeting id
-        handle_start_timer(id).get_response()
+        return handle_start_timer(id).get_response()
 
 
 # If the password is valid, returns the complete current configs.
@@ -123,49 +120,21 @@ class ArchiveDownload(Resource):
     Download a zip file with all the documents for the meeting with the given id.
     """
 
-    @db_session
     def get(self, id):
         """
         Download the archive for the meeting with the given id (if it exists)
         """
-        try:
-            archive = ArchiveCode.get(code=id)
-        except ValueError:
-            archive = None
+        return download_archive(id).get_response()
 
-        if archive is None:
-            return {"error": "Archive not found"}, 404
 
-        file_name = archive.archive_location + ".zip"
-        file_path_name = os.path.normpath(file_name)
-        num = archive.meeting.meeting_no
-        lp = archive.meeting.lp
-        year = archive.meeting.year
-        print("DOWNLOADING FILE: " + str(file_path_name))
-        name = "documents_" + str(num) + "_lp" + str(lp) + "_" + str(year) + ".zip"
-        return send_file(file_path_name, as_attachment=True, attachment_filename=name)
-
+class ArchiveUrl(Resource):
     @db_session
-    def post(self, id):
+    def get(self, id):
         """
         Request that the archive is created without the meeting deadline being reached.
         Returns the archive code
         """
-        try:
-            meeting = Meeting.get(id=id)
-        except ValueError:
-            meeting = None
-
-        if meeting is None:
-            return {"error": "Meeting not found"}, 404
-
-        archive = end_date_handler.create_archive(meeting)
-
-        # Return a redirect to the archive download location
-        base_url = Config["archive_base_url"].value
-        redirect_url = base_url + str(archive.code)
-        print("Should redirect to " + redirect_url)
-        return redirect_url
+        return get_archive_url(id).get_response()
 
 
 api.add_resource(FileRes, '/api/file')
@@ -176,7 +145,8 @@ api.add_resource(PasswordResource, "/api/admin")
 api.add_resource(MailStoriesRes, "/api/mail/stories")
 api.add_resource(MailRes, "/api/mail")
 api.add_resource(TimerResource, "/api/timer/<string:id>")
-api.add_resource(ArchiveDownload, "/api/archive/<string:id>")
+api.add_resource(ArchiveDownload, "/api/archive/download/<string:id>")
+api.add_resource(ArchiveUrl, "/api/archive/url/<string:id>")
 api.add_resource(StoriesRes, "/api/admin/config/stories")
 
 

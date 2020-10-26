@@ -7,6 +7,7 @@ import requests
 from pony import orm
 from pony.orm import db_session
 
+from command.MeetingCommands import update_meeting_check_for_deadline
 from db import GroupMeetingFile, ArchiveCode, Meeting, Config
 from queries.ConfigQueries import get_config_value
 from queries.GroupMeetingFileQueries import get_file_paths
@@ -68,6 +69,7 @@ def create_archive(meeting):
 
     return archive
 
+
 @db_session
 def send_final_mail(meeting):
     archive = create_archive(meeting)
@@ -104,6 +106,7 @@ def check_for_enddate():
             print("Meeting: " + str(meeting.id) + " waiting for: " + str(deadline))
             if deadline <= curr_date:
                 send_final_mail(meeting)
+                update_meeting_check_for_deadline(meeting.id, False)
 
         time.sleep(check_time)
 

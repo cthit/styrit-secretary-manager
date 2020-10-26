@@ -9,7 +9,7 @@ import {
 import {handleError} from "../../../../../../../../common/functions/handleError";
 import {putEmails} from "../../../../../../../../api/put.Emails.api";
 import {postDeadline} from "../../../../../../../../api/post.Deadline.api";
-import {postArchive} from "../../../../../../../../api/post.Archive.api";
+import {getArchiveUrl} from "../../../../../../../../api/get.ArchiveUrl.api";
 import {putStoryEmails} from "../../../../../../../../api/put.StoryEmails.api";
 
 export function saveMeeting(meeting, groupTasks, allTasks, password) {
@@ -46,7 +46,7 @@ export function startDeadlineCheck(meetingID, password) {
 }
 
 export function downloadArchive(meetingID) {
-    postArchive(meetingID).then(response => {
+    getArchiveUrl(meetingID).then(response => {
         onArchiveSuccessful(response);
     }).catch(error => {
         onArchiveError(error);
@@ -120,7 +120,8 @@ function onDeadlineError(error) {
 }
 
 function onArchiveSuccessful(response) {
-    window.open("http://" + response.data);
+    console.log("Response???? ", response.data.data);
+    window.open("http://" + response.data.data.redirect_url);
 }
 
 function onArchiveError(error) {
