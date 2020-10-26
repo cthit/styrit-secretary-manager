@@ -36,3 +36,19 @@ def get_meeting_data_by_id(id: UUID) -> Optional[MeetingData]:
 @db_session
 def get_meeting_ids() -> List[UUID]:
     return list(select(meeting.id for meeting in Meeting))
+
+
+@db_session
+def get_check_for_deadline_meetings() -> List[MeetingData]:
+    meeting_datas = []
+    meetings = list(Meeting.select(lambda meeting: meeting.check_for_deadline == True))
+    for meeting in meetings:
+        meeting_datas.append(MeetingData(
+            id=meeting.id,
+            year=meeting.year,
+            date=meeting.date,
+            last_upload=meeting.last_upload,
+            lp=meeting.lp,
+            meeting_no=meeting.meeting_no
+        ))
+    return meeting_datas

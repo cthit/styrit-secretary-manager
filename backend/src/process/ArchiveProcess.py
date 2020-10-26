@@ -18,11 +18,11 @@ from validation.Validation import validate_code, validate_meeting_id_from_str
 def download_archive(code_str: str) -> HttpResponse:
     code_res = validate_code(code_str)
     if code_res.is_error:
-        return get_with_error(code_res.message)
+        return get_with_error(404, code_res.message)
 
     archive_data = get_archive_data_by_code(code_res.data)
     if archive_data is None:
-        return get_with_error(404, "Archive not found")
+        return get_with_error(400, "Archive not found")
 
     attachment_name = "documents_{meeting_no}_lp{lp}_{year}.zip".format(
         meeting_no=archive_data.meeting.meeting_no,

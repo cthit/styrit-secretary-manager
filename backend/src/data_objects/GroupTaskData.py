@@ -10,4 +10,4 @@ class GroupTaskData:
     task_type: str
 
     def is_same(self, other) -> bool:
-        return self.group_name == other.group_name and self.code == other.code and self.task_type == other.task_type
+        return self.group_name == other.group_name and self.task_type == other.task_type

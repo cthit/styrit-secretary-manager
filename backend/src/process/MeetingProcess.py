@@ -68,8 +68,10 @@ def update_groups_tasks(meeting_id: uuid, groups_tasks: List[GroupTaskData]) -> 
 
         if not found:
             # Remove the group_task
-            remove_group_meeting_task(meeting_id, existing_group_task.group_name, "active",
-                                      existing_group_task.task_type)
+            res = remove_group_meeting_task(meeting_id, existing_group_task.group_name, "active",
+                                            existing_group_task.task_type)
+            if res.is_error:
+                return get_result_with_error(res.message)
 
     # Add new group_tasks
     for group_task in groups_tasks:

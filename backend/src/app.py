@@ -2,11 +2,10 @@ import threading
 
 import setup
 import web_handler
-
-import end_date_handler
+from process import EndDateProcess
 
 if __name__ == '__main__':
     setup.setup_db()
 
-    threading.Thread(target=end_date_handler.check_for_enddate).start()
+    threading.Thread(target=EndDateProcess.check_for_enddate).start()
     threading.Thread(target=web_handler.host).start()
