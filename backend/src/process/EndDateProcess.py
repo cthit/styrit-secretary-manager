@@ -40,7 +40,6 @@ def check_for_enddate():
         if check_frequency_res.is_error:
             raise Exception(f"Failed to retrieve check_frequency {check_frequency_res.message}")
         check_frequency = check_frequency_res.data * 60
-        check_frequency = 10
         sleep(check_frequency)
 
 
