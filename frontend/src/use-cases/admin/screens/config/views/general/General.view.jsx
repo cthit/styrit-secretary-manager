@@ -15,6 +15,7 @@ import {
     DigitTextField
 } from "@cthit/react-digit-components";
 import HelpIcon from '@material-ui/icons/Help';
+import {WarningText} from "../stories/Stories.styles.view.jsx.";
 
 
 const test = "asd <br/> bsd"
@@ -22,6 +23,9 @@ const test = "asd <br/> bsd"
 export const General = props => (
     <GeneralConfigContainer>
         <ConfigListContainer>
+            {props.unsavedChanges && (
+                <WarningText text="You have unsaved changes!"/>
+            )}
             {props.configs.map((config, index) => {
                 return (
                     <ConfigContainer key={index}>
@@ -38,6 +42,9 @@ export const General = props => (
                 )
             })}
             <HLine/>
+            {props.unsavedChanges && (
+                <WarningText text="You have unsaved changes!"/>
+            )}
             <DigitButton primary raised text={"Save"} size={{width: "100%"}}
                          onClick={() => props.onConfigSave(props.password, props.configs)}/>
         </ConfigListContainer>
