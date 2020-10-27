@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {DigitText} from "@cthit/react-digit-components";
 
 export const StoriesContainer = styled.div`
     padding-top: 50px;
@@ -58,4 +59,10 @@ export const InfoCard = styled.div`
   border-radius: 4px;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
     0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+`;
+
+
+export const WarningText = styled(DigitText.Text)`
+  color: orange;
+  font-weight: bold;
 `;
