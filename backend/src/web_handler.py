@@ -9,7 +9,7 @@ from process.ConfigProcess import handle_incoming_config, get_configs
 from process.FileProcess import handle_file_request
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
-from process.StoryEmailRes import handle_story_email
+from process.StoryEmailProcess import handle_story_email
 from process.StoryProcess import handle_stories
 from process.TimerProcess import handle_start_timer
 from validation.PasswordValidation import validate_password
