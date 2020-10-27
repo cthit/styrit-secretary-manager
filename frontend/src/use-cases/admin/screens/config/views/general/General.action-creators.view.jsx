@@ -35,7 +35,6 @@ export function configHelpButtonPressed(configIndex) {
 }
 
 function onSaveConfigAccepted(response) {
-    console.log("Response", response);
     alert("Saving configs successful");
 }
 

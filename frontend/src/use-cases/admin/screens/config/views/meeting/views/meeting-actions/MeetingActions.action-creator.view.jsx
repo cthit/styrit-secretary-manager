@@ -120,7 +120,6 @@ function onDeadlineError(error) {
 }
 
 function onArchiveSuccessful(response) {
-    console.log("Response???? ", response.data.data);
     window.open("http://" + response.data.data.redirect_url);
 }
 

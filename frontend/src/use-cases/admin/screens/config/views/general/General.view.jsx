@@ -32,7 +32,6 @@ export const General = props => (
                                          primary={props.selectedConfigIndex !== index}
                                          onClick={() => {
                                              props.configHelpButtonPressed(index);
-                                             console.log("ASD", props.selectedConfigIndex, " --- ", index);
                                          }}
                         />
                     </ConfigContainer>

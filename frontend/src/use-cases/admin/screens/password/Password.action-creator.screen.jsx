@@ -18,8 +18,6 @@ export function submitPassword(password) {
 }
 
 function onAccept(response, password) {
-    console.log("RESPONSE::", response);
-
     // Modify the data here.
     let data = response.data.data;
     let meetings = {};

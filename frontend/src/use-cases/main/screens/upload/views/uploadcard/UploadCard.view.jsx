@@ -1,10 +1,15 @@
 import React from "react";
-import { UploadCardButton, UploadCardCard, UploadCardContainer, UploadCardInput } from "./UploadCard.styles";
-import { DigitText } from "@cthit/react-digit-components";
+import {
+    UploadCardButton,
+    UploadCardCard,
+    UploadCardContainer,
+    UploadCardInput
+} from "./UploadCard.styles";
+import {DigitText} from "@cthit/react-digit-components";
 
 export const UploadCard = ({props}) => (
     <UploadCardCard>
-        <DigitText.Text text={props.taskName} />
+        <DigitText.Text text={props.taskName}/>
         <UploadCardContainer>
             <UploadCardButton text="" style={{minWidth: "500px"}}>
                 <UploadCardInput
@@ -12,7 +17,6 @@ export const UploadCard = ({props}) => (
                     type="file"
                     accept=".pdf, application/pdf"
                     onChange={event => {
-                        console.log("Event", event);
                         const file = event.target.files[0];
                         if (file) {
                             if (file.type === "application/pdf") {

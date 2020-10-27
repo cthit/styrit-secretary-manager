@@ -1,6 +1,10 @@
-import { ON_FILEUPLOAD_FINISHED, ON_SUBMIT_FILES_FAILED, ON_UPLOAD } from "./Upload.actions.screen";
-import { putFiles } from "../../../../api/put.Files.api";
-import { handleError } from "../../../../common/functions/handleError";
+import {
+    ON_FILEUPLOAD_FINISHED,
+    ON_SUBMIT_FILES_FAILED,
+    ON_UPLOAD
+} from "./Upload.actions.screen";
+import {putFiles} from "../../../../api/put.Files.api";
+import {handleError} from "../../../../common/functions/handleError";
 
 export function onUpload(file, task) {
     return {
@@ -26,8 +30,6 @@ export function onSubmitFiles(reports, code, group) {
 }
 
 function onAccept(response) {
-    console.log("RESPONSE::", response);
-
     let overwrite = false;
     if (response.data && response.data.data) {
         overwrite = response.data.data.overwrite;
