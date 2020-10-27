@@ -6,7 +6,8 @@ import {
     StoriesContainer,
     StoriesSelectContainer,
     StoryChipContainer,
-    VSpace
+    VSpace,
+    WarningText
 } from "./Stories.styles.view.jsx.";
 import {
     DigitAutocompleteSelectSingle,
@@ -17,19 +18,20 @@ import {
 } from "@cthit/react-digit-components";
 
 export const Stories = props => {
-    const [openSendMailDialog] = useDigitDialog({
-        title: "Are you sure you want to send the mail(s)?",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
-        onConfirm: () => props.sendStoryEmails(props.password),
-        onCancel: () => {
-        }
-    })
+    const [openSendMailDialog] = useDigitDialog(
+        {
+            title: "Are you sure you want to send the mail(s)?",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            onConfirm: () => props.sendStoryEmails(props.password),
+            onCancel: () => {
+            }
+        })
 
     return (
         <StoriesContainer>
-            <DigitText.Heading5 text={"Ansvarsbefrielse"} />
-            <VSpace />
+            <DigitText.Heading5 text={"Ansvarsbefrielse"}/>
+            <VSpace/>
             <StoriesSelectContainer>
                 <DigitAutocompleteSelectSingle
                     upperLabel={"Group"}
@@ -41,7 +43,7 @@ export const Stories = props => {
                     value={props.selectedGroup}
                     noOptionsText={"No Groups"}
                 />
-                <HSpace />
+                <HSpace/>
                 <DigitAutocompleteSelectSingle
                     upperLabel={"Year"}
                     outlined
@@ -52,7 +54,7 @@ export const Stories = props => {
                     value={props.selectedYear}
                     noOptionsText={"No Years"}
                 />
-                <HSpace />
+                <HSpace/>
                 <DigitButton
                     raised
                     primary
@@ -68,33 +70,40 @@ export const Stories = props => {
             {
                 props.errorMsg && (
                     <div>
-                        <SmallVSpace />
-                        <DigitText.Text text={props.errorMsg} color="error" bold />
+                        <SmallVSpace/>
+                        <DigitText.Text text={props.errorMsg} color="error"
+                                        bold/>
                     </div>
                 )
             }
-            <SmallVSpace />
-            <HLine />
-            <VSpace />
+            <SmallVSpace/>
+            <HLine/>
+            <VSpace/>
             <StoryChipContainer>
                 {
                     getGroupYears(props.groupYears, props.groups).map(gy => (
-                        <DigitChip key={gy.group.name + "_" + gy.year} primary label={formatChipLabel(gy)}
-                                   onDelete={() => props.deleteGroupYear(gy)} />
+                        <DigitChip key={gy.group.name + "_" + gy.year} primary
+                                   label={formatChipLabel(gy)}
+                                   onDelete={() => props.deleteGroupYear(gy)}/>
                     ))
                 }
             </StoryChipContainer>
-            <VSpace />
-            <HLine />
+            <VSpace/>
+            <HLine/>
             {
                 props.saveError && (
-                    <DigitText.Text text={props.saveError} color="error" bold />
+                    <DigitText.Text text={props.saveError} color="error" bold/>
+                )
+            }
+            {
+                props.unsavedChanges && (
+                    <WarningText text="You have unchanged changes!"/>
                 )
             }
             <DigitButton raised primary
                          onClick={() => props.save(props.groupYears, props.password)}
                          text={"Save stories settings"}
-                         size={{width: "400px"}} />
+                         size={{width: "400px"}}/>
         </StoriesContainer>
     );
 }
@@ -122,9 +131,9 @@ function getGroupYears(groupYears, groups) {
     groupYears.forEach(groupYear => {
         if (groupYear.finished === false) {
             arr.push({
-                year: groupYear.year,
-                group: getGroupFromName(groupYear.group, groups)
-            })
+                         year: groupYear.year,
+                         group: getGroupFromName(groupYear.group, groups)
+                     })
         }
     })
     return arr;

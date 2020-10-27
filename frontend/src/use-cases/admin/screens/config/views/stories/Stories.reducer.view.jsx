@@ -14,7 +14,8 @@ const initialState = {
     selectedGroup: undefined,
     selectedYear: undefined,
     errorMsg: "",
-    saveError: ""
+    saveError: "",
+    unsavedChanges: false
 };
 
 export const StoriesReducer = (state = initialState, action) => {
@@ -22,7 +23,8 @@ export const StoriesReducer = (state = initialState, action) => {
         case SUBMIT_PASSWORD_SUCCESSFUL:
             return assignState(state, {
                 years: action.payload.data.years,
-                groupYears: action.payload.data.groupYears
+                groupYears: action.payload.data.groupYears,
+                unsavedChanges: false
             })
         case ON_STORY_GROUP_SELECTED:
             return assignState(state, {
@@ -36,6 +38,7 @@ export const StoriesReducer = (state = initialState, action) => {
             return assignState(state, {
                 groupYears: action.payload.groupYears,
                 years: action.payload.years,
+                unsavedChanges: false
             })
         case ON_SAVE_STORIES_ERROR:
             return assignState(state, {
@@ -60,7 +63,7 @@ function assignState(state, data = {}) {
 }
 
 function handleAddStoryGroupYear(state) {
-    // Should be == because it can also be undefined.
+    // Should be == because it can also be undefined, thus === would not work.
     if (state.selectedGroup == null || state.selectedYear == null) {
         return state;
     }
@@ -74,11 +77,12 @@ function handleAddStoryGroupYear(state) {
         if (groupYear.group === state.selectedGroup && groupYear.year === state.selectedYear) {
             found = true;
             if (groupYear.finished) {
-                newGroupYears.push({
-                    group: groupYear.group,
-                    year: groupYear.year,
-                    finished: false
-                })
+                newGroupYears.push(
+                    {
+                        group: groupYear.group,
+                        year: groupYear.year,
+                        finished: false
+                    })
             } else {
                 finished = false;
             }
@@ -95,15 +99,17 @@ function handleAddStoryGroupYear(state) {
     }
 
     if (!found) {
-        newGroupYears.push({
-            group: state.selectedGroup,
-            year: state.selectedYear,
-            finished: false
-        })
+        newGroupYears.push(
+            {
+                group: state.selectedGroup,
+                year: state.selectedYear,
+                finished: false
+            })
     }
 
     return assignState(state, {
-        groupYears: newGroupYears
+        groupYears: newGroupYears,
+        unsavedChanges: true
     })
 }
 
@@ -112,17 +118,19 @@ function handleDeleteStoryGroupYear(state, group, year) {
     let newGroupYears = []
     oldGroupYears.forEach(groupYear => {
         if (groupYear.group === group && groupYear.year === year) {
-            newGroupYears.push({
-                group: group,
-                year: year,
-                finished: true
-            })
+            newGroupYears.push(
+                {
+                    group: group,
+                    year: year,
+                    finished: true
+                })
         } else {
             newGroupYears.push(groupYear)
         }
     })
 
     return assignState(state, {
-        groupYears: newGroupYears
+        groupYears: newGroupYears,
+        unsavedChanges: true
     })
 }
