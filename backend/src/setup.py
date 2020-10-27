@@ -135,9 +135,7 @@ Description of the formatting values: \n
         if conf is None:
             Config(key=config["key"], value=config["value"], config_type=config["config_type"],
                    description=config["description"])
-        elif conf.description == "none":
-            # Used for migration
-            conf.description = config["description"]
+        conf.description = config["description"]
 
     # Setup groups and tasks
     groups = [
