@@ -23,7 +23,7 @@ def handle_file_request(code_str: str, files: Dict) -> HttpResponse:
     group_meeting = get_group_meeting_by_code(code)
     if group_meeting is None:
         secretary_email = get_config_value("secretary_email")
-        return get_with_error(404, "Code not found! Please contact the secretary at {0}".format(secretary_email))
+        return get_with_error(400, "Code not found! Please contact the secretary at {0}".format(secretary_email))
 
     overwrite = False
     for task in files:
