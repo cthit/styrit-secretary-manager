@@ -46,19 +46,21 @@ def to_story_email_data(group: GroupMeetingEmailData) -> MailData:
     display_name_year = get_story_group_name(group.group_name, group.group_year)
 
     msg = email_conf.stories_msg.format(
-        display_name_year,
-        date.day,
-        date.month,
-        last_turnin_time,
-        last_turnin_date,
-        group.get_formatted_task_list(),
-        email_conf.frontend_url,
-        group.group_code,
-        email_conf.document_template_url,
-        email_conf.secretary_email,
-        email_conf.board_display_name,
-        email_conf.board_email
+        group_name_year=display_name_year,
+        meeting_day=date.day,
+        meeting_month=date.month,
+        deadline_time=last_turnin_time,
+        deadline_date=last_turnin_date,
+        task_list=group.get_formatted_task_list(),
+        frontend_url=email_conf.frontend_url,
+        group_code=group.group_code,
+        template_url=email_conf.document_template_url,
+        secretary_email=email_conf.secretary_email,
+        board_display_name=email_conf.board_display_name,
+        board_email=email_conf.board_email
     )
 
-    subject = email_conf.stories_subject.format(group.meeting.meeting_no, group.meeting.lp)
+    subject = email_conf.stories_subject.format(
+        meeting_number=group.meeting.meeting_no,
+        meeting_lp=group.meeting.lp)
     return MailData(mail_to=mail_to , subject=subject, msg=msg)

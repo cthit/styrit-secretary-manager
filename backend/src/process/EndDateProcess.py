@@ -60,15 +60,18 @@ def get_board_email_data(meeting: MeetingData, archive: ArchiveData) -> MailData
     raw_msg = get_config_value("mail_to_board_message")
     board_name = get_config_value("board_display_name")
     secretary_email = get_config_value("secretary_email")
-    msg = raw_msg.format(board_name,
-                         meeting.meeting_no,
-                         meeting.lp,
-                         archive.get_archive_location(),
-                         secretary_email)
+    msg = raw_msg.format(
+        board_name=board_name,
+        meeting_number=meeting.meeting_no,
+        meeting_lp=meeting.lp,
+        meeting_archive_url=archive.get_archive_location(),
+        secretary_email=secretary_email)
     to = get_config_value("board_email")
 
     raw_subject = get_config_value("mail_to_board_subject")
-    subject = raw_subject.format(meeting.meeting_no, meeting.lp)
+    subject = raw_subject.format(
+        meeting_number=meeting.meeting_no,
+        meeting_lp=meeting.lp)
 
     return MailData(
         mail_to=to,

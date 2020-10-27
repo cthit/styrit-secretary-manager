@@ -40,19 +40,21 @@ def to_email_data(group: GroupMeetingEmailData) -> MailData:
     date = group.meeting.date.replace(tzinfo=pytz.utc).astimezone(email_conf.timezone)
     mail_to = "{0}{1}".format(group.group_name, email_conf.email_domain)
 
-    msg = email_conf.active_msg.format(group.group_display_name,
-                                       date.day,
-                                       date.month,
-                                       last_turnin_time,
-                                       last_turnin_date,
-                                       group.get_formatted_task_list(),
-                                       email_conf.frontend_url,
-                                       group.group_code,
-                                       email_conf.document_template_url,
-                                       email_conf.secretary_email,
-                                       email_conf.board_display_name,
-                                       email_conf.board_email)
+    msg = email_conf.active_msg.format(group_name=group.group_display_name,
+                                       meeting_day=date.day,
+                                       meeting_month=date.month,
+                                       deadline_time=last_turnin_time,
+                                       deadline_date=last_turnin_date,
+                                       task_list=group.get_formatted_task_list(),
+                                       frontend_url=email_conf.frontend_url,
+                                       group_code=group.group_code,
+                                       template_url=email_conf.document_template_url,
+                                       secretary_email=email_conf.secretary_email,
+                                       board_display_name=email_conf.board_display_name,
+                                       board_email=email_conf.board_email)
 
-    subject = email_conf.active_subject.format(date.day, date.month)
+    subject = email_conf.active_subject.format(
+        day=date.day,
+        month=date.month)
 
     return MailData(mail_to, subject, msg)

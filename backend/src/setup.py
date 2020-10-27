@@ -37,85 +37,88 @@ def setup_general_config():
          "description": "The domain to send emails to"},
         {"key": "from_email_address", "value": "admin@chalmers.it", "config_type": string,
          "description": "The email to send from"},
-        {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {0}/{1}", "config_type": string,
-         "description": """The subject for "regular" email sendout (that goes out to all active groups that have documents to turn in for the meeting). \n Description of the formatting values: \n - {0} = day of month \n - {1} = number of month"""},
+        {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {day}/{month}", "config_type": string,
+         "description": """
+         The subject for "regular" email sendout (that goes out to all active groups that have documents to turn in for the meeting). 
+          Description of the formatting values: 
+           - {day} = day of month 
+           - {month} = number of month"""},
         {"key": "mail_to_groups_message",
-         "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in "
-                  "följande dokument: {5}\nDetta görs på sidan: {6}\nAnge koden: {7}\n\nMall för vissa "
-                  "dokument finns här: {8}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n\nOm ni har "
-                  "några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} "
+         "value": "\nHej {group_name}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
+                  "följande dokument: {task_list}\nDetta görs på sidan: {frontend_url}\nAnge koden: {group_code}\n\nMall för vissa "
+                  "dokument finns här: {template_url}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n\nOm ni har "
+                  "några frågor eller stöter på några problem kan kan ni kontakta mig på {secretary_email} eller hela {board_display_name} på {board_email} "
                   ": ).",
          "config_type": long_string, "description":
              """
 The body of the "regular" emails (the ones that are sent to all the active groups that should turn in documents for the meeting).  \n
 Description of the formatting values:  \n
- - {0} = The display name of the group \n
- - {1} = The day of month for the meeting \n
- - {2} = The month (number) of the meeting \n
- - {3} = The deadline time (hh:mm) \n
- - {4} = The deadline date (dd/mm) \n
- - {5} = A list of the tasks that the group should upload \n
- - {6} = The url to the website \n
- - {7} = Their unique code \n
- - {8} = The document (overleaf) template url \n
- - {9} = The email to the secretary \n
- - {10} = The email to the secretary \n
- - {11} = The display name of the board \n
- - {12} = The email to the board
+ - {group_name} = The display name of the group \n
+ - {meeting_day} = The day of month for the meeting \n
+ - {meeting_month} = The month (number) of the meeting \n
+ - {deadline_time} = The deadline time (hh:mm) \n
+ - {deadline_date} = The deadline date (dd/mm) \n
+ - {task_list} = A list of the tasks that the group should upload \n
+ - {frontend_url} = The url to the website \n
+ - {group_code} = Their unique code \n
+ - {template_url} = The document (overleaf) template url \n
+ - {secretary_email} = The email to the secretary \n
+ - {board_display_name} = The display name of the board \n
+ - {board_email} = The email to the board
              """},
-        {"key": "mail_to_board_subject", "value": "Dokument för sektionsmöte {0} lp {1}", "config_type": string,
+        {"key": "mail_to_board_subject", "value": "Dokument för sektionsmöte {meeting_number} lp {meeting_lp}", "config_type": string,
          "description":
              """
  The subject of the email that is sent to the board upon reaching the deadline.  \n
  Description of the formatting values: \n
-  - {0} = The number of the meeting that LP (0 if there is just one meeting that LP) \n
-  - {1} = The study period of the meeting 
+  - {meeting_number} = The number of the meeting that LP (0 if there is just one meeting that LP) \n
+  - {meeting_lp} = The study period of the meeting 
              """},
         {"key": "mail_to_board_message",
-         "value": "\nHej {0}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {1} i lp {2} är nu nådd.\nFör "
-                  "nedladdning av dessa dokument klicka på denna länk: {3}\n\nVid frågor, kontakta sekreteraren på {4}",
+         "value": "\nHej {board_name}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {meeting_number} i lp {meeting_lp} är nu nådd.\nFör "
+                  "nedladdning av dessa dokument klicka på denna länk: {meeting_archive_url}\n\nVid frågor, kontakta sekreteraren på {secretary_email}",
          "config_type": long_string, "description":
              """
 The contents of the email that is sent out to the board upon reaching the deadline. \n
 Description of the formatting values: \n
- - {0} = The display name of the board \n
- - {1} = The number of the meeting (usually 0) \n
- - {2} = The study period of the meeting \n
- - {3} = A link to the archive download \n
- - {4} = The email to the secretary
+ - {board_name} = The display name of the board \n
+ - {meeting_number} = The number of the meeting (usually 0) \n
+ - {meeting_lp} = The study period of the meeting \n
+ - {meeting_archive_url} = A link to the archive download \n
+ - {secretary_email} = The email to the secretary
              """},
-        {"key": "mail_for_stories_subject", "value": "Dokument för sektionsmöte {0} lp {1}", "config_type": string,
+        {"key": "mail_for_stories_subject", "value": "Dokument för sektionsmöte {meeting_number} lp {meeting_lp}", "config_type": string,
          "description":
              """ 
  The subject of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser.
  Description of the formatting values:
-  - {0} = The number of the meeting that study period (usually 0)
-  - {1} = The study period
+  - {meeting_number} = The number of the meeting that study period (usually 0)
+  - {meeting_lp} = The study period
              """},
         {"key": "mail_for_stories",
-         "value": "\nHej {0}!\n\nDen {1}/{2} är det dags för sektionsmöte och senast {3} den {4} behöver ni lämna in "
-                  "följande dokument: {5}\nDetta görs på sidan: {6}\nAnge koden: {7}\n\nMall för vissa "
-                  "dokument finns här: {8}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n "
+         "value": "\nHej {group_name_year}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
+                  "följande dokument: {task_list}\nDetta görs på sidan: {frontend_url}\nAnge koden: {group_code}\n\nMall för vissa "
+                  "dokument finns här: {template_url}\nGör en kopia av projektet (Menu -> Copy Project) och fyll i.\n "
                   "Kontakta revisorerna på revisorer@chalmers.it för mer information om vad som behövs göras innan ni "
                   "kan bli rekomenderade att bli ansvarsbefriade.\n\nOm ni har "
-                  "några frågor eller stöter på några problem kan kan ni kontakta mig på {9} eller hela {10} på {11} "
+                  "några frågor eller stöter på några problem kan kan ni kontakta mig på {secretary_email} eller hela {board_display_name} på {board_email} "
                   ": ).",
          "config_type": long_string, "description":
              """
 The body of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser) \n
 Description of the formatting values: \n
- - {0} = Display name of the group. \n
- - {1} = The day of month that the meeting will take place \n
- - {2} = The month (number) of the meeting \n
- - {3} = The deadline time \n
- - {4} = The deadline date \n
- - {5} = A list of the tasks that the group will have to turn in. \n
- - {6} = A url to the frontend (upload page) \n
- - {7} = Their unique code \n
- - {8} = A link the overleaf template for the documents. \n
- - {9} = The email to the secretary \n
- - {10} = The display name of the board \n
- - {11} = The email to the board 
+ - {group_name_year} = Display name of the group. \n
+ - {meeting_day} = The day of month that the meeting will take place \n
+ - {meeting_month} = The month (number) of the meeting \n
+ - {deadline_time} = The deadline time \n
+ - {deadline_date} = The deadline date \n
+ - {task_list} = A list of the tasks that the group will have to turn in. \n
+ - {frontend_url} = A url to the frontend (upload page) \n
+ - {group_code} = Their unique code \n
+ - {template_url} = A link the overleaf template for the documents. \n
+ - {secretary_email} = The email to the secretary \n
+ - {board_display_name} = The display name of the board \n
+ - {board_email} = The email to the board 
              """},
         {"key": "board_display_name", "value": "styrIT", "config_type": string,
          "description": "The display name of the board"},
