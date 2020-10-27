@@ -34,8 +34,9 @@ def get_tasks_for_meeting(meeting_id: UUID) -> List[GroupTaskData]:
     group_tasks = GroupMeetingTask.select(lambda g_t: g_t.group.meeting.id == meeting_id)[:]
     group_task_datas = []
     for group_task in group_tasks:
-        group_task_datas.append(
-            GroupTaskData(group_task.group.group.group.name, group_task.group.code, group_task.task.name))
+        if group_task.task.name != "vberattelse" and group_task.task.name != "eberattelse":
+            group_task_datas.append(
+                GroupTaskData(group_task.group.group.group.name, group_task.group.code, group_task.task.name))
 
     return group_task_datas
 
