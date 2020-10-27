@@ -32,3 +32,10 @@ export const MeetingTableContainer = styled.div`
 export const MeetingConfContainer = styled.div`
     min-width: 80%;
 `;
+
+export const Center = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-top: 20px;
+`;

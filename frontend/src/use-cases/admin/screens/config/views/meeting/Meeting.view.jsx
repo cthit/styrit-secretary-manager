@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    Center,
     MeetingConfContainer,
     MeetingContainer,
     MeetingSelectContainer,
@@ -11,6 +12,7 @@ import {
     DigitAutocompleteSelectSingle,
     DigitButton
 } from "@cthit/react-digit-components";
+import {WarningText} from "../stories/Stories.styles.view.jsx.";
 
 export const Meeting = props => (
     <MeetingContainer>
@@ -33,6 +35,11 @@ export const Meeting = props => (
         </MeetingSelectContainer>
         {props.selectedMeeting && (
             <MeetingConfContainer>
+                <Center>
+                    {props.unsavedChangesList.length > 0 && (
+                        <WarningText text="You have unsaved changes!"/>
+                    )}
+                </Center>
                 <GeneralMeeting/>
                 <MeetingTable/>
             </MeetingConfContainer>

@@ -63,4 +63,4 @@ def to_story_email_data(group: GroupMeetingEmailData) -> MailData:
     subject = email_conf.stories_subject.format(
         meeting_number=group.meeting.meeting_no,
         meeting_lp=group.meeting.lp)
-    return MailData(mail_to=mail_to , subject=subject, msg=msg)
+    return MailData(mail_to=mail_to, subject=subject, msg=msg)

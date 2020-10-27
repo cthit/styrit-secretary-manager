@@ -24,7 +24,8 @@ const initialState = {
     selectedMeetingID: 0,
     selectedMeeting: null,
     taskMode: {}, // A dictionary from a task name to a task mode.
-    groupTasks: {} // A dictionary from a group to all its code and tasks.
+    groupTasks: {}, // A dictionary from a group to all its code and tasks.
+    unsavedChangesList: [] // A list of all the meetingIds that have unchanged changes.
 };
 
 export const MeetingReducer = (state = initialState, action) => {
@@ -47,7 +48,8 @@ export const MeetingReducer = (state = initialState, action) => {
                 selectedMeetingID: receivedMeeting.id,
                 groupTasks: receivedGroupTasks,
                 meetings: newMeetingsDict,
-                taskMode: getTasksMode(state.tasks, receivedGroupTasks)
+                taskMode: getTasksMode(state.tasks, receivedGroupTasks),
+                unsavedChangesList: removeUnsavedChanges(state.unsavedChangesList, state.selectedMeetingID)
             })
 
         case NEW_MEETING:
@@ -70,7 +72,8 @@ export const MeetingReducer = (state = initialState, action) => {
                 selectedMeeting: newMeeting,
                 groupTasks: newMeetingGroupsTasks,
                 taskMode: getTasksMode(state.tasks, newMeetingGroupsTasks),
-                meetings: newMeetings
+                meetings: newMeetings,
+                unsavedChangesList: addUnsavedChanges(state.unsavedChangesList, "new")
             });
         case MEETING_SELECTED:
             const meetingID = action.payload.meeting;
@@ -94,7 +97,6 @@ export const MeetingReducer = (state = initialState, action) => {
                 selectedMeeting: initialState.selectedMeeting,
                 taskMode: initialState.taskMode,
                 groupTasks: initialState.groupTasks
-
             })
         case GROUP_TASK_CHANGED:
             const newGroupsTasks = updateTasks(
@@ -104,7 +106,8 @@ export const MeetingReducer = (state = initialState, action) => {
             );
             return Object.assign({}, state, {
                 groupTasks: newGroupsTasks,
-                taskMode: getTasksMode(state.tasks, newGroupsTasks)
+                taskMode: getTasksMode(state.tasks, newGroupsTasks),
+                unsavedChangesList: addUnsavedChanges(state.unsavedChangesList, state.selectedMeetingID)
             });
         case ALL_GROUPS_TASK_CHANGED:
             const updatedTask = action.payload.task;
@@ -116,7 +119,8 @@ export const MeetingReducer = (state = initialState, action) => {
 
             return Object.assign({}, state, {
                 groupTasks: newGroupsTasks2,
-                taskMode: getTasksMode(state.tasks, newGroupsTasks2)
+                taskMode: getTasksMode(state.tasks, newGroupsTasks2),
+                unsavedChangesList: addUnsavedChanges(state.unsavedChangesList, state.selectedMeetingID)
             })
         // General meeting information.
         case MEETING_DATE_UPDATED:
@@ -126,7 +130,7 @@ export const MeetingReducer = (state = initialState, action) => {
                 }),
                 state.meetings,
                 state.selectedMeetingID,
-                state
+                state,
             );
         case MEETING_LAST_UPLOAD_UPDATED:
             return updateMeeting(
@@ -184,7 +188,8 @@ function updateMeeting(newMeetingObject, meetingsList, id, state) {
 
     return Object.assign({}, state, {
         selectedMeeting: newMeetingObject,
-        meetings: meetingsList
+        meetings: meetingsList,
+        unsavedChangesList: addUnsavedChanges(state.unsavedChangesList, state.selectedMeetingID)
     });
 }
 
@@ -250,7 +255,6 @@ function updateAllTasks(task, taskMode, groupTasks) {
 }
 
 function getMeetingsData(data) {
-
     const groupsMap = {};
     data.groups.forEach(group => {
         groupsMap[group.name] = group.display_name;
@@ -265,7 +269,25 @@ function getMeetingsData(data) {
         groups: groupsMap,
         tasks: tasksMap,
         selectedMeeting: null,
-        selectedMeetingID: 0
+        selectedMeetingID: 0,
+        unsavedChangesList: []
     };
+}
 
+function removeUnsavedChanges(unsavedChangesList, meetingId) {
+    let newUnsavedChanges = [];
+    unsavedChangesList.forEach(meeting => {
+        if (meeting !== meetingId) {
+            newUnsavedChanges.push(meeting);
+        }
+    })
+    return newUnsavedChanges;
+}
+
+function addUnsavedChanges(unsavedChangesList, meetingId) {
+    let newUnsavedChanges = unsavedChangesList.slice();
+    if (newUnsavedChanges.includes(meetingId) === false) {
+        newUnsavedChanges.push(meetingId);
+    }
+    return newUnsavedChanges;
 }

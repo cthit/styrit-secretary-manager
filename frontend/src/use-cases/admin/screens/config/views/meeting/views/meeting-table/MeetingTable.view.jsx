@@ -6,10 +6,11 @@ import {
     StyledTableHead,
     StyledTableRow
 } from "./MeetingTable.styles.view";
-import { MeetingTableContainer } from "../../Meeting.styles.view";
-import { TASK_MODE_ALL, TASK_MODE_SOME } from "../../TaskModes";
+import {Center, MeetingTableContainer} from "../../Meeting.styles.view";
+import {TASK_MODE_ALL, TASK_MODE_SOME} from "../../TaskModes";
 import MeetingActions from "../meeting-actions/MeetingActions.container.view";
-import { DigitCheckbox } from "@cthit/react-digit-components";
+import {DigitCheckbox} from "@cthit/react-digit-components";
+import {WarningText} from "../../../stories/Stories.styles.view.jsx.";
 
 export const MeetingTable = props => {
     const {groups, tasks, tasksMode, groupTasks} = props;
@@ -69,7 +70,12 @@ export const MeetingTable = props => {
                     ))}
                 </StyledTableBody>
             </StyledTable>
-            <MeetingActions />
+            <Center>
+                {props.unsavedChangesList.length > 0 && (
+                    <WarningText text="You have unsaved changes!"/>
+                )}
+            </Center>
+            <MeetingActions/>
         </MeetingTableContainer>
     );
 };

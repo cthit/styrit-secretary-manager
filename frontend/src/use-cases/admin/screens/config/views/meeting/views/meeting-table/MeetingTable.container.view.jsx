@@ -1,12 +1,16 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import MeetingTable from "./MeetingTable.view";
-import { onAllTasksClicked, onGroupTaskClicked } from "./MeetingTable.action-creators.view";
+import {
+    onAllTasksClicked,
+    onGroupTaskClicked
+} from "./MeetingTable.action-creators.view";
 
 const mapStateToProps = state => ({
     groups: state.root.MeetingReducer.groups,
     tasks: state.root.MeetingReducer.tasks,
     tasksMode: state.root.MeetingReducer.taskMode,
-    groupTasks: state.root.MeetingReducer.groupTasks
+    groupTasks: state.root.MeetingReducer.groupTasks,
+    unsavedChangesList: state.root.MeetingReducer.unsavedChangesList
 });
 
 const mapDispatchToProps = dispatch => ({
