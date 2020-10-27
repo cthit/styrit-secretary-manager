@@ -1,7 +1,11 @@
 import React from "react";
-import { GeneralMeetingInfoContainer, GeneralMeetingInfoGroup } from "./GeneralMeeting.styles.view";
-import NumbersTextField from "../../../../../../../../common/elements/NumberTextField";
-import { DigitDateAndTimePicker } from "@cthit/react-digit-components";
+import {
+    GeneralMeetingInfoContainer,
+    GeneralMeetingInfoGroup
+} from "./GeneralMeeting.styles.view";
+import NumbersTextField
+    from "../../../../../../../../common/elements/NumberTextField";
+import {DigitDateAndTimePicker} from "@cthit/react-digit-components";
 
 export const GeneralMeeting = props => (
         <GeneralMeetingInfoGroup>
@@ -9,13 +13,13 @@ export const GeneralMeeting = props => (
                 <DigitDateAndTimePicker upperLabel="Date"
                                         value={formatDate(props.meeting.date)}
                                         outlined
-                                        onChange={props.onDateUpdated} />
+                                        onChange={props.onDateUpdated}/>
             </GeneralMeetingInfoContainer>
             <GeneralMeetingInfoContainer>
                 <DigitDateAndTimePicker upperLabel="Deadline"
                                         value={formatDate(props.meeting.last_upload_date)}
                                         outlined
-                                        onChange={props.onDeadlineUpdated} />
+                                        onChange={props.onDeadlineUpdated}/>
             </GeneralMeetingInfoContainer>
             <GeneralMeetingInfoContainer>
                 <NumbersTextField
