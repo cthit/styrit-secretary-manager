@@ -97,7 +97,7 @@ export const Stories = props => {
             }
             {
                 props.unsavedChanges && (
-                    <WarningText text="You have unchanged changes!"/>
+                    <WarningText text="You have unsaved changes!"/>
                 )
             }
             <DigitButton raised primary
