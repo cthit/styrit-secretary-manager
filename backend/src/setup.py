@@ -135,7 +135,10 @@ Description of the formatting values: \n
         if conf is None:
             Config(key=config["key"], value=config["value"], config_type=config["config_type"],
                    description=config["description"])
-        conf.description = config["description"]
+        else:
+            # Since the only way to change the description is here,
+            # we always want the db version to be up to date with this list on application restart.
+            conf.description = config["description"]
 
     # Setup groups and tasks
     groups = [
