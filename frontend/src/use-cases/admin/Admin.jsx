@@ -1,12 +1,13 @@
 import React from "react";
-import Password from "./screens/password";
 import Config from "./screens/config";
+import Gamma from "./screens/gamma-login";
 
 export const Admin = props => {
     if (props.passwordVerified) {
         return <Config/>;
     } else {
-        return <Password/>;
+        // return <Password/>;
+        return <Gamma/>
     }
 };
 

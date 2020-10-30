@@ -1,12 +1,17 @@
-from flask import Flask, request
+from functools import wraps
+
+from flask import Flask, request, session
 from flask_cors import CORS
 from flask_restful import Api, Resource
+from jwt import jwt
 from pony.orm import db_session
 
+from config.gamma_config import SECRET_KEY
 from process.ArchiveProcess import download_archive, get_archive_url
 from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config, get_configs
 from process.FileProcess import handle_file_request
+from process.GammaProcess import handle_gamma_me, handle_gamma_auth
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
 from process.StoryEmailProcess import handle_story_email
@@ -18,6 +23,44 @@ app = Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+# Gamma ===
+
+app.secret_key = SECRET_KEY
+
+
+def auth_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "token" in session:
+            authorities = jwt.decode(jwt=session['token'], options={'verify_signature': False})["authorities"]
+            token = jwt.decode(jwt=session['token'], options={'verify_signature': False})
+
+            # if not GAMMA_ADMIN_AUTHORITY in authorities:
+            #     return Response(status=403)
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+class GammaMe(Resource):
+    def get(self):
+        return handle_gamma_me().get_response()
+
+
+class GammaAuth(Resource):
+    def post(self):
+        data = request.get_json()
+        return handle_gamma_auth(data).get_response()
+
+
+class Authorized(Resource):
+    @auth_required
+    def get(self):
+        return {"IsAuthorized": True}
+
+
+# End Gamma ===
 
 # Validate code, return data associated with a validated code.
 class CodeRes(Resource):
@@ -146,6 +189,10 @@ api.add_resource(TimerResource, "/api/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/api/archive/download/<string:id>")
 api.add_resource(ArchiveUrl, "/api/archive/url/<string:id>")
 api.add_resource(StoriesRes, "/api/admin/config/stories")
+
+# Gamma
+api.add_resource(GammaMe, "/api/me")
+api.add_resource(GammaAuth, "/api/auth")
 
 
 def host():
