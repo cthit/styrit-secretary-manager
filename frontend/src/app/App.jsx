@@ -1,11 +1,12 @@
-import React, { Component } from "react";
-import { DigitDialog, DigitHeader } from "@cthit/react-digit-components";
+import React, {Component} from "react";
+import {DigitDialog, DigitHeader} from "@cthit/react-digit-components";
 import Main from "../use-cases/main";
 import DebugHeader from "../use-cases/debug";
 import HeaderButtons from "../common/views/headerbuttons";
-import { Route, Switch } from "react-router";
+import {Route, Switch} from "react-router";
 import Admin from "../use-cases/admin";
-import { AppContainer, MainContainer } from "./App.styles.";
+import {AppContainer, MainContainer} from "./App.styles.";
+import {Gamma} from "../common/gamma/Gamma";
 
 class App extends Component {
     constructor(props) {
@@ -16,18 +17,19 @@ class App extends Component {
     render() {
         return (
             <AppContainer>
-                <DigitDialog />
-                <DebugHeader />
+                <Gamma/>
+                <DigitDialog/>
+                <DebugHeader/>
                 <DigitHeader
                     dense
                     headerHeight="56px"
                     title="Dokumentinsamling"
-                    renderHeader={() => <HeaderButtons />}
+                    renderHeader={() => <HeaderButtons/>}
                     renderMain={() => (
                         <MainContainer>
                             <Switch>
-                                <Route path="/admin" component={Admin} />
-                                <Route path="/" component={Main} />
+                                <Route path="/admin" component={Admin}/>
+                                <Route path="/" component={Main}/>
                             </Switch>
                         </MainContainer>
                     )}

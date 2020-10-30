@@ -6,7 +6,7 @@ let path = "/api";
 export function initApi(debugMode) {
     initialized = true;
     if (debugMode) {
-        path = "http://localhost:5000/api";
+        // path = "http://localhost:5000/api";
     }
 }
 
