@@ -57,9 +57,25 @@ def handle_gamma_auth(data: dict) -> HttpResponse:
     }
 
     res = requests.post(f"{GAMMA_TOKEN_URI}?{urllib.parse.urlencode(data)}", headers=headers)
-    if res.ok:
-        access_token = res.json()["access_token"]
-        session["token"] = access_token
-        return get_with_data({})
+    res_json = res.json()
+    if "access_token" not in res_json:
+        return get_with_error(400, "Invalid token")
+
+    token = res.json()["access_token"]
+    gamma_me_headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    gamma_me_res = requests.get(GAMMA_ME_URI, headers=gamma_me_headers)
+
+    if gamma_me_res.ok:
+        gamma_me_json = gamma_me_res.json()
+        for group in gamma_me_json["groups"]:
+            super_group = group["superGroup"]
+            if group["active"] and super_group["name"] == "styrit":
+                if res.ok:
+                    session["token"] = token
+                    return get_with_data({})
+
+        return get_with_error(403, "Must be a member of styrIT")
     else:
         return get_with_error(500, f"Unable to communicate with Gamma, code '{res.status_code}', content '{res.content}'")

@@ -8,18 +8,22 @@ import {INIT} from "./App.actions";
 import {MeetingActionsReducer} from "../use-cases/admin/screens/config/views/meeting/views/meeting-actions/MeetingActions.reducer.view";
 import {GeneralReducer} from "../use-cases/admin/screens/config/views/general/General.reducer.view";
 import {StoriesReducer} from "../use-cases/admin/screens/config/views/stories/Stories.reducer.view";
+import {AuthHandlerReducer} from "../common/elements/AuthHandler/AuthHandler.reducer";
 
-export const rootReducer = combineReducers({
-    CodeReducer,
-    init,
-    UploadReducer,
-    PasswordReducer,
-    ConfigReducer,
-    MeetingReducer,
-    MeetingActionsReducer,
-    GeneralReducer,
-    StoriesReducer
-});
+export const rootReducer = combineReducers(
+    {
+        CodeReducer,
+        init,
+        UploadReducer,
+        PasswordReducer,
+        ConfigReducer,
+        MeetingReducer,
+        MeetingActionsReducer,
+        GeneralReducer,
+        StoriesReducer,
+        AuthHandlerReducer
+    }
+);
 
 export function init(
     state = {
