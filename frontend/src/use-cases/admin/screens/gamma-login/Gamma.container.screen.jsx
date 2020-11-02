@@ -1,11 +1,11 @@
-import {onLoginWithGamma} from "./Gamma.action-creators.screen";
 import {Gamma} from "./Gamma.screen";
 import {connect} from "react-redux";
+import {authorizeAdmin} from "../../Admin.action-creators";
 
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
-    loginWithGamma: () => dispatch(onLoginWithGamma())
+    authorizeAdmin: () => dispatch(authorizeAdmin())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Gamma);

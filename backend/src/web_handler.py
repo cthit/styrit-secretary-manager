@@ -1,12 +1,12 @@
+from datetime import datetime
 from functools import wraps
 
-from flask import Flask, request, session
+import jwt
+from flask import Flask, request, session, Response
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from jwt import jwt
-from pony.orm import db_session
 
-from config.gamma_config import SECRET_KEY
+from config.gamma_config import SECRET_KEY, GAMMA_CLIENT_ID, GAMMA_REDIRECT_URI, GAMMA_AUTHORIZATION_URI
 from process.ArchiveProcess import download_archive, get_archive_url
 from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config, get_configs
@@ -32,13 +32,22 @@ def auth_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "token" in session:
-            authorities = jwt.decode(jwt=session['token'], options={'verify_signature': False})["authorities"]
-            token = jwt.decode(jwt=session['token'], options={'verify_signature': False})
+            token = jwt.decode(jwt=session["token"], options={"verify_signature": False})
+            expires = token["exp"]
+            expires_date = datetime.fromtimestamp(expires)
+            current_date = datetime.utcnow()
+            if current_date <= expires_date:
+                return f(*args, **kwargs)
 
-            # if not GAMMA_ADMIN_AUTHORITY in authorities:
-            #     return Response(status=403)
+        response_type = "response_type=code"
+        client_id = f"client_id={GAMMA_CLIENT_ID}"
+        redirect_uri = f"redirect_uri={GAMMA_REDIRECT_URI}"
 
-        return f(*args, **kwargs)
+        response = f"{GAMMA_AUTHORIZATION_URI}?{response_type}&{client_id}&{redirect_uri}"
+        headers = {
+            "location": response
+        }
+        return Response(response=response, headers=headers, status=401)
 
     return decorated_function
 
@@ -52,12 +61,6 @@ class GammaAuth(Resource):
     def post(self):
         data = request.get_json()
         return handle_gamma_auth(data).get_response()
-
-
-class Authorized(Resource):
-    @auth_required
-    def get(self):
-        return {"IsAuthorized": True}
 
 
 # End Gamma ===
@@ -133,7 +136,6 @@ class MailStoriesRes(Resource):
 
 # If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
-    @db_session
     def post(self, id):
         data = request.get_json()
         pass_validation = validate_password(data)
@@ -146,6 +148,7 @@ class TimerResource(Resource):
 
 # If the password is valid, returns the complete current configs.
 class PasswordResource(Resource):
+    @auth_required
     def put(self):
         data = request.get_json()
         pass_validation = validate_password(data)
@@ -169,7 +172,6 @@ class ArchiveDownload(Resource):
 
 
 class ArchiveUrl(Resource):
-    @db_session
     def get(self, id):
         """
         Request that the archive is created without the meeting deadline being reached.
@@ -191,7 +193,6 @@ api.add_resource(ArchiveUrl, "/api/archive/url/<string:id>")
 api.add_resource(StoriesRes, "/api/admin/config/stories")
 
 # Gamma
-api.add_resource(GammaMe, "/api/me")
 api.add_resource(GammaAuth, "/api/auth")
 
 

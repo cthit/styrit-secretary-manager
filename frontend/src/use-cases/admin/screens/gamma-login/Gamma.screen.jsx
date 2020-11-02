@@ -1,9 +1,19 @@
 import React from "react";
-import {DigitButton} from "@cthit/react-digit-components";
+import {DigitButton, DigitText} from "@cthit/react-digit-components";
+import {InfoCard} from "../password/Password.styles.screen";
+import {GammaLoginContainer} from "./Gamma.styles.screen";
 
 export const Gamma = props => (
-    <div>
-        <DigitButton text="Gamma login" raised primary
-                     onClick={props.loginWithGamma}/>
-    </div>
+    <GammaLoginContainer>
+        <InfoCard>
+            <DigitText.Text
+                text="Inloggning, endast för styrIT!"/>
+        </InfoCard>
+        <DigitButton text="Logga in med Gamma" raised primary
+                     onClick={
+                         props.authorizeAdmin
+                     }
+                     size={{width: "320px", height: "50px"}}
+        />
+    </GammaLoginContainer>
 );
