@@ -81,80 +81,55 @@ class FileRes(Resource):
 
 # If the given password is valid, updates the servers configs.
 class AdminResource(Resource):
+    @auth_required
     def post(self):
         data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
         return handle_incoming_config(data).get_response()
 
 
 # If the given password is valid, updates / adds the given meeting configs.
 class MeetingResource(Resource):
+    @auth_required
     def post(self):
         data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
         return handle_meeting_config(data).get_response()
 
 
 # If the password is valid, updates / adds the given story configs.
 class StoriesRes(Resource):
+    @auth_required
     def post(self):
         data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
         return handle_stories(data).get_response()
 
 
 # If the given password is valid, sends out the emails to active groups for the given meeting.
 class MailRes(Resource):
+    @auth_required
     def put(self):
         data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
         return handle_email(data).get_response()
 
 
 # If the given password is valid, sends out emails for the stories for the given meeting.
 class MailStoriesRes(Resource):
+    @auth_required
     def put(self):
         data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
         return handle_story_email(data).get_response()
 
 
 # If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
+    @auth_required
     def post(self, id):
-        data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
-        # The password was accepted, check the meeting id
         return handle_start_timer(id).get_response()
 
 
 # If the password is valid, returns the complete current configs.
-class PasswordResource(Resource):
+class AdminPageResource(Resource):
     @auth_required
-    def put(self):
-        data = request.get_json()
-        pass_validation = validate_password(data)
-        if pass_validation.is_error():
-            return pass_validation.get_response()
-
+    def get(self):
         return get_configs().get_response()
 
 
@@ -184,7 +159,7 @@ api.add_resource(FileRes, '/api/file')
 api.add_resource(CodeRes, '/api/code/<string:code>')
 api.add_resource(MeetingResource, "/api/admin/config/meeting")
 api.add_resource(AdminResource, "/api/admin/config")
-api.add_resource(PasswordResource, "/api/admin")
+api.add_resource(AdminPageResource, "/api/admin")
 api.add_resource(MailStoriesRes, "/api/mail/stories")
 api.add_resource(MailRes, "/api/mail")
 api.add_resource(TimerResource, "/api/timer/<string:id>")
