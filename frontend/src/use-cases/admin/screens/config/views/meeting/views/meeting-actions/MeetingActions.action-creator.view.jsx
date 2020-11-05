@@ -10,39 +10,56 @@ import {handleError} from "../../../../../../../../common/functions/handleError"
 import {putEmails} from "../../../../../../../../api/put.Emails.api";
 import {postDeadline} from "../../../../../../../../api/post.Deadline.api";
 import {getArchiveUrl} from "../../../../../../../../api/get.ArchiveUrl.api";
+import {authorizedApiCall} from "../../../../../../../../common/functions/authorizedApiCall";
 import {putStoryEmails} from "../../../../../../../../api/put.StoryEmails.api";
 
-export function saveMeeting(meeting, groupTasks, allTasks, password) {
+export function saveMeeting(meeting, groupTasks, allTasks) {
     meeting.groups_tasks = getGroupTasksToSend(allTasks, groupTasks);
 
     return dispatch => {
         dispatch({
                      type: WAITING_FOR_RESULT
                  })
-        postMeeting(meeting, password)
+        authorizedApiCall(() => postMeeting(meeting))
             .then(response => {
-                dispatch(onMeetingSavedAccepted(response));
+                if (response.error) {
+                    dispatch(onMeetingSavedError(response.errResponse));
+                } else {
+                    dispatch(onMeetingSavedAccepted(response.response));
+                }
             })
             .catch(error => {
                 dispatch(onMeetingSavedError(error));
-            });
+            })
     };
 }
 
-export function sendMail(meetingID, password) {
-    putEmails(meetingID, password).then(response => {
-        onEmailsSentAccepted(response);
-    }).catch(error => {
-        onEmailsSentError(error);
-    })
+export function sendMail(meetingID) {
+    authorizedApiCall(() => putEmails(meetingID))
+        .then(response => {
+            if (response.error) {
+                onMeetingSavedAccepted(response.response);
+            } else {
+                onMeetingSavedError(response.error);
+            }
+        })
+        .catch(error => {
+            onMeetingSavedError(error);
+        })
 }
 
-export function startDeadlineCheck(meetingID, password) {
-    postDeadline(meetingID, password).then(response => {
-        onDeadlineAccepted(response);
-    }).catch(error => {
-        onDeadlineError(error);
-    })
+export function startDeadlineCheck(meetingID) {
+    authorizedApiCall(() => postDeadline(meetingID))
+        .then(response => {
+            if (response.error) {
+                onDeadlineError(response.errResponse);
+            } else {
+                onDeadlineAccepted(response.response);
+            }
+        })
+        .catch(error => {
+            onDeadlineError(error);
+        })
 }
 
 export function downloadArchive(meetingID) {
@@ -61,27 +78,36 @@ function getGroupTasksToSend(allTasks, groupTasks) {
 
     Object.keys(groupTasks).forEach(group => {
         groupTasks[group].tasks.forEach(task => {
-            meetingGTs[task].push({
-                                      name: group,
-                                      code: groupTasks[group].code
-                                  })
+            meetingGTs[task].push(
+                {
+                    name: group,
+                    code: groupTasks[group].code
+                }
+            )
         })
     })
 
     return meetingGTs;
 }
 
-export function sendStoryEmails(password, meeting) {
+export function sendStoryEmails(meeting) {
     return dispatch => {
-        dispatch({
-                     type: WAITING_FOR_RESULT
-                 })
-        putStoryEmails(meeting, password)
+        dispatch(
+            {
+                type: WAITING_FOR_RESULT
+            }
+        )
+        authorizedApiCall(() => putStoryEmails(meeting))
             .then(response => {
-                dispatch(onSendStoryEmailsSuccessful(response))
-            }).catch(error => {
-            dispatch(onSendStoryEmailsFailed(error))
-        })
+                if (response.error) {
+                    dispatch(onSendStoryEmailsFailed(response.errResponse));
+                } else {
+                    dispatch(onSendStoryEmailsSuccessful(response.response))
+                }
+            })
+            .catch(error => {
+                dispatch(onSendStoryEmailsFailed(error));
+            })
     }
 }
 

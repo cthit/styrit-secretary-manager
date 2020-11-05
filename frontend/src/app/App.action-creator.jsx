@@ -8,7 +8,7 @@ export function init() {
         debug = true;
     }
 
-    initApi(debug);
+    initApi();
     return {
         type: INIT,
         payload: {

@@ -7,6 +7,7 @@ import {
 import {postConfig} from "../../../../../../api/post.Config.api";
 import {handleError} from "../../../../../../common/functions/handleError";
 import {WAITING_FOR_RESULT} from "../meeting/views/meeting-actions/MeetingActions.actions.view";
+import {authorizedApiCall} from "../../../../../../common/functions/authorizedApiCall";
 
 export function onConfigChange(configKey, newVal) {
     return {
@@ -19,17 +20,22 @@ export function onConfigChange(configKey, newVal) {
     }
 }
 
-export function saveConfig(password, configs) {
+export function saveConfig(configs) {
     return dispatch => {
         dispatch({
                      type: WAITING_FOR_RESULT
                  })
-        postConfig(password, configs)
+        authorizedApiCall(() => postConfig(configs))
             .then(response => {
-                dispatch(onSaveConfigAccepted(response));
-            }).catch(error => {
-            dispatch(onSaveConfigFailed(error));
-        })
+                if (response.error) {
+                    dispatch(onSaveConfigFailed(response.errResponse));
+                } else {
+                    dispatch(onSaveConfigAccepted(response.response))
+                }
+            })
+            .catch(error => {
+                dispatch(onSaveConfigFailed(error));
+            })
     }
 }
 

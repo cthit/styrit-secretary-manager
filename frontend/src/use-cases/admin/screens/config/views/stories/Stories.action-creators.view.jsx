@@ -9,6 +9,7 @@ import {
 import {WAITING_FOR_RESULT} from "../meeting/views/meeting-actions/MeetingActions.actions.view";
 import {postStories} from "../../../../../../api/post.Stories.api";
 import {handleError} from "../../../../../../common/functions/handleError";
+import {authorizedApiCall} from "../../../../../../common/functions/authorizedApiCall";
 
 export function selectedStoryGroup(group) {
     return {
@@ -52,17 +53,21 @@ export function deleteStoryGroupYear(groupYear) {
     }
 }
 
-export function saveStories(storyGroups, password) {
+export function saveStories(storyGroups) {
     return dispatch => {
         dispatch({
                      type: WAITING_FOR_RESULT
                  })
-        postStories(storyGroups, password)
+        authorizedApiCall(() => postStories(storyGroups))
             .then(response => {
-                dispatch(onStoriesSavedSuccessful(response));
+                if (response.error) {
+                    dispatch(onStoriesSavedError(response.errResponse));
+                } else {
+                    dispatch(onStoriesSavedSuccessful(response.response));
+                }
             })
             .catch(error => {
-                dispatch(onStoriesSavedError(error));
+                onStoriesSavedError(error);
             });
     };
 }

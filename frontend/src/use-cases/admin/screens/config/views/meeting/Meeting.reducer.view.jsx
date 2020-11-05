@@ -3,7 +3,6 @@ import {
     NEW_MEETING,
     NO_MEETING_SELECTED
 } from "./Meeting.actions.view";
-import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
 import {
     MEETING_DATE_UPDATED,
     MEETING_LAST_UPLOAD_UPDATED,
@@ -16,6 +15,7 @@ import {
 } from "./views/meeting-table/MeetingTable.actions.view";
 import {TASK_MODE_ALL, TASK_MODE_NONE, TASK_MODE_SOME} from "./TaskModes";
 import {MEETING_SAVE_SUCCESSFUL} from "./views/meeting-actions/MeetingActions.actions.view";
+import {GET_ADMIN_PAGE_SUCCESSFUL} from "../../../../Admin.actions";
 
 const initialState = {
     meetings: {},
@@ -30,7 +30,7 @@ const initialState = {
 
 export const MeetingReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SUBMIT_PASSWORD_SUCCESSFUL:
+        case GET_ADMIN_PAGE_SUCCESSFUL:
             return Object.assign({}, state, getMeetingsData(action.payload.data));
         case MEETING_SAVE_SUCCESSFUL:
             const receivedMeeting = action.payload.meeting;

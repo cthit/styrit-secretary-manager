@@ -1,7 +1,7 @@
 import React from "react";
 import {DigitButton, DigitText} from "@cthit/react-digit-components";
-import {InfoCard} from "../password/Password.styles.screen";
 import {GammaLoginContainer} from "./Gamma.styles.screen";
+import {InfoCard} from "../config/views/stories/Stories.styles.view.jsx.";
 
 export const Gamma = props => (
     <GammaLoginContainer>

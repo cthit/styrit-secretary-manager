@@ -23,7 +23,7 @@ export const Stories = props => {
             title: "Are you sure you want to send the mail(s)?",
             confirmButtonText: "Yes",
             cancelButtonText: "No",
-            onConfirm: () => props.sendStoryEmails(props.password),
+            onConfirm: () => props.sendStoryEmails(),
             onCancel: () => {
             }
         })
@@ -101,7 +101,7 @@ export const Stories = props => {
                 )
             }
             <DigitButton raised primary
-                         onClick={() => props.save(props.groupYears, props.password)}
+                         onClick={() => props.save(props.groupYears)}
                          text={"Save stories settings"}
                          size={{width: "400px"}}/>
         </StoriesContainer>

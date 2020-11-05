@@ -1,5 +1,5 @@
-import { postRequest } from "./RequestUtilities";
+import {postRequest} from "./RequestUtilities";
 
 export function postCode(code) {
-    return postRequest("/code/" + code, {}, false);
+    return postRequest("/code/" + code, {});
 }

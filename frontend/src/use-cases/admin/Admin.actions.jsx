@@ -1,2 +1,2 @@
-export const RETRIEVE_CONFIGS_FAILED = "retrieve_configs_failed"
-export const AUTHORIZATION_REQUIRED = "authorization_required"
+export const GET_ADMIN_PAGE_SUCCESSFUL = "get_admin_page_successful"
+export const GET_ADMIN_PAGE_FAILED = "get_admin_page_failed"
