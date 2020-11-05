@@ -13,12 +13,7 @@ from queries.GroupMeetingTaskQueries import get_tasks_for_meeting, get_meeting_j
 
 
 def handle_meeting_config(data: Dict) -> HttpResponse:
-    try:
-        valid = validate_meeting(data)
-    except Exception as e:
-        print("Failed validating meeting {0}".format(e))
-        return get_with_error(400, "Bad Request")
-
+    valid = validate_meeting(data)
     if valid.is_error:
         return get_with_error(400, valid.message)
 
