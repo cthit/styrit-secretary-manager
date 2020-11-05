@@ -39,7 +39,7 @@ export const MeetingActions = props => {
                 <DigitText.Text
                     text={"Saves the settings for the selected meeting"}/>
                 <DigitButton raised primary
-                             onClick={() => props.saveMeeting(props.meeting, props.groupTasks, props.tasks, props.password)}
+                             onClick={() => props.saveMeeting(props.meeting, props.groupTasks, props.tasks)}
                              text={"Save meeting settings"}
                              size={{width: "100%"}}/>
             </MeetingActionButtonContainer>
@@ -52,7 +52,7 @@ export const MeetingActions = props => {
                                  openSendMailDialog({
                                                         description: "Don't forget to save before sending the mail(s)!",
                                                         onConfirm: () => {
-                                                            props.sendEmails(props.meeting.id, props.password)
+                                                            props.sendEmails(props.meeting.id)
                                                         }
                                                     }
                                  )
@@ -68,7 +68,7 @@ export const MeetingActions = props => {
                              onClick={() => openSendMailDialog({
                                                                    title: "Are you sure you want to send the story email(s)?",
                                                                    description: "Don't forget to save (on the history config!) before sending the mail(s)!",
-                                                                   onConfirm: () => props.sendStoryEmails(props.meeting.id, props.password)
+                                                                   onConfirm: () => props.sendStoryEmails(props.meeting.id)
                                                                })}
                              text={"Send emails to story groups (see stories)"}
                              size={{width: "100%"}}/>
@@ -81,7 +81,7 @@ export const MeetingActions = props => {
                 <DigitButton raised secondary
                              onClick={() => openStartDeadlineCheck({
                                                                        onConfirm: () => {
-                                                                           props.startDeadlineCheck(props.meeting.id, props.password)
+                                                                           props.startDeadlineCheck(props.meeting.id)
                                                                        }
                                                                    })}
                              text={"Start deadline check"}

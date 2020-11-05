@@ -6,7 +6,7 @@ import {
     ON_STORY_GROUP_SELECTED,
     ON_STORY_YEAR_SELECTED
 } from "./Stories.actions.view";
-import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
+import {GET_ADMIN_PAGE_SUCCESSFUL} from "../../../../Admin.actions";
 
 const initialState = {
     years: [],
@@ -20,7 +20,7 @@ const initialState = {
 
 export const StoriesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SUBMIT_PASSWORD_SUCCESSFUL:
+        case GET_ADMIN_PAGE_SUCCESSFUL:
             return assignState(state, {
                 years: action.payload.data.years,
                 groupYears: action.payload.data.groupYears,

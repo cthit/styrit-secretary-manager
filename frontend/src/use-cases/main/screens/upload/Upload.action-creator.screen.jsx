@@ -5,6 +5,7 @@ import {
 } from "./Upload.actions.screen";
 import {putFiles} from "../../../../api/put.Files.api";
 import {handleError} from "../../../../common/functions/handleError";
+import {authorizedApiCall} from "../../../../common/functions/authorizedApiCall";
 
 export function onUpload(file, task) {
     return {
@@ -19,13 +20,12 @@ export function onUpload(file, task) {
 
 export function onSubmitFiles(reports, code, group) {
     return dispatch => {
-        putFiles(reports, code, group)
-            .then(response => {
-                return dispatch(onAccept(response));
-            })
-            .catch(error => {
-                return dispatch(onError(error));
-            });
+        const result = authorizedApiCall(() => putFiles(reports, code, group))
+        if (result.error) {
+            dispatch(onError(result.errResponse));
+        } else {
+            dispatch(onAccept(result.response));
+        }
     };
 }
 

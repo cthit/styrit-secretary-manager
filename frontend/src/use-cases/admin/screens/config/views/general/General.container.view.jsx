@@ -8,7 +8,6 @@ import {
 
 const mapStateToProps = state => ({
     configs: state.root.GeneralReducer.configs,
-    password: state.root.PasswordReducer.password,
     selectedConfigIndex: state.root.GeneralReducer.selectedHelpIndex,
     selectedHelp: state.root.GeneralReducer.selectedHelp,
     unsavedChanges: state.root.GeneralReducer.unsavedChanges
@@ -16,7 +15,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
         onConfigChange: (key, newVal) => dispatch(onConfigChange(key, newVal)),
-        onConfigSave: (password, configs) => dispatch(saveConfig(password, configs)),
+        onConfigSave: (configs) => dispatch(saveConfig(configs)),
         configHelpButtonPressed: index => dispatch(configHelpButtonPressed(index))
     })
 ;

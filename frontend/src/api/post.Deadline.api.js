@@ -1,5 +1,5 @@
-import { postRequest } from "./RequestUtilities";
+import {postRequest} from "./RequestUtilities";
 
-export function postDeadline(meetingID, password) {
-    return postRequest("/timer/" + meetingID, {pass: password}, false);
+export function postDeadline(meetingID) {
+    return postRequest("/timer/" + meetingID);
 }

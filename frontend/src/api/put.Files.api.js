@@ -1,4 +1,4 @@
-import { putRequest } from "./RequestUtilities";
+import {putRequest} from "./RequestUtilities";
 
 export function putFiles(reports, code, group) {
     let data = new FormData();
@@ -9,5 +9,5 @@ export function putFiles(reports, code, group) {
     data.append("code", code);
     data.append("group", group);
 
-    return putRequest("/file", data, false);
+    return putRequest("/file", data);
 }

@@ -4,7 +4,7 @@ import Admin from "./Admin";
 import {authorizeAdmin} from "./Admin.action-creators";
 
 const mapStateToProps = state => ({
-    passwordVerified: state.root.PasswordReducer.passwordVerified
+    isAuthorized: state.root.AdminReducer.isAuthorized
 });
 
 const mapDispatchToProps = dispatch => ({

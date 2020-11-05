@@ -1,10 +1,10 @@
-import {SUBMIT_PASSWORD_SUCCESSFUL} from "../../../password/Password.actions.screen";
 import {
     CONFIG_CHANGED,
     CONFIG_HELP_BUTTON_CLICKED,
     ON_SAVE_CONFIGS_FAILED,
     ON_SAVE_CONFIGS_SUCCESSFUL
 } from "./General.actions.view";
+import {GET_ADMIN_PAGE_SUCCESSFUL} from "../../../../Admin.actions";
 
 const initialState = {
     configs: [],
@@ -15,7 +15,7 @@ const initialState = {
 
 export const GeneralReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SUBMIT_PASSWORD_SUCCESSFUL:
+        case GET_ADMIN_PAGE_SUCCESSFUL:
             return Object.assign({}, state,
                                  {
                                      configs: action.payload.data.general,

@@ -1,10 +1,9 @@
 import {putRequest} from "./RequestUtilities";
 
-export function putEmails(id, password) {
+export function putEmails(id) {
     let data = {
-        pass: password,
         id: id
     }
 
-    return putRequest("/mail", data, false);
+    return putRequest("/mail", data);
 }

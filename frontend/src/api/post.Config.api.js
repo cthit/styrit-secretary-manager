@@ -1,6 +1,6 @@
-import { postRequest } from "./RequestUtilities";
+import {postRequest} from "./RequestUtilities";
 
-export function postConfig(password, configs) {
-    let data = {pass: password, config: configs}
-    return postRequest("/admin/config", data, false);
+export function postConfig(configs) {
+    let data = {config: configs}
+    return postRequest("/admin/config", data);
 }

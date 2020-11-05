@@ -46,7 +46,7 @@ export const General = props => (
                 <WarningText text="You have unsaved changes!"/>
             )}
             <DigitButton primary raised text={"Save"} size={{width: "100%"}}
-                         onClick={() => props.onConfigSave(props.password, props.configs)}/>
+                         onClick={() => props.onConfigSave(props.configs)}/>
         </ConfigListContainer>
         {props.selectedHelp &&
         <HelpCard>

@@ -1,27 +1,29 @@
-import {RETRIEVE_CONFIGS_FAILED} from "./Admin.actions";
+import {
+    GET_ADMIN_PAGE_FAILED,
+    GET_ADMIN_PAGE_SUCCESSFUL
+} from "./Admin.actions";
 import {handleError} from "../../common/functions/handleError";
-import {SUBMIT_PASSWORD_SUCCESSFUL} from "./screens/password/Password.actions.screen";
-import {putPassword} from "../../api/put.Password.api";
+import {getAdminPage} from "../../api/get.AdminPage.api";
+import {authorizedApiCall} from "../../common/functions/authorizedApiCall";
 
 export function authorizeAdmin() {
     return dispatch => {
-        putPassword("asd123")
+        authorizedApiCall(() => getAdminPage())
             .then(response => {
-                dispatch(onAccept(response));
+                if (response.error) {
+                    dispatch(handleError(response.errResponse, GET_ADMIN_PAGE_FAILED));
+                } else {
+                    dispatch(onAccept(response.response));
+                }
             })
             .catch(error => {
-                const headers = error.response.headers;
-                if (error.response.status === 401 && headers.location) {
-                    window.location.href = headers.location;
-                } else {
-                    dispatch(handleError(error, RETRIEVE_CONFIGS_FAILED))
-                }
+                dispatch(handleError(error, GET_ADMIN_PAGE_FAILED));
             })
     }
 }
 
 
-function onAccept(response, password) {
+function onAccept(response) {
     // Modify the data here.
     let data = response.data.data;
     let meetings = {};
@@ -29,10 +31,9 @@ function onAccept(response, password) {
     data.meetings = meetings;
 
     return {
-        type: SUBMIT_PASSWORD_SUCCESSFUL,
+        type: GET_ADMIN_PAGE_SUCCESSFUL,
         payload: {
-            data: data,
-            password: password
+            data: data
         },
         error: false
     };

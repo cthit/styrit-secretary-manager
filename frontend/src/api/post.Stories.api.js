@@ -1,10 +1,9 @@
 import {postRequest} from "./RequestUtilities";
 
-export function postStories(storyGroups, password) {
+export function postStories(storyGroups) {
     let data = {
-        pass: password,
         storyGroups: storyGroups
     }
 
-    return postRequest("/admin/config/stories", data, false);
+    return postRequest("/admin/config/stories", data);
 }
