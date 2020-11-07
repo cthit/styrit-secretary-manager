@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 import jwt
@@ -17,7 +17,6 @@ from process.MeetingProcess import handle_meeting_config
 from process.StoryEmailProcess import handle_story_email
 from process.StoryProcess import handle_stories
 from process.TimerProcess import handle_start_timer
-from validation.PasswordValidation import validate_password
 
 app = Flask(__name__)
 api = Api(app)
@@ -28,28 +27,37 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = SECRET_KEY
 
 
-def auth_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "token" in session:
-            token = jwt.decode(jwt=session["token"], options={"verify_signature": False})
-            expires = token["exp"]
-            expires_date = datetime.fromtimestamp(expires)
-            current_date = datetime.utcnow()
-            if current_date <= expires_date:
-                return f(*args, **kwargs)
+def auth_required(refresh_login=False):
+    def inner_func(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "token" in session:
+                token = jwt.decode(jwt=session["token"], options={"verify_signature": False})
+                expires = token["exp"]
+                expires_date = datetime.fromtimestamp(expires)
+                current_date = datetime.utcnow()
+                if current_date <= expires_date:
+                    if refresh_login:
+                        refresh_after = expires_date - timedelta(hours=2)
+                        # If there is less than a couple of hours to expiration, force the user to re-login.
+                        if current_date >= refresh_after:
+                            session["token"] = None
+                        else:
+                            return f(*args, **kwargs)
+                    else:
+                        return f(*args, **kwargs)
 
-        response_type = "response_type=code"
-        client_id = f"client_id={GAMMA_CLIENT_ID}"
-        redirect_uri = f"redirect_uri={GAMMA_REDIRECT_URI}"
+            response_type = "response_type=code"
+            client_id = f"client_id={GAMMA_CLIENT_ID}"
+            redirect_uri = f"redirect_uri={GAMMA_REDIRECT_URI}"
 
-        response = f"{GAMMA_AUTHORIZATION_URI}?{response_type}&{client_id}&{redirect_uri}"
-        headers = {
-            "location": response
-        }
-        return Response(response=response, headers=headers, status=401)
-
-    return decorated_function
+            response = f"{GAMMA_AUTHORIZATION_URI}?{response_type}&{client_id}&{redirect_uri}"
+            headers = {
+                "location": response
+            }
+            return Response(response=response, headers=headers, status=401)
+        return decorated_function
+    return inner_func
 
 
 class GammaMe(Resource):
@@ -81,7 +89,7 @@ class FileRes(Resource):
 
 # If the given password is valid, updates the servers configs.
 class AdminResource(Resource):
-    @auth_required
+    @auth_required()
     def post(self):
         data = request.get_json()
         return handle_incoming_config(data).get_response()
@@ -89,7 +97,7 @@ class AdminResource(Resource):
 
 # If the given password is valid, updates / adds the given meeting configs.
 class MeetingResource(Resource):
-    @auth_required
+    @auth_required()
     def post(self):
         data = request.get_json()
         return handle_meeting_config(data).get_response()
@@ -97,7 +105,7 @@ class MeetingResource(Resource):
 
 # If the password is valid, updates / adds the given story configs.
 class StoriesRes(Resource):
-    @auth_required
+    @auth_required()
     def post(self):
         data = request.get_json()
         return handle_stories(data).get_response()
@@ -105,7 +113,7 @@ class StoriesRes(Resource):
 
 # If the given password is valid, sends out the emails to active groups for the given meeting.
 class MailRes(Resource):
-    @auth_required
+    @auth_required()
     def put(self):
         data = request.get_json()
         return handle_email(data).get_response()
@@ -113,7 +121,7 @@ class MailRes(Resource):
 
 # If the given password is valid, sends out emails for the stories for the given meeting.
 class MailStoriesRes(Resource):
-    @auth_required
+    @auth_required()
     def put(self):
         data = request.get_json()
         return handle_story_email(data).get_response()
@@ -121,14 +129,14 @@ class MailStoriesRes(Resource):
 
 # If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
-    @auth_required
+    @auth_required()
     def post(self, id):
         return handle_start_timer(id).get_response()
 
 
 # If the password is valid, returns the complete current configs.
 class AdminPageResource(Resource):
-    @auth_required
+    @auth_required(True)
     def get(self):
         return get_configs().get_response()
 
