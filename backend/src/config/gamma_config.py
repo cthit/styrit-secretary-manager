@@ -8,4 +8,3 @@ GAMMA_ME_URI = os.environ.get('GAMMA_ME_URI', 'http://localhost:8081/api/users/m
 GAMMA_TOKEN_URI = os.environ.get('GAMMA_TOKEN_URI', 'http://localhost:8081/api/oauth/token')
 GAMMA_AUTHORIZATION_URI = os.environ.get('GAMMA_AUTHORIZATION_URI', 'http://localhost:8081/api/oauth/authorize')
 GAMMA_REDIRECT_URI = os.environ.get('GAMMA_REDIRECT_URI', 'http://localhost:3001/auth/account/callback')
-GAMMA_ADMIN_AUTHORITY = os.environ.get('GAMMA_ADMIN_AUTHORITY', 'admin')
