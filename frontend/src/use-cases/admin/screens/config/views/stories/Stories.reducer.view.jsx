@@ -15,7 +15,12 @@ const initialState = {
     selectedYear: undefined,
     errorMsg: "",
     saveError: "",
-    unsavedChanges: false
+    unsavedChanges: false,
+    groupIds: [{
+        group: "styrIT",
+        year: "2019",
+        id: "aaaa-bbbb-cccc-dddd"
+    }]
 };
 
 export const StoriesReducer = (state = initialState, action) => {
