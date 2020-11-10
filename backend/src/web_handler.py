@@ -31,21 +31,24 @@ def auth_required(refresh_login=False):
     def inner_func(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if "token" in session:
-                token = jwt.decode(jwt=session["token"], options={"verify_signature": False})
-                expires = token["exp"]
-                expires_date = datetime.fromtimestamp(expires)
-                current_date = datetime.utcnow()
-                if current_date <= expires_date:
-                    if refresh_login:
-                        refresh_after = expires_date - timedelta(hours=2)
-                        # If there is less than a couple of hours to expiration, force the user to re-login.
-                        if current_date >= refresh_after:
-                            session["token"] = None
+            try:
+                if "token" in session:
+                    token = jwt.decode(jwt=session["token"], options={"verify_signature": False})
+                    expires = token["exp"]
+                    expires_date = datetime.fromtimestamp(expires)
+                    current_date = datetime.utcnow()
+                    if current_date <= expires_date:
+                        if refresh_login:
+                            refresh_after = expires_date - timedelta(hours=2)
+                            # If there is less than a couple of hours to expiration, force the user to re-login.
+                            if current_date >= refresh_after:
+                                session["token"] = None
+                            else:
+                                return f(*args, **kwargs)
                         else:
                             return f(*args, **kwargs)
-                    else:
-                        return f(*args, **kwargs)
+            except jwt.ExpiredSignatureError:
+                print("Session has expired")
 
             response_type = "response_type=code"
             client_id = f"client_id={GAMMA_CLIENT_ID}"
