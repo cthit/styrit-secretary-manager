@@ -13,21 +13,11 @@ import {
     DigitAutocompleteSelectSingle,
     DigitButton,
     DigitChip,
-    DigitText,
-    useDigitDialog
+    DigitText
 } from "@cthit/react-digit-components";
+import {Space} from "../../../../../main/screens/upload/Upload.styles.screen";
 
 export const Stories = props => {
-    const [openSendMailDialog] = useDigitDialog(
-        {
-            title: "Are you sure you want to send the mail(s)?",
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
-            onConfirm: () => props.sendStoryEmails(),
-            onCancel: () => {
-            }
-        })
-
     return (
         <StoriesContainer>
             <DigitText.Heading5 text={"Ansvarsbefrielse"}/>
@@ -104,6 +94,54 @@ export const Stories = props => {
                          onClick={() => props.save(props.groupYears)}
                          text={"Save stories settings"}
                          size={{width: "400px"}}/>
+            <HLine/>
+            {/*<div style={{minHeight: "50px"}}/>*/}
+            <DigitText.Title text={"Connect stories to meeting"}/>
+            <DigitText.Text
+                text={"(Also done automatically before sending emails)"}/>
+            <div style={{minHeight: "10px"}}/>
+            <DigitAutocompleteSelectSingle
+                upperLabel={"Meeting"}
+                outlined
+                options={[
+                    {
+                        text: "Meeting A",
+                        value: "4524959-2252"
+                    },
+                    {
+                        text: "Meeting B",
+                        value: "4524959-554"
+                    }
+                ]}
+                onChange={e => {
+                    console.log("Blah", e.target.value)
+                }}
+                value={"4524959-2252"}
+                disabled={!props.meetings || Object.keys(props.meetings).length === 0}
+                noOptionsText={"No meetings"}
+            />
+            <DigitButton primary raised
+                         text={"Generate codes for the above story groups"}/>
+            <Space/>
+            <table style={{width: "80%"}}>
+                {
+                    props.groupIds.map((obj, index) => (
+                        <tr key={index}>
+                            <td width={"48%"}>
+                                <DigitText.Text
+                                    alignRight
+                                    text={obj.group + " " + obj.year + ": "}/>
+                            </td>
+                            <td width={"1%"}/>
+                            <td width={"51%"}>
+                                <DigitText.Text text={obj.id}/>
+                            </td>
+                        </tr>
+                    ))
+                }
+            </table>
+
+            <HLine/>
         </StoriesContainer>
     );
 }
@@ -148,16 +186,6 @@ function getGroupFromName(groupName, groups) {
 
 function formatChipLabel(data) {
     return data.group.displayName + " " + data.year
-}
-
-function getSendEmailsDisabled(groupYears) {
-    let disabled = true;
-    groupYears.forEach(groupYear => {
-        if (groupYear.finished === false) {
-            disabled = false;
-        }
-    })
-    return disabled;
 }
 
 export default Stories;

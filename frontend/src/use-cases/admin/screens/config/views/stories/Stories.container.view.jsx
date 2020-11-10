@@ -17,7 +17,8 @@ const mapStateToProps = state => ({
     selectedYear: state.root.StoriesReducer.selectedYear,
     errorMsg: state.root.StoriesReducer.errorMsg,
     saveError: state.root.StoriesReducer.saveError,
-    unsavedChanges: state.root.StoriesReducer.unsavedChanges
+    unsavedChanges: state.root.StoriesReducer.unsavedChanges,
+    groupIds: state.root.StoriesReducer.groupIds
 });
 
 const mapDispatchToProps = dispatch => ({
