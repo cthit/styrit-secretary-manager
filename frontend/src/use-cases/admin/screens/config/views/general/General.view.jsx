@@ -17,9 +17,6 @@ import {
 import HelpIcon from '@material-ui/icons/Help';
 import {WarningText} from "../stories/Stories.styles.view.jsx.";
 
-
-const test = "asd <br/> bsd"
-
 export const General = props => (
     <GeneralConfigContainer>
         <ConfigListContainer>

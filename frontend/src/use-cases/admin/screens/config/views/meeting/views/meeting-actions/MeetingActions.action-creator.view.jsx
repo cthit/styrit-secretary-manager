@@ -129,14 +129,6 @@ function onMeetingSavedError(error) {
     return handleError(error, MEETING_SAVE_FAILED);
 }
 
-function onEmailsSentAccepted(response) {
-    alert("Mail(s) sent successfully");
-}
-
-function onEmailsSentError(error) {
-    alert("Failed to send emails, '" + handleError(error, "").payload.message + "'");
-}
-
 function onDeadlineAccepted(response) {
     alert("Deadline check started successfully");
 }
@@ -157,7 +149,7 @@ function onSendStoryEmailsSuccessful(response) {
     alert("Send story emails successful!");
     return {
         type: SEND_STORY_EMAILS_SUCCESSFUL,
-        payload: {},
+        payload: response.data,
         error: false
     }
 }

@@ -9,7 +9,7 @@ from flask_restful import Api, Resource
 from config.gamma_config import SECRET_KEY, GAMMA_CLIENT_ID, GAMMA_REDIRECT_URI, GAMMA_AUTHORIZATION_URI
 from process.ArchiveProcess import download_archive, get_archive_url
 from process.CodeProcess import handle_code_request
-from process.ConfigProcess import handle_incoming_config, get_configs
+from process.ConfigProcess import handle_incoming_config, get_admin_page_data
 from process.FileProcess import handle_file_request
 from process.GammaProcess import handle_gamma_me, handle_gamma_auth
 from process.MailProcess import handle_email
@@ -141,7 +141,7 @@ class TimerResource(Resource):
 class AdminPageResource(Resource):
     @auth_required(True)
     def get(self):
-        return get_configs().get_response()
+        return get_admin_page_data().get_response()
 
 
 # Handles downloading of archives for meetings.
