@@ -39,10 +39,10 @@ def setup_general_config():
          "description": "The email to send from"},
         {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {day}/{month}", "config_type": string,
          "description": """
-         The subject for "regular" email sendout (that goes out to all active groups that have documents to turn in for the meeting). 
-          Description of the formatting values: 
-           - {day} = day of month 
-           - {month} = number of month"""},
+The subject for "regular" email sendout (that goes out to all active groups that have documents to turn in for the meeting). \n
+Description of the formatting values: \n 
+Please note that all of these must be used unless modifications to backend code are made.\n - {day} = day of month \n
+ - {month} = number of month"""},
         {"key": "mail_to_groups_message",
          "value": "\nHej {group_name}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
                   "följande dokument: {task_list}\nDetta görs på sidan: {frontend_url}\nAnge koden: {group_code}\n\nMall för vissa "
@@ -53,6 +53,7 @@ def setup_general_config():
              """
 The body of the "regular" emails (the ones that are sent to all the active groups that should turn in documents for the meeting).  \n
 Description of the formatting values:  \n
+Please note that all of these must be used unless modifications to backend code are made.\n
  - {group_name} = The display name of the group \n
  - {meeting_day} = The day of month for the meeting \n
  - {meeting_month} = The month (number) of the meeting \n
@@ -69,8 +70,9 @@ Description of the formatting values:  \n
         {"key": "mail_to_board_subject", "value": "Dokument för sektionsmöte {meeting_number} lp {meeting_lp}", "config_type": string,
          "description":
              """
- The subject of the email that is sent to the board upon reaching the deadline.  \n
- Description of the formatting values: \n
+The subject of the email that is sent to the board upon reaching the deadline.  \n
+Description of the formatting values: \n
+Please note that all of these must be used unless modifications to backend code are made.\n
   - {meeting_number} = The number of the meeting that LP (0 if there is just one meeting that LP) \n
   - {meeting_lp} = The study period of the meeting 
              """},
@@ -81,6 +83,7 @@ Description of the formatting values:  \n
              """
 The contents of the email that is sent out to the board upon reaching the deadline. \n
 Description of the formatting values: \n
+Please note that all of these must be used unless modifications to backend code are made.\n
  - {board_name} = The display name of the board \n
  - {meeting_number} = The number of the meeting (usually 0) \n
  - {meeting_lp} = The study period of the meeting \n
@@ -90,10 +93,11 @@ Description of the formatting values: \n
         {"key": "mail_for_stories_subject", "value": "Dokument för sektionsmöte {meeting_number} lp {meeting_lp}", "config_type": string,
          "description":
              """ 
- The subject of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser.
- Description of the formatting values:
-  - {meeting_number} = The number of the meeting that study period (usually 0)
-  - {meeting_lp} = The study period
+The subject of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser. \n
+Description of the formatting values: \n
+Please note that all of these must be used unless modifications to backend code are made.\n
+ - {meeting_number} = The number of the meeting that study period (usually 0) \n
+ - {meeting_lp} = The study period
              """},
         {"key": "mail_for_stories",
          "value": "\nHej {group_name_year}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
@@ -107,6 +111,7 @@ Description of the formatting values: \n
              """
 The body of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser) \n
 Description of the formatting values: \n
+Please note that all of these must be used unless modifications to backend code are made.\n
  - {group_name_year} = Display name of the group. \n
  - {meeting_day} = The day of month that the meeting will take place \n
  - {meeting_month} = The month (number) of the meeting \n
