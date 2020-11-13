@@ -1,5 +1,6 @@
 import {
     ON_ADD_STORY_GROUP_YEAR,
+    ON_CONNECT_STORIES_TO_MEETING_SUCCESSFUL,
     ON_SAVE_STORIES_ERROR,
     ON_SAVE_STORIES_SUCCESSFUL,
     ON_STORIES_MEETING_SELECTED,
@@ -71,9 +72,12 @@ export const StoriesReducer = (state = initialState, action) => {
                 selectedMeeting: action.payload.meeting
             })
         case SEND_STORY_EMAILS_SUCCESSFUL:
-            console.log("PAYLOAD", action.payload.data)
             return assignState(state, {
                 groupIds: action.payload.data
+            })
+        case ON_CONNECT_STORIES_TO_MEETING_SUCCESSFUL:
+            return assignState(state, {
+                groupIds: action.payload
             })
         default:
             return state;

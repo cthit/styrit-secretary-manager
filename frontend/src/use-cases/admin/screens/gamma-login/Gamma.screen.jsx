@@ -9,6 +9,11 @@ export const Gamma = props => (
             <DigitText.Text
                 text="Inloggning, endast för styrIT!"/>
         </InfoCard>
+        {
+            props.errorMsg !== "" && (
+                <DigitText.Text style={{color: "red"}} text={props.errorMsg}/>
+            )
+        }
         <DigitButton text="Logga in med Gamma" raised primary
                      onClick={
                          props.authorizeAdmin

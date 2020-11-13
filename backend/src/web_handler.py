@@ -15,7 +15,7 @@ from process.GammaProcess import handle_gamma_me, handle_gamma_auth
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
 from process.StoryEmailProcess import handle_story_email
-from process.StoryProcess import handle_stories
+from process.StoryProcess import handle_stories, connect_stories_to_meeting
 from process.TimerProcess import handle_start_timer
 
 app = Flask(__name__)
@@ -114,6 +114,12 @@ class StoriesRes(Resource):
         return handle_stories(data).get_response()
 
 
+class StoriesConnectToMeetingRes(Resource):
+    @auth_required()
+    def post(self, id: str):
+        return connect_stories_to_meeting(id).get_response()
+
+
 # If the given password is valid, sends out the emails to active groups for the given meeting.
 class MailRes(Resource):
     @auth_required()
@@ -133,7 +139,7 @@ class MailStoriesRes(Resource):
 # If the password is valid, starts a timer for the meeting.
 class TimerResource(Resource):
     @auth_required()
-    def post(self, id):
+    def post(self, id: str):
         return handle_start_timer(id).get_response()
 
 
@@ -176,7 +182,8 @@ api.add_resource(MailRes, "/api/mail")
 api.add_resource(TimerResource, "/api/timer/<string:id>")
 api.add_resource(ArchiveDownload, "/api/archive/download/<string:id>")
 api.add_resource(ArchiveUrl, "/api/archive/url/<string:id>")
-api.add_resource(StoriesRes, "/api/admin/config/stories")
+api.add_resource(StoriesRes, "/api/admin/config/stories/add")
+api.add_resource(StoriesConnectToMeetingRes, "/api/admin/config/stories/connect/<string:id>")
 
 # Gamma
 api.add_resource(GammaAuth, "/api/auth")
