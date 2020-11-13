@@ -126,6 +126,7 @@ export function connectStoriesToMeeting(meetingId) {
 }
 
 function onConnectStoriesToMeetingSuccessful(response) {
+    alert("Stories connected successfully!");
     return {
         type: ON_CONNECT_STORIES_TO_MEETING_SUCCESSFUL,
         payload: response.data.data,
