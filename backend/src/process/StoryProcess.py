@@ -8,7 +8,10 @@ from command.GroupMeetingCommands import create_group_meeting
 from command.GroupMeetingTaskCommands import create_group_meeting_task
 from command.GroupYearCommands import update_group_year, create_group_year
 from data_objects.StoryData import StoryData
-from validation.Validation import validate_list, validate_str, validate_int, validate_bool
+from process.ConfigProcess import get_meeting_story_groups
+from queries.MeetingQueries import get_meeting_ids
+from validation.Validation import validate_list, validate_str, validate_int, validate_bool, validate_meeting_id, \
+    validate_meeting_id_from_str
 from queries.ConfigQueries import get_config
 from queries.GroupYearQueries import get_group_year, get_group_years, get_story_group_years
 
@@ -89,3 +92,12 @@ def update_story_group_meetings(meeting_id: UUID) -> List[StoryData]:
         create_group_meeting_task(meeting_id, story_group.group, story_group.year,
                                   "eberattelse")
     return story_groups
+
+
+def connect_stories_to_meeting(id_str: str) -> HttpResponse:
+    meeting_id_res = validate_meeting_id_from_str(id_str)
+    if meeting_id_res.is_error:
+        return get_with_error(400, meeting_id_res.message)
+    meeting_id = meeting_id_res.data
+    update_story_group_meetings(meeting_id)
+    return get_with_data(get_meeting_story_groups(get_meeting_ids()))

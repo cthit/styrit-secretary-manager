@@ -23,7 +23,7 @@ def handle_story_email(data: Dict) -> HttpResponse:
         return get_with_error(meeting_id_res.message)
     meeting_id = meeting_id_res.data
 
-    story_datas = update_story_group_meetings(meeting_id)
+    update_story_group_meetings(meeting_id)
     threading.Thread(target=send_story_emails, args=(meeting_id,)).start()
     return get_with_data(get_meeting_story_groups(get_meeting_ids()))
 

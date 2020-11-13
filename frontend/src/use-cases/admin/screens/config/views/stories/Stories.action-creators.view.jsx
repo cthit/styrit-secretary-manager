@@ -1,5 +1,6 @@
 import {
     ON_ADD_STORY_GROUP_YEAR,
+    ON_CONNECT_STORIES_TO_MEETING_SUCCESSFUL,
     ON_SAVE_STORIES_ERROR,
     ON_SAVE_STORIES_SUCCESSFUL,
     ON_STORIES_MEETING_SELECTED,
@@ -11,6 +12,7 @@ import {WAITING_FOR_RESULT} from "../meeting/views/meeting-actions/MeetingAction
 import {postStories} from "../../../../../../api/post.Stories.api";
 import {handleError} from "../../../../../../common/functions/handleError";
 import {authorizedApiCall} from "../../../../../../common/functions/authorizedApiCall";
+import {postStoriesConnectMeeting} from "../../../../../../api/post.StoriesConnectMeeting.api";
 
 export function selectedStoryGroup(group) {
     return {
@@ -99,4 +101,38 @@ export function onStoriesMeetingSelected(meeting_id) {
         },
         error: false
     }
+}
+
+export function connectStoriesToMeeting(meetingId) {
+    return dispatch => {
+        dispatch(
+            {
+                type: WAITING_FOR_RESULT,
+                error: false
+            }
+        )
+        authorizedApiCall(() => postStoriesConnectMeeting(meetingId))
+            .then(response => {
+                if (response.error) {
+                    onConnectStoriesToMeetingFailed(response.errResponse);
+                } else {
+                    dispatch(onConnectStoriesToMeetingSuccessful(response.response))
+                }
+            })
+            .catch(error => {
+                onConnectStoriesToMeetingFailed(error);
+            })
+    }
+}
+
+function onConnectStoriesToMeetingSuccessful(response) {
+    return {
+        type: ON_CONNECT_STORIES_TO_MEETING_SUCCESSFUL,
+        payload: response.data.data,
+        error: false
+    }
+}
+
+function onConnectStoriesToMeetingFailed(error) {
+    alert("Failed to connect stories to meeting, error: " + handleError(error, "").payload.message)
 }

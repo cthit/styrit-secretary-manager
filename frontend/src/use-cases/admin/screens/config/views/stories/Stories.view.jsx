@@ -98,7 +98,7 @@ export const Stories = props => {
             {/*<div style={{minHeight: "50px"}}/>*/}
             <DigitText.Title text={"Connect stories to meeting"}/>
             <DigitText.Text
-                text={"(Also done automatically before sending emails)"}/>
+                text={"(Also done automatically before sending story emails)"}/>
             <div style={{minHeight: "10px"}}/>
             <DigitAutocompleteSelectSingle
                 upperLabel={"Meeting"}
@@ -111,8 +111,13 @@ export const Stories = props => {
                 disabled={props.meetings.length === 0}
                 noOptionsText={"No meetings"}
             />
-            <DigitButton primary raised
-                         text={"Generate codes for the above story groups"}/>
+            <DigitButton
+                primary
+                raised
+                text={"Generate codes for story groups"}
+                onClick={() => props.connectStories(props.selectedMeeting)}
+                disabled={props.selectedMeeting === ""}
+            />
             <Space/>
             <table style={{width: "80%"}}>
                 <tbody>
@@ -120,13 +125,14 @@ export const Stories = props => {
                     props.groupIds[props.selectedMeeting] && (
                         props.groupIds[props.selectedMeeting].map((obj, index) => (
                             <tr key={index}>
-                                <td width={"48%"}>
+                                <td width={"42%"}>
                                     <DigitText.Text
                                         alignRight
+                                        bold
                                         text={obj.group + " " + obj.year + ": "}/>
                                 </td>
                                 <td width={"1%"}/>
-                                <td width={"51%"}>
+                                <td width={"57%"}>
                                     <DigitText.Text text={obj.id}/>
                                 </td>
                             </tr>

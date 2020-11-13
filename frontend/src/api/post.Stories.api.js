@@ -5,5 +5,5 @@ export function postStories(storyGroups) {
         storyGroups: storyGroups
     }
 
-    return postRequest("/admin/config/stories", data);
+    return postRequest("/admin/config/stories/add", data);
 }
