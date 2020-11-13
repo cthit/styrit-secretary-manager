@@ -1,11 +1,13 @@
 from datetime import datetime
 from typing import Dict, List
+from uuid import UUID
 
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from ResultWithData import ResultWithData, get_result_with_error, get_result_with_data
 from command.ConfigCommands import update_config_value
 from data_objects.ConfigData import ConfigData
 from queries.ConfigQueries import get_config, get_config_list, get_config_value_int
+from queries.GroupMeetingQueries import get_meeting_story_group_data
 from queries.GroupMeetingTaskQueries import get_meeting_json_data
 from queries.GroupQueries import get_groups
 from queries.GroupYearQueries import get_group_years
@@ -52,8 +54,10 @@ def validate_configs(data: Dict) -> ResultWithData[List[ConfigData]]:
     return get_result_with_data(configs)
 
 
-def get_configs() -> HttpResponse:
-    meetings_res = get_meetings()
+def get_admin_page_data() -> HttpResponse:
+    meeting_ids = get_meeting_ids()
+
+    meetings_res = get_meetings(meeting_ids)
     if meetings_res.is_error:
         return get_with_error(500, meetings_res.message)
     meetings = meetings_res.data
@@ -69,19 +73,21 @@ def get_configs() -> HttpResponse:
 
     group_years = get_group_years()
 
+    meeting_story_groups = get_meeting_story_groups(meeting_ids)
+
     return get_with_data({
         "meetings": meetings,
         "general": config_list,
         "groups": groups,
         "tasks": tasks,
         "years": years,
-        "groupYears": group_years
+        "groupYears": group_years,
+        "meetingStoryGroups": meeting_story_groups
     })
 
 
-def get_meetings() -> ResultWithData[List[dict]]:
+def get_meetings(meeting_ids: List[UUID]) -> ResultWithData[List[dict]]:
     meetings = []
-    meeting_ids = get_meeting_ids()
     for meeting_id in meeting_ids:
         meeting_data_res = get_meeting_json_data(meeting_id)
         if meeting_data_res.is_error:
@@ -102,3 +108,10 @@ def get_years() -> ResultWithData[dict]:
     for i in range(years_back_res.data):
         years.append(curr_year - i)
     return get_result_with_data(years)
+
+
+def get_meeting_story_groups(meeting_ids) -> dict:
+    meeting_story_groups = dict()
+    for meeting_id in meeting_ids:
+        meeting_story_groups[str(meeting_id)] = get_meeting_story_group_data(meeting_id)
+    return meeting_story_groups

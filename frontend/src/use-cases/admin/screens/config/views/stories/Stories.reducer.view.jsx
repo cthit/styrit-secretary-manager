@@ -2,11 +2,16 @@ import {
     ON_ADD_STORY_GROUP_YEAR,
     ON_SAVE_STORIES_ERROR,
     ON_SAVE_STORIES_SUCCESSFUL,
+    ON_STORIES_MEETING_SELECTED,
     ON_STORY_GROUP_DELETED,
     ON_STORY_GROUP_SELECTED,
     ON_STORY_YEAR_SELECTED
 } from "./Stories.actions.view";
 import {GET_ADMIN_PAGE_SUCCESSFUL} from "../../../../Admin.actions";
+import {
+    MEETING_SAVE_SUCCESSFUL,
+    SEND_STORY_EMAILS_SUCCESSFUL
+} from "../meeting/views/meeting-actions/MeetingActions.actions.view";
 
 const initialState = {
     years: [],
@@ -16,11 +21,15 @@ const initialState = {
     errorMsg: "",
     saveError: "",
     unsavedChanges: false,
-    groupIds: [{
-        group: "styrIT",
-        year: "2019",
-        id: "aaaa-bbbb-cccc-dddd"
-    }]
+    groupIds: {
+        "A": [{
+            group: "styrIT",
+            year: "2019",
+            id: "aaaa-bbbb-cccc-dddd"
+        }]
+    },
+    meetings: [],
+    selectedMeeting: ""
 };
 
 export const StoriesReducer = (state = initialState, action) => {
@@ -29,8 +38,12 @@ export const StoriesReducer = (state = initialState, action) => {
             return assignState(state, {
                 years: action.payload.data.years,
                 groupYears: action.payload.data.groupYears,
-                unsavedChanges: false
+                unsavedChanges: false,
+                meetings: getMeetings(action.payload.data),
+                groupIds: action.payload.data.meetingStoryGroups
             })
+        case MEETING_SAVE_SUCCESSFUL:
+            return handle_meeting_saved(action.payload.meeting, state)
         case ON_STORY_GROUP_SELECTED:
             return assignState(state, {
                 selectedGroup: action.payload.group
@@ -53,6 +66,15 @@ export const StoriesReducer = (state = initialState, action) => {
             return handleAddStoryGroupYear(state)
         case ON_STORY_GROUP_DELETED:
             return handleDeleteStoryGroupYear(state, action.payload.group, action.payload.year)
+        case ON_STORIES_MEETING_SELECTED:
+            return assignState(state, {
+                selectedMeeting: action.payload.meeting
+            })
+        case SEND_STORY_EMAILS_SUCCESSFUL:
+            console.log("PAYLOAD", action.payload.data)
+            return assignState(state, {
+                groupIds: action.payload.data
+            })
         default:
             return state;
     }
@@ -138,4 +160,44 @@ function handleDeleteStoryGroupYear(state, group, year) {
         groupYears: newGroupYears,
         unsavedChanges: true
     })
+}
+
+function getMeetings(data) {
+    return Object.keys(data.meetings).map(id => {
+        return {
+            value: id,
+            text: getMeetingName(data.meetings[id])
+        }
+    });
+}
+
+function getMeetingName(meeting) {
+    const date = new Date(meeting.date)
+    return date.getFullYear() + "_LP" + meeting.lp + "_" + meeting.meeting_no;
+}
+
+function handle_meeting_saved(meeting, state) {
+    let newMeeting = true;
+    const newMeetings = state.meetings.map(m => {
+        if (m.value === meeting.id) {
+            newMeeting = false;
+            return {
+                value: meeting.id,
+                text: getMeetingName(meeting)
+            }
+        }
+        return m;
+    })
+
+    if (newMeeting) {
+        newMeetings.push(
+            {
+                value: meeting.id,
+                text: getMeetingName(meeting)
+            })
+    }
+
+    return assignState(state, {
+        meetings: newMeetings
+    });
 }

@@ -8,8 +8,10 @@ from HttpResponse import HttpResponse, get_with_error, get_with_data
 from data_objects.GroupMeetingEmailData import GroupMeetingEmailData
 from data_objects.MailData import MailData
 from mail_handler import send_email
+from process.ConfigProcess import get_meeting_story_groups
 from process.StoryProcess import update_story_group_meetings
 from queries.GroupYearQueries import get_story_group_name
+from queries.MeetingQueries import get_meeting_ids
 from validation.Validation import validate_meeting_id
 from queries.ConfigQueries import get_email_config_data
 from queries.GroupMeetingTaskQueries import get_story_group_email_datas_for_meeting
@@ -19,13 +21,14 @@ def handle_story_email(data: Dict) -> HttpResponse:
     meeting_id_res = validate_meeting_id(data, "id")
     if meeting_id_res.is_error:
         return get_with_error(meeting_id_res.message)
+    meeting_id = meeting_id_res.data
 
-    threading.Thread(target=send_story_emails, args=(meeting_id_res.data,)).start()
-    return get_with_data({})
-
-
-def send_story_emails(meeting_id: UUID):
     story_datas = update_story_group_meetings(meeting_id)
+    threading.Thread(target=send_story_emails, args=(meeting_id,)).start()
+    return get_with_data(get_meeting_story_groups(get_meeting_ids()))
+
+
+def send_story_emails(meeting_id: UUID, story_datas):
     email_datas = get_story_group_email_datas_for_meeting(meeting_id, story_datas)
     for email_data in email_datas:
         mail_data = to_story_email_data(email_data)

@@ -1,9 +1,9 @@
-import React from "react";
 import {connect} from "react-redux";
 import {Stories} from "./Stories.view";
 import {
     addStoryGroupYear,
     deleteStoryGroupYear,
+    onStoriesMeetingSelected,
     saveStories,
     selectedStoryGroup,
     selectedStoryYear
@@ -18,7 +18,9 @@ const mapStateToProps = state => ({
     errorMsg: state.root.StoriesReducer.errorMsg,
     saveError: state.root.StoriesReducer.saveError,
     unsavedChanges: state.root.StoriesReducer.unsavedChanges,
-    groupIds: state.root.StoriesReducer.groupIds
+    groupIds: state.root.StoriesReducer.groupIds,
+    meetings: state.root.StoriesReducer.meetings,
+    selectedMeeting: state.root.StoriesReducer.selectedMeeting
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -26,7 +28,8 @@ const mapDispatchToProps = dispatch => ({
     selectYear: year => dispatch(selectedStoryYear(year)),
     addGroupYear: () => dispatch(addStoryGroupYear()),
     deleteGroupYear: groupYear => dispatch(deleteStoryGroupYear(groupYear)),
-    save: (groupYears) => dispatch(saveStories(groupYears))
+    save: (groupYears) => dispatch(saveStories(groupYears)),
+    selectMeeting: meeting => dispatch(onStoriesMeetingSelected((meeting)))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stories);

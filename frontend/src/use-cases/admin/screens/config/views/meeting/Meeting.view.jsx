@@ -49,7 +49,7 @@ export const Meeting = props => (
 
 export default Meeting;
 
-function getMeetingSelectArray(meetings) {
+export function getMeetingSelectArray(meetings) {
     let meetingArr = [];
     Object.keys(meetings).forEach(id => {
         meetingArr.push({

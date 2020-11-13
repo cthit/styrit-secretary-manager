@@ -4,3 +4,4 @@ export const ON_ADD_STORY_GROUP_YEAR = "on_add_story_group_year";
 export const ON_STORY_GROUP_DELETED = "on_story_group_deleted";
 export const ON_SAVE_STORIES_SUCCESSFUL = "on_save_stories_successful";
 export const ON_SAVE_STORIES_ERROR = "on_save_stories_error";
+export const ON_STORIES_MEETING_SELECTED = "on_stories_meeting_selected";

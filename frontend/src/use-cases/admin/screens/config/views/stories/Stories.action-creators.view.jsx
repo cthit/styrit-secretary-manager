@@ -2,6 +2,7 @@ import {
     ON_ADD_STORY_GROUP_YEAR,
     ON_SAVE_STORIES_ERROR,
     ON_SAVE_STORIES_SUCCESSFUL,
+    ON_STORIES_MEETING_SELECTED,
     ON_STORY_GROUP_DELETED,
     ON_STORY_GROUP_SELECTED,
     ON_STORY_YEAR_SELECTED
@@ -88,4 +89,14 @@ function onStoriesSavedSuccessful(response) {
 function onStoriesSavedError(error) {
     alert("Failed to save stories");
     return handleError(error, ON_SAVE_STORIES_ERROR);
+}
+
+export function onStoriesMeetingSelected(meeting_id) {
+    return {
+        type: ON_STORIES_MEETING_SELECTED,
+        payload: {
+            meeting: meeting_id
+        },
+        error: false
+    }
 }

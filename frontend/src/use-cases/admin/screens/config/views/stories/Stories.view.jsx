@@ -103,42 +103,37 @@ export const Stories = props => {
             <DigitAutocompleteSelectSingle
                 upperLabel={"Meeting"}
                 outlined
-                options={[
-                    {
-                        text: "Meeting A",
-                        value: "4524959-2252"
-                    },
-                    {
-                        text: "Meeting B",
-                        value: "4524959-554"
-                    }
-                ]}
+                options={props.meetings}
                 onChange={e => {
-                    console.log("Blah", e.target.value)
+                    props.selectMeeting(e.target.value)
                 }}
-                value={"4524959-2252"}
-                disabled={!props.meetings || Object.keys(props.meetings).length === 0}
+                value={props.selectedMeeting}
+                disabled={props.meetings.length === 0}
                 noOptionsText={"No meetings"}
             />
             <DigitButton primary raised
                          text={"Generate codes for the above story groups"}/>
             <Space/>
             <table style={{width: "80%"}}>
+                <tbody>
                 {
-                    props.groupIds.map((obj, index) => (
-                        <tr key={index}>
-                            <td width={"48%"}>
-                                <DigitText.Text
-                                    alignRight
-                                    text={obj.group + " " + obj.year + ": "}/>
-                            </td>
-                            <td width={"1%"}/>
-                            <td width={"51%"}>
-                                <DigitText.Text text={obj.id}/>
-                            </td>
-                        </tr>
-                    ))
+                    props.groupIds[props.selectedMeeting] && (
+                        props.groupIds[props.selectedMeeting].map((obj, index) => (
+                            <tr key={index}>
+                                <td width={"48%"}>
+                                    <DigitText.Text
+                                        alignRight
+                                        text={obj.group + " " + obj.year + ": "}/>
+                                </td>
+                                <td width={"1%"}/>
+                                <td width={"51%"}>
+                                    <DigitText.Text text={obj.id}/>
+                                </td>
+                            </tr>
+                        ))
+                    )
                 }
+                </tbody>
             </table>
 
             <HLine/>
