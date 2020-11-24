@@ -20,12 +20,17 @@ export function onUpload(file, task) {
 
 export function onSubmitFiles(reports, code, group) {
     return dispatch => {
-        const result = authorizedApiCall(() => putFiles(reports, code, group))
-        if (result.error) {
-            dispatch(onError(result.errResponse));
-        } else {
-            dispatch(onAccept(result.response));
-        }
+        authorizedApiCall(() => putFiles(reports, code, group))
+        .then(response => {
+            if (response.error) {
+                dispatch(onError(response.errResponse))
+            } else {
+                dispatch(onAccept(response.response))
+            }
+        })
+        .catch(error => {
+            dispatch(handleError(error, ON_SUBMIT_FILES_FAILED));
+        })
     };
 }
 
@@ -36,7 +41,7 @@ function onAccept(response) {
     }
 
     let msg =
-        "File uppladad, om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil.";
+    "File uppladad, om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil.";
     if (overwrite) {
         msg = msg + "\nSkrev över tidigare uppladdad fil.";
     }
