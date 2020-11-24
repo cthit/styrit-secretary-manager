@@ -21,9 +21,9 @@ def setup_general_config():
     number = ConfigType(type="number") if number is None else number
 
     config_list = [
-        {"key": "frontend_url", "value": "localhost:3000", "config_type": string,
+        {"key": "frontend_url", "value": "localhost:3001", "config_type": string,
          "description": "The url to this frontend page (used for links in the emails)"},
-        {"key": "archive_base_url", "value": "localhost:3000/api/archive/download", "config_type": string,
+        {"key": "archive_base_url", "value": "localhost:3001/api/archive/download", "config_type": string,
          "description": "The base url to download archives from (used in emails to the board)"},
         {"key": "document_template_url", "value": "https://www.overleaf.com/read/ddjdhxnkxttj", "config_type": string,
          "description": "The template overleaf document for the different reports (used in the emails)"},

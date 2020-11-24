@@ -36,7 +36,7 @@ function onAccept(response) {
     }
 
     let msg =
-    "File uppladad, om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil.";
+    "Fil uppladad, om du vill byta ut en fil är det bara att skriva in koden igen och ladda upp en ny fil.";
     if (overwrite) {
         msg = msg + "\nSkrev över tidigare uppladdad fil.";
     }

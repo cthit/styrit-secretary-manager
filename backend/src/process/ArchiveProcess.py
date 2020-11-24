@@ -29,7 +29,7 @@ def download_archive(code_str: str) -> HttpResponse:
         lp=archive_data.meeting.lp,
         year=archive_data.meeting.year
     )
-    file_path_name = os.path.normpath("{0}.zip".format(archive_data.archive_path))
+    file_path_name = os.path.normpath("src/{0}.zip".format(archive_data.archive_path))
 
     last_modified = datetime.now()
     cache_timeout = 60
@@ -78,13 +78,14 @@ def create_archive(id: UUID) -> ResultWithData[UUID]:
     for path in file_paths:
         shutil.copy(path, folder_location)
 
-    archives_location = "src/archives"
-    if not os.path.exists(archives_location):
-        os.makedirs(archives_location)
+    archives_location = "archives"
+    folder_name = f"src/{archives_location}"
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
 
     archive_name = f"{archives_location}/documents_lp{meeting.lp}_{meeting.meeting_no}_{meeting.year}"
     print(f"Archiving folder: {folder_location}\nTo file: {archive_name}")
-    shutil.make_archive(archive_name, "zip", folder_location)
+    shutil.make_archive(f"src/{archive_name}", "zip", folder_location)
 
     old_archive = get_archive_data_by_meeting_id(meeting.id)
     if old_archive is None:
