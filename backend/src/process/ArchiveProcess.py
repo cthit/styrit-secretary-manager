@@ -78,10 +78,9 @@ def create_archive(id: UUID) -> ResultWithData[UUID]:
     for path in file_paths:
         shutil.copy(path, folder_location)
 
-    archives_location = "archives"
-    folder_name = f"src/{archives_location}"
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+    archives_location = "src/archives"
+    if not os.path.exists(archives_location):
+        os.makedirs(archives_location)
 
     archive_name = f"{archives_location}/documents_lp{meeting.lp}_{meeting.meeting_no}_{meeting.year}"
     print(f"Archiving folder: {folder_location}\nTo file: {archive_name}")
