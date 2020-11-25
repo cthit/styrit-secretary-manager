@@ -29,7 +29,7 @@ def download_archive(code_str: str) -> HttpResponse:
         lp=archive_data.meeting.lp,
         year=archive_data.meeting.year
     )
-    file_path_name = os.path.normpath("src/{0}.zip".format(archive_data.archive_path))
+    file_path_name = os.path.normpath("{0}.zip".format(archive_data.archive_path))
 
     last_modified = datetime.now()
     cache_timeout = 60
