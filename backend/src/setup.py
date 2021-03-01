@@ -190,6 +190,10 @@ Please note that all of these must be used unless modifications to backend code 
         {
             "codeName": "equalit",
             "displayName": "EqualIT"
+        },
+        {
+            "codeName": "flashit",
+            "displayName": "FlashIT"
         }
     ]
 
