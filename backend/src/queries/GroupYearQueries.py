@@ -34,9 +34,3 @@ def get_story_group_years() -> List[StoryData]:
         year=gy.year,
         finished=gy.finished
     ) for gy in story_data_dict]
-
-
-@db_session
-def get_story_group_name(group_name: str, year: str):
-    g = Group.get(name=group_name)
-    return f"{g.display_name}{year[-2:]}"

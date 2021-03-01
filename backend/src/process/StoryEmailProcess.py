@@ -11,7 +11,6 @@ from data_objects.StoryData import StoryData
 from mail_handler import send_email
 from process.ConfigProcess import get_meeting_story_groups
 from process.StoryProcess import update_story_group_meetings
-from queries.GroupYearQueries import get_story_group_name
 from queries.MeetingQueries import get_meeting_ids
 from validation.Validation import validate_meeting_id
 from queries.ConfigQueries import get_email_config_data
@@ -45,9 +44,12 @@ def to_story_email_data(group: GroupMeetingEmailData) -> MailData:
     last_turnin_date = last_upload.strftime("%d/%m")
 
     date = group.meeting.date.replace(tzinfo=pytz.utc).astimezone(email_conf.timezone)
-    mail_to = "{0}{1}{2}".format(group.group_name, group.group_year, email_conf.email_domain)
 
-    display_name_year = get_story_group_name(group.group_name, group.group_year)
+    short_year = group.group_year[-2:]
+    display_name_year = f"{group.group_display_name}{short_year}"
+
+    mail_to_name_year = f"{group.group_name}{short_year}"
+    mail_to = f"{mail_to_name_year}{email_conf.email_domain}"
 
     msg = email_conf.stories_msg.format(
         group_name_year=display_name_year,
