@@ -114,6 +114,7 @@ def get_story_group_email_datas_for_meeting(meeting_id: UUID, story_datas: List[
     story_email_datas = []
     for story_data in story_datas:
         group_meeting = get_group_meeting(meeting_id, story_data.group, story_data.year)
+
         task_names = get_tasks_for_group_meeting(group_meeting)
         story_email_datas.append(GroupMeetingEmailData(
             meeting=meeting,
