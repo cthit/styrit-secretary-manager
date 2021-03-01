@@ -39,4 +39,4 @@ def get_story_group_years() -> List[StoryData]:
 @db_session
 def get_story_group_name(group_name: str, year: str):
     g = Group.get(name=group_name)
-    return f"{g.display_name}{year[-2]}"
+    return f"{g.display_name}{year[-2:]}"
