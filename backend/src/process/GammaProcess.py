@@ -12,8 +12,6 @@ from validation.Validation import validate_str
 
 def handle_gamma_me() -> HttpResponse:
     if "token" in session:
-        token = session["token"]
-
         headers = {
             "Authorization": "Bearer {token}".format(token={session["token"]})
         }
