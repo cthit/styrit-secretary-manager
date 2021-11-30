@@ -40,9 +40,20 @@ def setup_general_config():
         {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {day}/{month}", "config_type": string,
          "description": """
 The subject for "regular" email sendout (that goes out to all active groups that have documents to turn in for the meeting). \n
-Description of the formatting values: \n 
-Please note that all of these must be used unless modifications to backend code are made.\n - {day} = day of month \n
- - {month} = number of month"""},
+Description of the formatting values:  \n
+ - {group_name} = The display name of the group \n
+ - {meeting_day} = The day of month for the meeting \n
+ - {meeting_month} = The month (number) of the meeting \n
+ - {deadline_time} = The deadline time (hh:mm) \n
+ - {deadline_date} = The deadline date (dd/mm) \n
+ - {task_list} = A list of the tasks that the group should upload \n
+ - {frontend_url} = The url to the website \n
+ - {group_code} = Their unique code \n
+ - {template_url} = The document (overleaf) template url \n
+ - {secretary_email} = The email to the secretary \n
+ - {board_display_name} = The display name of the board \n
+ - {board_email} = The email to the board
+ """},
         {"key": "mail_to_groups_message",
          "value": "\nHej {group_name}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
                   "följande dokument: {task_list}\nDetta görs på sidan: {frontend_url}\nAnge koden: {group_code}\n\nMall för vissa "
@@ -53,7 +64,6 @@ Please note that all of these must be used unless modifications to backend code 
              """
 The body of the "regular" emails (the ones that are sent to all the active groups that should turn in documents for the meeting).  \n
 Description of the formatting values:  \n
-Please note that all of these must be used unless modifications to backend code are made.\n
  - {group_name} = The display name of the group \n
  - {meeting_day} = The day of month for the meeting \n
  - {meeting_month} = The month (number) of the meeting \n
@@ -71,10 +81,19 @@ Please note that all of these must be used unless modifications to backend code 
          "description":
              """
 The subject of the email that is sent to the board upon reaching the deadline.  \n
-Description of the formatting values: \n
-Please note that all of these must be used unless modifications to backend code are made.\n
-  - {meeting_number} = The number of the meeting that LP (0 if there is just one meeting that LP) \n
-  - {meeting_lp} = The study period of the meeting 
+Description of the formatting values:  \n
+ - {group_name} = The display name of the group \n
+ - {meeting_day} = The day of month for the meeting \n
+ - {meeting_month} = The month (number) of the meeting \n
+ - {deadline_time} = The deadline time (hh:mm) \n
+ - {deadline_date} = The deadline date (dd/mm) \n
+ - {task_list} = A list of the tasks that the group should upload \n
+ - {frontend_url} = The url to the website \n
+ - {group_code} = Their unique code \n
+ - {template_url} = The document (overleaf) template url \n
+ - {secretary_email} = The email to the secretary \n
+ - {board_display_name} = The display name of the board \n
+ - {board_email} = The email to the board
              """},
         {"key": "mail_to_board_message",
          "value": "\nHej {board_name}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {meeting_number} i lp {meeting_lp} är nu nådd.\nFör "
@@ -82,22 +101,37 @@ Please note that all of these must be used unless modifications to backend code 
          "config_type": long_string, "description":
              """
 The contents of the email that is sent out to the board upon reaching the deadline. \n
-Description of the formatting values: \n
-Please note that all of these must be used unless modifications to backend code are made.\n
- - {board_name} = The display name of the board \n
- - {meeting_number} = The number of the meeting (usually 0) \n
- - {meeting_lp} = The study period of the meeting \n
- - {meeting_archive_url} = A link to the archive download \n
- - {secretary_email} = The email to the secretary
+Description of the formatting values:  \n
+ - {group_name} = The display name of the group \n
+ - {meeting_day} = The day of month for the meeting \n
+ - {meeting_month} = The month (number) of the meeting \n
+ - {deadline_time} = The deadline time (hh:mm) \n
+ - {deadline_date} = The deadline date (dd/mm) \n
+ - {task_list} = A list of the tasks that the group should upload \n
+ - {frontend_url} = The url to the website \n
+ - {group_code} = Their unique code \n
+ - {template_url} = The document (overleaf) template url \n
+ - {secretary_email} = The email to the secretary \n
+ - {board_display_name} = The display name of the board \n
+ - {board_email} = The email to the board
              """},
         {"key": "mail_for_stories_subject", "value": "Dokument för sektionsmöte {meeting_number} lp {meeting_lp}", "config_type": string,
          "description":
              """ 
 The subject of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser. \n
-Description of the formatting values: \n
-Please note that all of these must be used unless modifications to backend code are made.\n
- - {meeting_number} = The number of the meeting that study period (usually 0) \n
- - {meeting_lp} = The study period
+Description of the formatting values:  \n
+ - {group_name} = The display name of the group \n
+ - {meeting_day} = The day of month for the meeting \n
+ - {meeting_month} = The month (number) of the meeting \n
+ - {deadline_time} = The deadline time (hh:mm) \n
+ - {deadline_date} = The deadline date (dd/mm) \n
+ - {task_list} = A list of the tasks that the group should upload \n
+ - {frontend_url} = The url to the website \n
+ - {group_code} = Their unique code \n
+ - {template_url} = The document (overleaf) template url \n
+ - {secretary_email} = The email to the secretary \n
+ - {board_display_name} = The display name of the board \n
+ - {board_email} = The email to the board
              """},
         {"key": "mail_for_stories",
          "value": "\nHej {group_name_year}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
@@ -110,20 +144,19 @@ Please note that all of these must be used unless modifications to backend code 
          "config_type": long_string, "description":
              """
 The body of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser) \n
-Description of the formatting values: \n
-Please note that all of these must be used unless modifications to backend code are made.\n
- - {group_name_year} = Display name of the group. \n
- - {meeting_day} = The day of month that the meeting will take place \n
+Description of the formatting values:  \n
+ - {group_name} = The display name of the group \n
+ - {meeting_day} = The day of month for the meeting \n
  - {meeting_month} = The month (number) of the meeting \n
- - {deadline_time} = The deadline time \n
- - {deadline_date} = The deadline date \n
- - {task_list} = A list of the tasks that the group will have to turn in. \n
- - {frontend_url} = A url to the frontend (upload page) \n
+ - {deadline_time} = The deadline time (hh:mm) \n
+ - {deadline_date} = The deadline date (dd/mm) \n
+ - {task_list} = A list of the tasks that the group should upload \n
+ - {frontend_url} = The url to the website \n
  - {group_code} = Their unique code \n
- - {template_url} = A link the overleaf template for the documents. \n
+ - {template_url} = The document (overleaf) template url \n
  - {secretary_email} = The email to the secretary \n
  - {board_display_name} = The display name of the board \n
- - {board_email} = The email to the board 
+ - {board_email} = The email to the board
              """},
         {"key": "board_display_name", "value": "styrIT", "config_type": string,
          "description": "The display name of the board"},

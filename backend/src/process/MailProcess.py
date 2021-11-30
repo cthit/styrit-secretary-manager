@@ -2,15 +2,14 @@ import threading
 from typing import Dict
 from uuid import UUID
 
-import pytz
-
 import mail_handler
+import pytz
 from HttpResponse import HttpResponse, get_with_error, get_with_data
 from data_objects.GroupMeetingEmailData import GroupMeetingEmailData
 from data_objects.MailData import MailData
-from validation.Validation import validate_meeting_id
 from queries.ConfigQueries import get_email_config_data
 from queries.GroupMeetingTaskQueries import get_active_group_email_datas_for_meeting
+from validation.Validation import validate_meeting_id
 
 
 def handle_email(data: Dict) -> HttpResponse:
@@ -53,8 +52,17 @@ def to_email_data(group: GroupMeetingEmailData) -> MailData:
                                        board_display_name=email_conf.board_display_name,
                                        board_email=email_conf.board_email)
 
-    subject = email_conf.active_subject.format(
-        day=date.day,
-        month=date.month)
+    subject = email_conf.active_subject.format(group_name=group.group_display_name,
+                                               meeting_day=date.day,
+                                               meeting_month=date.month,
+                                               deadline_time=last_turnin_time,
+                                               deadline_date=last_turnin_date,
+                                               task_list=group.get_formatted_task_list(),
+                                               frontend_url=email_conf.frontend_url,
+                                               group_code=group.group_code,
+                                               template_url=email_conf.document_template_url,
+                                               secretary_email=email_conf.secretary_email,
+                                               board_display_name=email_conf.board_display_name,
+                                               board_email=email_conf.board_email)
 
     return MailData(mail_to, subject, msg)
