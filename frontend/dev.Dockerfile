@@ -1,20 +1,7 @@
-FROM node:latest
+FROM node:lts
 
-RUN mkdir -p /usr/src/secretary-manager/frontend
-RUN chown -R node /usr/src/secretary-manager/frontend
+WORKDIR /app
 
-USER node
+ENV NODE_ENV=development
 
-WORKDIR /usr/src/secretary-manager/frontend
-
-COPY ./src/ .
-COPY package.json .
-COPY ./public/ .
-COPY .env.development .env
-
-RUN yarn install
-RUN yarn global add react-scripts
-
-EXPOSE 3000
-
-CMD yarn start
+CMD yarn && yarn start

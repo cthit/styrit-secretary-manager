@@ -1,4 +1,4 @@
-FROM node:latest AS build-step
+FROM node:16.13 AS build-step
 
 RUN mkdir -p /usr/src/secretary-manager/frontend
 RUN chown -R node /usr/src/secretary-manager/frontend

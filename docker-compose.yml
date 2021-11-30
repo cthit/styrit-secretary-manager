@@ -59,17 +59,21 @@ services:
         ports:
             - 3001:3000
         volumes:
-            - ./frontend:/usr/src/secretary-manager/frontend
+            - ./frontend:/app
+            - /app/node_modules
         environment:
             - REACT_APP_DEBUG_MODE=true
         networks:
             - secretary
+        extra_hosts:
+            host.docker.internal: host-gateway
 
     gotify:
         image: cthit/gotify:latest
         environment:
             GOTIFY_PRE-SHARED-KEY: "123abc"
             GOTIFY_MOCK-MODE: "true"
+            GOTIFY_DEBUG-MODE: "true"
         ports:
             - 8080:8080
 
