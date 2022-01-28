@@ -37,7 +37,7 @@ def send_story_emails(meeting_id: UUID, story_datas: List[StoryData]):
 
 def to_story_email_data(group: GroupMeetingEmailData) -> MailData:
     email_conf = get_email_config_data()
-
+    
     # Convert the datetime to the swedish timezone
     last_upload = group.meeting.last_upload.replace(tzinfo=pytz.utc).astimezone(email_conf.timezone)
     last_turnin_time = last_upload.strftime("%H:%M")
@@ -63,10 +63,25 @@ def to_story_email_data(group: GroupMeetingEmailData) -> MailData:
         template_url=email_conf.document_template_url,
         secretary_email=email_conf.secretary_email,
         board_display_name=email_conf.board_display_name,
-        board_email=email_conf.board_email
+        board_email=email_conf.board_email,
+        meeting_number=group.meeting.meeting_no,
+        meeting_lp=group.meeting.lp
     )
 
     subject = email_conf.stories_subject.format(
+        group_name_year=display_name_year,
+        meeting_day=date.day,
+        meeting_month=date.month,
+        deadline_time=last_turnin_time,
+        deadline_date=last_turnin_date,
+        task_list=group.get_formatted_task_list(),
+        frontend_url=email_conf.frontend_url,
+        group_code=group.group_code,
+        template_url=email_conf.document_template_url,
+        secretary_email=email_conf.secretary_email,
+        board_display_name=email_conf.board_display_name,
+        board_email=email_conf.board_email,
         meeting_number=group.meeting.meeting_no,
-        meeting_lp=group.meeting.lp)
+        meeting_lp=group.meeting.lp
+    )
     return MailData(mail_to=mail_to, subject=subject, msg=msg)

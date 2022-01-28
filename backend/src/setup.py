@@ -120,18 +120,20 @@ Description of the formatting values:  \n
              """ 
 The subject of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser. \n
 Description of the formatting values:  \n
- - {group_name} = The display name of the group \n
- - {meeting_day} = The day of month for the meeting \n
+ - {group_name_year} = Display name of the group. \n
+ - {meeting_day} = The day of month that the meeting will take place \n
  - {meeting_month} = The month (number) of the meeting \n
- - {deadline_time} = The deadline time (hh:mm) \n
- - {deadline_date} = The deadline date (dd/mm) \n
- - {task_list} = A list of the tasks that the group should upload \n
- - {frontend_url} = The url to the website \n
+ - {deadline_time} = The deadline time \n
+ - {deadline_date} = The deadline date \n
+ - {task_list} = A list of the tasks that the group will have to turn in. \n
+ - {frontend_url} = A url to the frontend (upload page) \n
  - {group_code} = Their unique code \n
- - {template_url} = The document (overleaf) template url \n
+ - {template_url} = A link the overleaf template for the documents. \n
  - {secretary_email} = The email to the secretary \n
  - {board_display_name} = The display name of the board \n
- - {board_email} = The email to the board
+ - {board_email} = The email to the board \n
+ - {meeting_number} = The number of the meeting that study period (usually 0) \n
+ - {meeting_lp} = The study period
              """},
         {"key": "mail_for_stories",
          "value": "\nHej {group_name_year}!\n\nDen {meeting_day}/{meeting_month} är det dags för sektionsmöte och senast {deadline_time} den {deadline_date} behöver ni lämna in "
@@ -145,18 +147,20 @@ Description of the formatting values:  \n
              """
 The body of the email that is sent to the "story groups" (i.e. the groups that needs to turn in eberattelser / vberattelser) \n
 Description of the formatting values:  \n
- - {group_name} = The display name of the group \n
- - {meeting_day} = The day of month for the meeting \n
+ - {group_name_year} = Display name of the group. \n
+ - {meeting_day} = The day of month that the meeting will take place \n
  - {meeting_month} = The month (number) of the meeting \n
- - {deadline_time} = The deadline time (hh:mm) \n
- - {deadline_date} = The deadline date (dd/mm) \n
- - {task_list} = A list of the tasks that the group should upload \n
- - {frontend_url} = The url to the website \n
+ - {deadline_time} = The deadline time \n
+ - {deadline_date} = The deadline date \n
+ - {task_list} = A list of the tasks that the group will have to turn in. \n
+ - {frontend_url} = A url to the frontend (upload page) \n
  - {group_code} = Their unique code \n
- - {template_url} = The document (overleaf) template url \n
+ - {template_url} = A link the overleaf template for the documents. \n
  - {secretary_email} = The email to the secretary \n
  - {board_display_name} = The display name of the board \n
- - {board_email} = The email to the board
+ - {board_email} = The email to the board \n
+ - {meeting_number} = The number of the meeting that study period (usually 0) \n
+ - {meeting_lp} = The study period
              """},
         {"key": "board_display_name", "value": "styrIT", "config_type": string,
          "description": "The display name of the board"},
