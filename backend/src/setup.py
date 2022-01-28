@@ -82,18 +82,11 @@ Description of the formatting values:  \n
              """
 The subject of the email that is sent to the board upon reaching the deadline.  \n
 Description of the formatting values:  \n
- - {group_name} = The display name of the group \n
- - {meeting_day} = The day of month for the meeting \n
- - {meeting_month} = The month (number) of the meeting \n
- - {deadline_time} = The deadline time (hh:mm) \n
- - {deadline_date} = The deadline date (dd/mm) \n
- - {task_list} = A list of the tasks that the group should upload \n
- - {frontend_url} = The url to the website \n
- - {group_code} = Their unique code \n
- - {template_url} = The document (overleaf) template url \n
- - {secretary_email} = The email to the secretary \n
- - {board_display_name} = The display name of the board \n
- - {board_email} = The email to the board
+ - {board_name} = The display name of the board \n
+ - {meeting_number} = The number of the meeting (usually 0) \n
+ - {meeting_lp} = The study period of the meeting \n
+ - {meeting_archive_url} = A link to the archive download \n
+ - {secretary_email} = The email to the secretary
              """},
         {"key": "mail_to_board_message",
          "value": "\nHej {board_name}!\n\nDeadlinen för dokumentinsamling till sektionsmöte {meeting_number} i lp {meeting_lp} är nu nådd.\nFör "
@@ -102,18 +95,11 @@ Description of the formatting values:  \n
              """
 The contents of the email that is sent out to the board upon reaching the deadline. \n
 Description of the formatting values:  \n
- - {group_name} = The display name of the group \n
- - {meeting_day} = The day of month for the meeting \n
- - {meeting_month} = The month (number) of the meeting \n
- - {deadline_time} = The deadline time (hh:mm) \n
- - {deadline_date} = The deadline date (dd/mm) \n
- - {task_list} = A list of the tasks that the group should upload \n
- - {frontend_url} = The url to the website \n
- - {group_code} = Their unique code \n
- - {template_url} = The document (overleaf) template url \n
- - {secretary_email} = The email to the secretary \n
- - {board_display_name} = The display name of the board \n
- - {board_email} = The email to the board
+ - {board_name} = The display name of the board \n
+ - {meeting_number} = The number of the meeting (usually 0) \n
+ - {meeting_lp} = The study period of the meeting \n
+ - {meeting_archive_url} = A link to the archive download \n
+ - {secretary_email} = The email to the secretary
              """},
         {"key": "mail_for_stories_subject", "value": "Dokument för sektionsmöte {meeting_number} lp {meeting_lp}", "config_type": string,
          "description":

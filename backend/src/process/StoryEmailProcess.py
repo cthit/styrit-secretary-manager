@@ -37,7 +37,7 @@ def send_story_emails(meeting_id: UUID, story_datas: List[StoryData]):
 
 def to_story_email_data(group: GroupMeetingEmailData) -> MailData:
     email_conf = get_email_config_data()
-    
+
     # Convert the datetime to the swedish timezone
     last_upload = group.meeting.last_upload.replace(tzinfo=pytz.utc).astimezone(email_conf.timezone)
     last_turnin_time = last_upload.strftime("%H:%M")
