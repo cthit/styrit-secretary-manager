@@ -223,7 +223,7 @@ Description of the formatting values:  \n
     tasks = [
         {
             "codeName": "vplan",
-            "displayName": "Verksamhetsplan"
+            "displayName": "Verksamhetsplan / Operational plan"
         },
         {
             "codeName": "budget",
@@ -231,15 +231,15 @@ Description of the formatting values:  \n
         },
         {
             "codeName": "vrapport",
-            "displayName": "Verksamhetsrapport"
+            "displayName": "Verksamhetsrapport / Operational report"
         },
         {
             "codeName": "vberattelse",
-            "displayName": "Verksamhetsberättelse"
+            "displayName": "Verksamhetsberättelse / Operational story"
         },
         {
             "codeName": "eberattelse",
-            "displayName": "Ekonomisk Berättelse"
+            "displayName": "Ekonomisk Berättelse / Economic story"
         }
     ]
 
