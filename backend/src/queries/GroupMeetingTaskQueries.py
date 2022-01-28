@@ -43,7 +43,7 @@ def get_tasks_for_meeting(meeting_id: UUID) -> List[GroupTaskData]:
 
 @db_session
 def get_tasks_for_group_meeting(group_meeting: GroupMeeting) -> List[str]:
-    return list(select(gmt.task.name for gmt in GroupMeetingTask if
+    return list(select(gmt.task.display_name for gmt in GroupMeetingTask if
                        gmt.group == group_meeting))
 
 
