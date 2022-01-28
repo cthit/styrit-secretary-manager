@@ -55,6 +55,10 @@ def handle_gamma_auth(data: dict) -> HttpResponse:
     }
 
     res = requests.post(f"{GAMMA_TOKEN_URI}?{urllib.parse.urlencode(data)}", headers=headers)
+    if res.status_code != 200:
+        print(f"Error communicating with gamma status code {res.status_code} > {res.raw}")
+        return get_with_error(500, "Gamma error")
+
     res_json = res.json()
     if "access_token" not in res_json:
         return get_with_error(400, "Invalid token")
