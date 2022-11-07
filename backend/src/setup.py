@@ -217,6 +217,10 @@ Description of the formatting values:  \n
         {
             "codeName": "flashit",
             "displayName": "FlashIT"
+        },
+        {
+            "codeName": "tradgardsmasterit",
+            "displayName": "TrädgårdsmästerIT"
         }
     ]
 
