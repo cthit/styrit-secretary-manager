@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./app";
 import {DigitProviders} from "@cthit/react-digit-components";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import createTheme from "@material-ui/core/styles/createTheme";
 import {rootReducer} from "./app/App.reducer";
 import {Provider} from "react-redux";
 import {applyMiddleware, combineReducers, createStore} from "redux";
@@ -11,7 +11,7 @@ import {unregister} from "./serviceWorker";
 import logger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 
-const theme = createMuiTheme(
+const theme = createTheme(
     {
         palette: {
             primary: {
