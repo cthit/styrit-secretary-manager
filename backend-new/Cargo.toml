@@ -1,0 +1,18 @@
+[package]
+name = "backend-new"
+version = "0.1.0"
+edition = "2021"
+authors = ["Vidar Magnusson <secretary-manager@vidarmagnusson.com>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = {version = "0.5.0-rc.2", features = ["json", "secrets"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dotenv = "0.15"
+sqlx = { version = "0.6", features = ["runtime-async-std-rustls", "postgres", "macros", "migrate", "chrono", "uuid", "offline"] }
+thiserror = "1.0"
+uuid = { version = "1.2", features = ["serde", "v4"] }
+chrono = { version="0.4", features = ["serde"] }
+reqwest = { version = "0.11", features = ["json"] }
