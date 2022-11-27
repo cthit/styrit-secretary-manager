@@ -38,7 +38,7 @@ def download_archive(code_str: str) -> HttpResponse:
     return get_with_file(send_file(
         file_path_name,
         as_attachment=True,
-        attachment_filename=attachment_name,
+        download_name=attachment_name,
         last_modified=last_modified,
         cache_timeout=cache_timeout
     ))
