@@ -58,3 +58,25 @@ SELECT id,
     ' pepe '
 FROM ituser
 WHERE cid = 'admin';
+
+INSERT INTO itclient(
+    id,
+    client_id,
+    client_secret,
+    web_server_redirect_uri,
+    access_token_validity,
+    refresh_token_validity,
+    auto_approve,
+    name,
+    description
+) VALUES (
+    '4f96764d-63a4-4610-9cd8-1389f60461b8',
+    'id',
+    '{noop}secret',
+    'http://localhost:3001/auth/account/callback',
+    3600, 
+    500000000,
+    true,
+    'secretary-manager',
+    '56777d1c-c675-456d-b092-046f4c97b6dc'
+);

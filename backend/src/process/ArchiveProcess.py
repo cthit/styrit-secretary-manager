@@ -40,7 +40,7 @@ def download_archive(code_str: str) -> HttpResponse:
         as_attachment=True,
         download_name=attachment_name,
         last_modified=last_modified,
-        cache_timeout=cache_timeout
+        max_age=cache_timeout
     ))
 
 

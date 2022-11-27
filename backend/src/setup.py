@@ -37,7 +37,7 @@ def setup_general_config():
          "description": "The domain to send emails to"},
         {"key": "from_email_address", "value": "admin@chalmers.it", "config_type": string,
          "description": "The email to send from"},
-        {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {day}/{month}", "config_type": string,
+        {"key": "mail_to_groups_subject", "value": "Dokument till sektionsmöte den {deadline_date}", "config_type": string,
          "description": """
 The subject for "regular" email sendout (that goes out to all active groups that have documents to turn in for the meeting). \n
 Description of the formatting values:  \n
