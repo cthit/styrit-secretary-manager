@@ -1,4 +1,4 @@
-FROM node:16.13 AS build-step
+FROM node:16.16 AS build-step
 
 RUN mkdir -p /usr/src/secretary-manager/frontend
 RUN chown -R node /usr/src/secretary-manager/frontend
@@ -8,7 +8,7 @@ USER node
 WORKDIR /usr/src/secretary-manager/frontend
 
 COPY ./src ./src
-COPY package.json .
+COPY package.json yarn.lock ./
 COPY ./public ./public
 
 RUN yarn install
