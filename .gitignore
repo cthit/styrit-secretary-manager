@@ -5,6 +5,8 @@ backend/src/private_keys.py
 backend/archives/
 backend/src/archives/
 
+secretary_manager_backup.sql
+
 backend/.idea/
 __pycache__/
 backend/venv/
