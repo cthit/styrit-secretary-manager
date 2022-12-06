@@ -8,3 +8,4 @@ backend/src/archives/
 backend/.idea/
 __pycache__/
 backend/venv/
+*.sql

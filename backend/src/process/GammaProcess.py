@@ -9,7 +9,6 @@ from config.gamma_config import GAMMA_ME_URI, GAMMA_CLIENT_ID, GAMMA_REDIRECT_UR
     GAMMA_SECRET, GAMMA_TOKEN_URI
 from validation.Validation import validate_str
 
-
 def handle_gamma_me() -> HttpResponse:
     if "token" in session:
         headers = {
@@ -30,6 +29,7 @@ def handle_gamma_me() -> HttpResponse:
     }
     return get_with_response(Response(response=response, headers=headers, status=401))
 
+acceptable_groups = ["styrit", "motespresidit"]
 
 def handle_gamma_auth(data: dict) -> HttpResponse:
     code_res = validate_str(data, "code")
@@ -73,7 +73,7 @@ def handle_gamma_auth(data: dict) -> HttpResponse:
         gamma_me_json = gamma_me_res.json()
         for group in gamma_me_json["groups"]:
             super_group = group["superGroup"]
-            if group["active"] and super_group["name"] == "styrit":
+            if group["active"] and super_group["name"] in acceptable_groups:
                 if res.ok:
                     session["token"] = token
                     return get_with_data({})
