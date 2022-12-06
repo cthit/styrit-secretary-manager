@@ -78,6 +78,6 @@ def handle_gamma_auth(data: dict) -> HttpResponse:
                     session["token"] = token
                     return get_with_data({})
 
-        return get_with_error(403, "Must be a member of styrIT")
+        return get_with_error(403, "Must be a member of MötespresidIT")
     else:
         return get_with_error(500, f"Unable to communicate with Gamma, code '{res.status_code}', content '{res.content}'")
