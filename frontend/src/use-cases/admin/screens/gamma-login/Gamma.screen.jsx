@@ -7,7 +7,7 @@ export const Gamma = props => (
     <GammaLoginContainer>
         <InfoCard>
             <DigitText.Text
-                text="Inloggning, endast för styrIT!"/>
+                text="Inloggning, endast för styrIT & MötespresidIT!"/>
         </InfoCard>
         {
             props.errorMsg !== "" && (
