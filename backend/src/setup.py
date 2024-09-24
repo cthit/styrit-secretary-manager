@@ -175,6 +175,10 @@ Description of the formatting values:  \n
             "displayName": "ArmIT"
         },
         {
+            "codeName": "cloudlords",
+            "displayName": "Cloudlords"
+        },
+        {
             "codeName": "digit",
             "displayName": "digIT"
         },
