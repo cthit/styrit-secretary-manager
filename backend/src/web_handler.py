@@ -6,12 +6,12 @@ from flask import Flask, request, session, Response
 from flask_cors import CORS
 from flask_restful import Api, Resource
 
-from config.gamma_config import SECRET_KEY, GAMMA_CLIENT_ID, GAMMA_REDIRECT_URI, GAMMA_AUTHORIZATION_URI
+from config.gamma_config import SECRET_KEY
 from process.ArchiveProcess import download_archive, get_archive_url
 from process.CodeProcess import handle_code_request
 from process.ConfigProcess import handle_incoming_config, get_admin_page_data
 from process.FileProcess import handle_file_request
-from process.GammaProcess import handle_gamma_me, handle_gamma_auth
+from process.GammaProcess import handle_gamma_me, handle_gamma_auth, build_auth_redirect_url
 from process.MailProcess import handle_email
 from process.MeetingProcess import handle_meeting_config
 from process.StoryEmailProcess import handle_story_email
@@ -20,11 +20,14 @@ from process.TimerProcess import handle_start_timer
 
 app = Flask(__name__)
 api = Api(app)
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Gamma ===
 
 app.secret_key = SECRET_KEY
+app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 
 def auth_required(refresh_login=False):
@@ -33,28 +36,24 @@ def auth_required(refresh_login=False):
         def decorated_function(*args, **kwargs):
             try:
                 if "token" in session:
-                    token = jwt.decode(jwt=session["token"], options={"verify_signature": False})
+                    token = jwt.decode(jwt=session["token"], options={"verify_signature": False, "verify_nbf": False, "verify_aud": False})
                     expires = token["exp"]
                     expires_date = datetime.fromtimestamp(expires)
                     current_date = datetime.utcnow()
                     if current_date <= expires_date:
                         if refresh_login:
-                            refresh_after = expires_date - timedelta(hours=2)
-                            # If there is less than a couple of hours to expiration, force the user to re-login.
+                            refresh_after = expires_date - timedelta(minutes=1)
+                            # If there is less than a minute to expiration, force the user to re-login.
                             if current_date >= refresh_after:
                                 session["token"] = None
                             else:
                                 return f(*args, **kwargs)
                         else:
                             return f(*args, **kwargs)
-            except jwt.ExpiredSignatureError:
-                print("Session has expired")
+            except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
+                print(f"Token validation error: {type(e).__name__}: {e}")
 
-            response_type = "response_type=code"
-            client_id = f"client_id={GAMMA_CLIENT_ID}"
-            redirect_uri = f"redirect_uri={GAMMA_REDIRECT_URI}"
-
-            response = f"{GAMMA_AUTHORIZATION_URI}?{response_type}&{client_id}&{redirect_uri}"
+            response = build_auth_redirect_url()
             headers = {
                 "location": response
             }

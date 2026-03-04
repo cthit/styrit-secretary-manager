@@ -14,7 +14,7 @@ export function getRequest(endpoint) {
     }
 
     let headers = {};
-    return axios.get(path + endpoint, {headers});
+    return axios.get(path + endpoint, {headers, withCredentials: true});
 }
 
 export function postRequest(endpoint, data) {
@@ -24,7 +24,7 @@ export function postRequest(endpoint, data) {
     }
 
     let headers = {};
-    return axios.post(path + endpoint, data, {headers});
+    return axios.post(path + endpoint, data, {headers, withCredentials: true});
 }
 
 export function putRequest(endpoint, data) {
@@ -34,5 +34,5 @@ export function putRequest(endpoint, data) {
     }
 
     let headers = {};
-    return axios.put(path + endpoint, data, {headers});
+    return axios.put(path + endpoint, data, {headers, withCredentials: true});
 }

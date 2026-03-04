@@ -1,4 +1,3 @@
-version: "3"
 networks:
     gamma:
     secretary:
@@ -25,34 +24,40 @@ services:
             - secretary
             - gamma
 
-    # secretary-backend:
-    #     image: styrit_secretary_manager_backend_dev
-    #     links:
-    #         - gotify
-    #     depends_on:
-    #         - secretary-db
-    #     build:
-    #         context: ./backend/
-    #         dockerfile: dev.Dockerfile
-    #     environment:
-    #         gotify_auth_key: "123abc"
-    #         frontend_admin_pass: "asd123"
-    #         SECRETARY_POSTGRES_USER: secretary
-    #         SECRETARY_POSTGRES_PASSWORD: password
-    #         SECRETARY_POSTGRES_HOST: secretary-db
-    #         SECRETARY_POSTGRES_DB: secretary
-    #         SECRETARY_POSTGRES_PORT: 5432
-    #         PYTHONUNBUFFERED: 0
-    #     ports:
-    #         - 5000:5000
-    #     volumes:
-    #         - ./backend/:/usr/src/secretary-manager/backend
-    #     networks:
-    #         - secretary
-    #         - gamma
+    secretary-backend:
+        image: styrit_secretary_manager_backend_dev
+        links:
+            - gotify
+        depends_on:
+            - secretary-db
+        build:
+            context: ./backend/
+            dockerfile: dev.Dockerfile
+        environment:
+            gotify_auth_key: "123abc"
+            frontend_admin_pass: "asd123"
+            SECRETARY_POSTGRES_USER: secretary
+            SECRETARY_POSTGRES_PASSWORD: password
+            SECRETARY_POSTGRES_HOST: secretary-db
+            SECRETARY_POSTGRES_DB: secretary
+            SECRETARY_POSTGRES_PORT: 5432
+            PYTHONUNBUFFERED: 0
+            GAMMA_CLIENT_ID: client-id
+            GAMMA_SECRET: secret
+            GAMMA_USERINFO_URI: https://auth.chalmers.it/oauth2/userinfo
+            GAMMA_TOKEN_URI: https://auth.chalmers.it/oauth2/token
+            GAMMA_AUTHORIZATION_URI: https://auth.chalmers.it/oauth2/authorize
+            GAMMA_REDIRECT_URI: http://localhost:3001/auth/account/callback
+
+        ports:
+            - 5000:5000
+        volumes:
+            - ./backend/:/usr/src/secretary-manager/backend
+        networks:
+            - secretary
+            - gamma
 
     secretary-frontend:
-        image: styrit_secretary_manager_frontend_dev
         build:
             context: ./frontend/
             dockerfile: dev.Dockerfile
@@ -77,66 +82,45 @@ services:
         ports:
             - 8080:8080
 
-    gamma-frontend:
-        image: cthit/gamma-frontend:development
-        environment:
-            HTTP_PROXY: http://gamma-backend:8081
-        depends_on:
-            - gamma-backend
-        networks:
-            - gamma
-        ports:
-            - 3000:3000
-
-    gamma-backend:
-        image: cthit/gamma-backend
-        environment:
-            # Default admin user name = admin
-            # Default admin password  = password
-
-            DB_USER: user
-            DB_PASSWORD: password
-            DB_HOST: gamma-db
-            DB_PORT: 5432
-            DB_NAME: postgres
-
-            REDIS_HOST: gamma-redis
-            REDIS_PASSWORD: ""
-            REDIS_PORT: 6379
-
-            GOTIFY_KEY: "123abc"
-            GOTIFY_URL: http://gamma-gotify:8080/mail
-
-            DEFAULT_CLIENT_NAME: demo
-            DEFAULT_CLIENT_ID: id
-            DEFAULT_CLIENT_SECRET: secret
-            DEFAULT_REDIRECT_URI: http://localhost:3001/auth/account/callback
-
-            SERVER_PORT: 8081
-            SUCCESSFUL_LOGIN: http://localhost:3000
-            CORS_ALLOWED_ORIGIN: http://localhost:3000
-            BACKEND_URI: http://localhost:8081
-            PRODUCTION: "false"
-            COOKIE_DOMAIN: localhost
-            IS_MOCKING_CLIENT: "true"
-        depends_on:
-            - gamma-redis
-            - gamma-db
-        networks:
-            - gamma
-        ports:
-            - 8081:8081
-
-    gamma-redis:
-        image: redis:5.0
-        networks:
-            - gamma
-
-    gamma-db:
-        image: postgres:10
-        environment:
-            POSTGRES_USER: user
-            POSTGRES_DB: postgres
-            POSTGRES_PASSWORD: password
-        networks:
-            - gamma
+    # gamma:
+    #     image: ghcr.io/cthit/gamma:latest
+    #     environment:
+    #         DB_USER: user
+    #         DB_PASSWORD: password
+    #         DB_HOST: gamma-db
+    #         DB_PORT: 5432
+    #         DB_NAME: postgres
+    # 
+    #         REDIS_HOST: gamma-redis
+    #         REDIS_PASSWORD: ""
+    #         REDIS_PORT: 6379
+    # 
+    #         GOTIFY_KEY: "123abc"
+    #         GOTIFY_BASE_URL: http://gotify:8080
+    # 
+    #         BASE_URL: "http://localhost:8081"
+    #         SERVER_PORT: 8081
+    #         PRODUCTION: "false"
+    #         IS_MOCKING: "false"
+    #         ADMIN_SETUP: "true"
+    #     depends_on:
+    #         - gamma-redis
+    #         - gamma-db
+    #     networks:
+    #         - gamma
+    #     ports:
+    #         - 8081:8081
+    # 
+    # gamma-redis:
+    #     image: redis:5.0
+    #     networks:
+    #         - gamma
+    # 
+    # gamma-db:
+    #     image: postgres:10
+    #     environment:
+    #         POSTGRES_USER: user
+    #         POSTGRES_DB: postgres
+    #         POSTGRES_PASSWORD: password
+    #     networks:
+    #         - gamma
