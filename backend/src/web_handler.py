@@ -20,14 +20,11 @@ from process.TimerProcess import handle_start_timer
 
 app = Flask(__name__)
 api = Api(app)
-cors = CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Gamma ===
 
 app.secret_key = SECRET_KEY
-app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
-app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 
 def auth_required(refresh_login=False):
