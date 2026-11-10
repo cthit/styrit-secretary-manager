@@ -242,6 +242,10 @@ Description of the formatting values:  \n
             "displayName": "Verksamhetsrapport / Operational report"
         },
         {
+            "codeName": "erapport",
+            "displayName": "Ekonomisk rapport / Economic report"
+        },
+        {
             "codeName": "vberattelse",
             "displayName": "Verksamhetsberättelse / Operational story"
         },
